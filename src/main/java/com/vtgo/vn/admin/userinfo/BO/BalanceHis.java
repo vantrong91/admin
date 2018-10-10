@@ -18,36 +18,53 @@ import org.apache.log4j.Logger;
  */
 public class BalanceHis extends BaseRequest<Object> implements BaseObject {
 
-    private static final Logger logger = Logger.getLogger(BalanceHis.class);
+    private static final Logger log = Logger.getLogger(BalanceHis.class);
 
     private Long hisId;
     private Long accountId;
-    private Long hisType;
+    private String hisType;
     private String hisContent;
     private String iP;
     private Long balanceBefor;
     private Long balanceAfter;
     private Long amount;
+    private Long time;
 
     @Override
     public boolean parse(Record record) {
-        return false;
+        try {
+            this.hisId = record.getLong("HisId");
+            this.accountId = record.getLong("AccountId");
+            this.hisType = record.getString("HisType");
+            this.hisContent = record.getString("HisContent");
+            this.iP = record.getString("IP");
+            this.balanceBefor = record.getLong("BalanceBefor");
+            this.balanceAfter = record.getLong("BalanceAfter");
+            this.amount = record.getLong("Amount");     
+            this.time = record.getLong("Time");
+            return true;
+        } catch (Exception ex) {
+            log.debug(ex);
+            return false;
+        }
     }
 
     @Override
     public boolean parse(Map<String, Object> map) {
         try {
             this.hisId = (Long) map.get("HisId");
-            this.accountId = (Long) map.get("AccountId");
-            this.hisType = (Long) map.get("HisType");
+            this.accountId = (Long) map.get("Account");
+            this.hisType = (String) map.get("HisType");
             this.hisContent = (String) map.get("HisContent");
             this.iP = (String) map.get("IP");
             this.balanceBefor = (Long) map.get("BalanceBefor");
             this.balanceAfter = (Long) map.get("BalanceAfter");
             this.amount = (Long) map.get("Amount");
+            this.time = (Long) map.get("CreateTime");
+
             return true;
         } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex);
+            log.error(ex.getMessage(), ex);
             return false;
         }
     }
@@ -55,6 +72,14 @@ public class BalanceHis extends BaseRequest<Object> implements BaseObject {
     @Override
     public Bin[] toBins() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
     }
 
     public Long getHisId() {
@@ -73,11 +98,11 @@ public class BalanceHis extends BaseRequest<Object> implements BaseObject {
         this.accountId = accountId;
     }
 
-    public Long getHisType() {
+    public String getHisType() {
         return hisType;
     }
 
-    public void setHisType(Long hisType) {
+    public void setHisType(String hisType) {
         this.hisType = hisType;
     }
 

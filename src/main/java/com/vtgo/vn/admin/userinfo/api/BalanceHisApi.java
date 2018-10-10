@@ -35,4 +35,9 @@ public class BalanceHisApi {
         return balance.searchBalanceHis(search);
     }
 
+    @PostMapping(value = "/get-by-id", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity getBalanceHisById(@RequestBody BalanceHis search) {
+        log.debug(search.toString());
+        return balance.getBalanceHisById(search);
+    }
 }

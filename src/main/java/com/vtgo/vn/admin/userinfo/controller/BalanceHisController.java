@@ -5,6 +5,7 @@
  */
 package com.vtgo.vn.admin.userinfo.controller;
 
+import com.aerospike.client.Record;
 import com.aerospike.client.Value;
 import com.aerospike.client.query.ResultSet;
 import com.vtgo.vn.admin.aerospike.AerospikeFactory;
@@ -16,6 +17,7 @@ import com.vtgo.vn.admin.userinfo.BO.BalanceHis;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import com.vtgo.vn.admin.userinfo.service.BalanceHisService;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,7 +36,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class BalanceHisController extends BaseController implements BalanceHisService {
 
-    private static final Logger logger = Logger.getLogger(BalanceHisController.class.getName());
+    private static final Logger log = Logger.getLogger(BalanceHisController.class.getName());
 
     @Override
     public ResponseEntity searchBalanceHis(SearchRequest request) {
@@ -59,23 +61,23 @@ public class BalanceHisController extends BaseController implements BalanceHisSe
             ResultSet resultSet = AerospikeFactory.getInstance()
                     .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE_HIS_SET, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
             if (resultSet != null) {
-//                 Iterator<Object> objectIterator = resultSet.iterator();
-//                while (objectIterator.hasNext()) {
-//                    ArrayList arrayList = (ArrayList) objectIterator.next();
-//                    for (Object o : arrayList) {
-//                        BalanceHis balanceHis = new BalanceHis();
-//                        if (balanceHis.parse((Map) o)) {
-//                            listBalance.add(balanceHis);
-//                        }
-//                    }
-//                }
+                Iterator<Object> objectIterator = resultSet.iterator();
+                while (objectIterator.hasNext()) {
+                    ArrayList arrayList = (ArrayList) objectIterator.next();
+                    for (Object o : arrayList) {
+                        BalanceHis balanceHis = new BalanceHis();
+                        if (balanceHis.parse((Map) o)) {
+                            listBalance.add(balanceHis);
+                        }
+                    }
+                }
             }
-             response.setData(listBalance);
+            response.setData(listBalance);
             response.setStatus(ResponseConstants.SUCCESS);
             response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception ex) {
-            logger.debug(ex.getMessage(), ex);
+            log.debug(ex.getMessage(), ex);
             response.setStatus(ResponseConstants.SERVICE_FAIL);
             response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -85,7 +87,55 @@ public class BalanceHisController extends BaseController implements BalanceHisSe
     @Override
     public ResponseEntity getBalanceHisById(BalanceHis request
     ) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        BaseResponse response = new BaseResponse();
+        List<BalanceHis> listBalance = new ArrayList<>();
+        try {
+            Map<String, Object> argument = new HashMap<>();
+            List<Value.MapValue> argumentFilter = new ArrayList<>();
+            Long getId = request.getHisId();
+            if (getId != null) {
+                Map<String, Object> f = new HashMap<>();
+                f.put("field", "HisId");
+                f.put("value", getId);
+                f.put("operator", "contain");
+                argumentFilter.add(new Value.MapValue(f));
+                List<Value.MapValue> argumentSorters = new ArrayList<>();
+                Map<String, Object> s = new HashMap<>();
+                s.put("sort_key", "HisId");
+                s.put("order", "ASC");
+                s.put("type", "STRING");
+                argumentSorters.add(new Value.MapValue(s));
+
+                argument.put("sorters", new Value.ListValue(argumentSorters));
+                argument.put("filters", new Value.ListValue(argumentFilter));
+                ResultSet resultSet = AerospikeFactory.getInstance()
+                        .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE_HIS_SET, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+                if (resultSet != null) {
+                    Iterator<Object> objectIterator = resultSet.iterator();
+                    while (objectIterator.hasNext()) {
+                        ArrayList arrayList = (ArrayList) objectIterator.next();
+                        for (Object o : arrayList) {
+                            BalanceHis balanceHis = new BalanceHis();
+                            if (balanceHis.parse((Map) o)) {
+                                listBalance.add(balanceHis);
+                            }
+                        }
+                    }
+                }
+                response.setData(listBalance);
+                response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+            } else {
+                response.setMessage(ResponseConstants.SERVICE_GET_BALANCE_FAIL);
+            }
+
+            response.setStatus(ResponseConstants.SUCCESS);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception ex) {
+            log.debug(ex.getMessage(), ex);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
     }
 
     @Override

@@ -86,7 +86,7 @@ public class AccountManagerController extends BaseController implements AccountM
 
     @Override
     public ResponseEntity getAccountManById(AccountManager request) {
-         BaseResponse response = new BaseResponse();
+        BaseResponse response = new BaseResponse();
         try {
             Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId());
             response.setStatus(ResponseConstants.SUCCESS);

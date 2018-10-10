@@ -27,6 +27,7 @@ com\vtgo\vn\admin\userinfo\api\AccounManagerApi.class
 com\vtgo\vn\admin\userinfo\api\VehicleApi.class
 com\vtgo\vn\admin\userinfo\api\DriverApi.class
 com\vtgo\vn\admin\config\Config.class
+com\vtgo\vn\admin\userinfo\BO\Balance.class
 com\vtgo\vn\admin\userinfo\BO\Driver.class
 com\vtgo\vn\admin\userinfo\request\VehicleOwnerSearchRequest.class
 com\vtgo\vn\admin\aerospike\DatabaseMsg.class
