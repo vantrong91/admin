@@ -13,10 +13,13 @@ import org.springframework.http.ResponseEntity;
  *
  * @author viett
  */
-public interface BalanceHisService  {
+public interface BalanceHisService {
+
     public ResponseEntity searchBalanceHis(SearchRequest request);
 
     public ResponseEntity getBalanceHisById(BalanceHis request);
+
+    public ResponseEntity getBalanceHisByAccId(BalanceHis request);
 
     public ResponseEntity update(BalanceHis request);
 

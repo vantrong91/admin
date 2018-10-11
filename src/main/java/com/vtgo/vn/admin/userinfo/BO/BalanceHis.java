@@ -34,14 +34,14 @@ public class BalanceHis extends BaseRequest<Object> implements BaseObject {
     public boolean parse(Record record) {
         try {
             this.hisId = record.getLong("HisId");
-            this.accountId = record.getLong("AccountId");
+            this.accountId = record.getLong("Account");
             this.hisType = record.getString("HisType");
             this.hisContent = record.getString("HisContent");
             this.iP = record.getString("IP");
             this.balanceBefor = record.getLong("BalanceBefor");
             this.balanceAfter = record.getLong("BalanceAfter");
             this.amount = record.getLong("Amount");     
-            this.time = record.getLong("Time");
+            this.time = record.getLong("CreateTime");
             return true;
         } catch (Exception ex) {
             log.debug(ex);

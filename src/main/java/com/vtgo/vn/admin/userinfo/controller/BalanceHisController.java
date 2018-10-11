@@ -7,8 +7,11 @@ package com.vtgo.vn.admin.userinfo.controller;
 
 import com.aerospike.client.Record;
 import com.aerospike.client.Value;
+import com.aerospike.client.query.KeyRecord;
+import com.aerospike.client.query.RecordSet;
 import com.aerospike.client.query.ResultSet;
 import com.vtgo.vn.admin.aerospike.AerospikeFactory;
+import com.vtgo.vn.admin.aerospike.DatabaseMsg;
 import com.vtgo.vn.admin.base.BaseController;
 import com.vtgo.vn.admin.base.BaseResponse;
 import com.vtgo.vn.admin.constant.DatabaseConstants;
@@ -47,7 +50,17 @@ public class BalanceHisController extends BaseController implements BalanceHisSe
             List<Value.MapValue> argumentFilter = new ArrayList<>();
             String searchVal = request.getSearchParam();
             if (searchVal != null && !searchVal.isEmpty()) {
+                Map<String, Object> f = new HashMap<>();
+                f.put("field", "HisId");
+                f.put("value", searchVal);
+                f.put("operator", "contain");
+                argumentFilter.add(new Value.MapValue(f));
 
+                f = new HashMap<>();
+                f.put("field", "Account");
+                f.put("value", searchVal);
+                f.put("operator", "contain");
+                argumentFilter.add(new Value.MapValue(f));
             }
             List<Value.MapValue> argumentSorters = new ArrayList<>();
             Map<String, Object> s = new HashMap<>();
@@ -88,50 +101,23 @@ public class BalanceHisController extends BaseController implements BalanceHisSe
     public ResponseEntity getBalanceHisById(BalanceHis request
     ) {
         BaseResponse response = new BaseResponse();
-        List<BalanceHis> listBalance = new ArrayList<>();
         try {
-            Map<String, Object> argument = new HashMap<>();
-            List<Value.MapValue> argumentFilter = new ArrayList<>();
-            Long getId = request.getHisId();
-            if (getId != null) {
-                Map<String, Object> f = new HashMap<>();
-                f.put("field", "HisId");
-                f.put("value", getId);
-                f.put("operator", "contain");
-                argumentFilter.add(new Value.MapValue(f));
-                List<Value.MapValue> argumentSorters = new ArrayList<>();
-                Map<String, Object> s = new HashMap<>();
-                s.put("sort_key", "HisId");
-                s.put("order", "ASC");
-                s.put("type", "STRING");
-                argumentSorters.add(new Value.MapValue(s));
+            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE_HIS_SET, request.getHisId());
+            log.debug(request.getHisId());
 
-                argument.put("sorters", new Value.ListValue(argumentSorters));
-                argument.put("filters", new Value.ListValue(argumentFilter));
-                ResultSet resultSet = AerospikeFactory.getInstance()
-                        .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE_HIS_SET, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
-                if (resultSet != null) {
-                    Iterator<Object> objectIterator = resultSet.iterator();
-                    while (objectIterator.hasNext()) {
-                        ArrayList arrayList = (ArrayList) objectIterator.next();
-                        for (Object o : arrayList) {
-                            BalanceHis balanceHis = new BalanceHis();
-                            if (balanceHis.parse((Map) o)) {
-                                listBalance.add(balanceHis);
-                            }
-                        }
-                    }
-                }
-                response.setData(listBalance);
+            if (rec != null) {
+                BalanceHis bal = new BalanceHis();
+                bal.parse(rec);
+                response.setData(Arrays.asList(bal));
+                response.setStatus(ResponseConstants.SUCCESS);
                 response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
             } else {
+                response.setStatus(ResponseConstants.SUCCESS);
                 response.setMessage(ResponseConstants.SERVICE_GET_BALANCE_FAIL);
             }
-
-            response.setStatus(ResponseConstants.SUCCESS);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception ex) {
-            log.debug(ex.getMessage(), ex);
+            log.error(ex.getMessage(), ex);
             response.setStatus(ResponseConstants.SERVICE_FAIL);
             response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -154,6 +140,47 @@ public class BalanceHisController extends BaseController implements BalanceHisSe
     public ResponseEntity delete(BalanceHis request
     ) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ResponseEntity getBalanceHisByAccId(BalanceHis request) {
+
+        BaseResponse response = new BaseResponse();
+        try {
+            Long getId = request.getAccountId();
+            if (getId != null) {
+                RecordSet resultSet = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE_HIS_SET, "Account",
+                        "AccountIdx", request.getAccountId());
+                if (resultSet != null && resultSet.iterator().hasNext()) {
+                    Iterator<KeyRecord> objectIterator = resultSet.iterator();
+                    List<BalanceHis> lstBalan = new ArrayList<>();
+                    while (objectIterator.hasNext()) {
+                        try {
+                            BalanceHis myBal = new BalanceHis();
+                            KeyRecord myKey = objectIterator.next();
+                            if (myBal.parse(myKey.record)) {
+                                lstBalan.add(myBal);
+                            }
+                        } catch (Exception ex) {
+                            log.error(ex.getMessage(), ex);
+                        }
+
+                    }
+                    response.setData(lstBalan);
+                    response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+                }
+            } else {
+                response.setMessage(ResponseConstants.SERVICE_GET_BALANCE_FAIL);
+            }
+
+            response.setStatus(ResponseConstants.SUCCESS);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception ex) {
+            log.debug(ex.getMessage(), ex);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
     }
 
 }
