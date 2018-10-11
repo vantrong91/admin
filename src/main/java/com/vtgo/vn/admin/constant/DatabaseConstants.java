@@ -1,17 +1,19 @@
 package com.vtgo.vn.admin.constant;
 
 public class DatabaseConstants {
-    
-    public static String NAMESPACE="vgo";
-    public static String VEHICLE_SET="vehicle";
-    public static String INSURANCE_ORDER_SET="insuranceOrder";
-    public static String VEHICLE_OWNER_SET="vehicleOwner";
-    public static String DRIVER_SET="driver";
-    public static String GOOD_OWNER="goodsOwner";
-    public static String ACCOUNT_SET="account";
-    public static String BANK_SET="bankAccount";
-    public static String ORDER_SET="order";
-    public static String QUOTATION="quotation";
+
+    public static String NAMESPACE = "vgo";
+    public static String VEHICLE_SET = "vehicle";
+    public static String INSURANCE_ORDER_SET = "insuranceOrder";
+    public static String VEHICLE_OWNER_SET = "vehicleOwner";
+    public static String DRIVER_SET = "driver";
+    public static String GOOD_OWNER = "goodsOwner";
+    public static String ACCOUNT_SET = "account";
+    public static String BANK_SET = "bankAccount";
+    public static String ORDER_SET = "order";
+    public static String QUOTATION = "quotation";
+    public static String BALANCE_HIS_SET = "history";
+    public static String ACCOINT_MAN_SET = "account";
 
     public class Command {
 
@@ -70,7 +72,5 @@ public class DatabaseConstants {
         public static final String NOT_EXISTED_VEHICLE = "NOT_EXISTED_VEHICLE";
 
     }
-    
-    
-    
+
 }
