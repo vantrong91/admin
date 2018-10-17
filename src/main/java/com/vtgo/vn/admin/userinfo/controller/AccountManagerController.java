@@ -47,7 +47,16 @@ public class AccountManagerController extends BaseController implements AccountM
             List<Value.MapValue> argumentFilter = new ArrayList<>();
             String searchVal = request.getSearchParam();
             if (searchVal != null && !searchVal.isEmpty()) {
-
+                Map<String, Object> f = new HashMap<>();
+                f.put("field","FullName");
+                f.put("value", searchVal);
+                f.put("operator","contain");
+                argumentFilter.add(new Value.MapValue(f));
+                f = new HashMap<>();
+                f.put("field","Email");
+                f.put("value", searchVal);
+                f.put("operator","contain");
+                argumentFilter.add(new Value.MapValue(f));
             }
             List<Value.MapValue> argumentSorters = new ArrayList<>();
             Map<String, Object> s = new HashMap<>();
