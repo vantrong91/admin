@@ -40,6 +40,15 @@ public class Driver extends BaseRequest<Object> implements BaseObject {
     private Map<String, String> address;
     private Map<Integer, Map<String, String>> attachProperties;
     private Long state;
+    private String driverCode;
+
+    public String getDriverCode() {
+        return driverCode;
+    }
+
+    public void setDriverCode(String driverCode) {
+        this.driverCode = driverCode;
+    }
 
     public Long getAccountId() {
         return accountId;
@@ -217,8 +226,6 @@ public class Driver extends BaseRequest<Object> implements BaseObject {
         this.attachProperties = attachProperties;
     }
 
-   
-
     public Long getState() {
         return state;
     }
@@ -257,6 +264,8 @@ public class Driver extends BaseRequest<Object> implements BaseObject {
             this.contactAddress = (Map<String, String>) record.getMap("ContactAddress");
             this.address = (Map<String, String>) record.getMap("Address");
             this.attachProperties = (Map<Integer, Map<String, String>>) record.getMap("AttachProp");
+            this.driverCode = record.getString("DriverCode");
+
         } catch (Exception ex) {
             logger.error(ex, ex);
             return false;
@@ -287,6 +296,7 @@ public class Driver extends BaseRequest<Object> implements BaseObject {
             bins.add(new Bin("ContactAddress", (contactAddress)));
             bins.add(new Bin("Address", (address)));
             bins.add(new Bin("AttachProp", attachProperties));
+            bins.add(new Bin("DriverCode", "US" + phoneNumber));
             return bins.toArray(new Bin[bins.size()]);
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
@@ -315,6 +325,8 @@ public class Driver extends BaseRequest<Object> implements BaseObject {
             this.contactAddress = (Map<String, String>) map.get("ContactAddress");
             this.address = (Map<String, String>) map.get("Address");
             this.attachProperties = (Map<Integer, Map<String, String>>) map.get("AttachProp");
+            this.driverCode = (String) map.get("DriverCode");
+
             return true;
         } catch (Exception ex) {
             logger.error(ex, ex);

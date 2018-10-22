@@ -8,6 +8,7 @@ package com.vtgo.vn.admin.userinfo.api;
 
 import com.vtgo.vn.admin.userinfo.BO.BalanceTemp;
 import com.vtgo.vn.admin.userinfo.BO.Quotation;
+import com.vtgo.vn.admin.userinfo.BO.Transaction;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import com.vtgo.vn.admin.userinfo.service.BalanceService;
 import lombok.AllArgsConstructor;
@@ -37,25 +38,13 @@ public class BalanceApi {
     
     @PostMapping(value = "/get-by-id", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity getById(@RequestBody BalanceTemp request) {
-        LOGGER.debug("request /getById: " + request);
+        LOGGER.debug("request  /getById: " + request);
         return balanceService.getBalanceId(request);
     }
     
-    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity update(@RequestBody BalanceTemp request) {
-        LOGGER.debug("request /update: " + request);
-        return balanceService.update(request);
-    }
-
-    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity create(@RequestBody BalanceTemp request) {
-        LOGGER.debug("request /create: " + request);
-        return balanceService.create(request);
-    }
-
-    @PostMapping(value = "/delete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity delete(@RequestBody BalanceTemp request) {
-        LOGGER.debug("request /delete: " + request);
-        return balanceService.delete(request);
+    @PostMapping(value = "/transaction", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity transation(@RequestBody Transaction request) {
+        LOGGER.debug("request /Transaction: " + request.getAccountId());
+        return balanceService.transaction(request);
     }
 }

@@ -209,6 +209,11 @@ public class AerospikeFactory {
         client.execute(writePolicy, listener, new Key(namespace, set, key), module, function, values);
     }
 
+    public void execute(ExecuteListener listener, WritePolicy writePolicy, String namespace, String set, Long key,
+            String module, String function, Value... values) {
+        client.execute(writePolicy, listener, new Key(namespace, set, key), module, function, values);
+    }
+
     public Object execute(WritePolicy writePolicy, String namespace, String set, String key,
             String module, String function, Value... values) throws AerospikeException {
         return client.execute(writePolicy, new Key(namespace, set, key), module, function, values);

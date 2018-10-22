@@ -21,9 +21,4 @@ public interface BalanceHisService {
 
     public ResponseEntity getBalanceHisByAccId(BalanceHis request);
 
-    public ResponseEntity update(BalanceHis request);
-
-    public ResponseEntity create(BalanceHis request);
-
-    public ResponseEntity delete(BalanceHis request);
 }

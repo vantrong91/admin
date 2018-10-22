@@ -7,8 +7,10 @@ package com.vtgo.vn.admin.userinfo.controller;
 
 import com.aerospike.client.AerospikeException;
 import com.aerospike.client.Bin;
+import com.aerospike.client.Key;
 import com.aerospike.client.Record;
 import com.aerospike.client.Value;
+import com.aerospike.client.listener.ExecuteListener;
 import com.aerospike.client.query.RecordSet;
 import com.aerospike.client.query.ResultSet;
 import com.vtgo.vn.admin.aerospike.AerospikeFactory;
@@ -174,7 +176,7 @@ public class GoodOwnerController extends BaseController implements GoodOwnerServ
                 response.setMessage("Get accountId sequence error");
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
-
+            //TODO create account
             List<Bin> lstBin = new ArrayList();
             lstBin.add(new Bin("AccountId", accountId));
             String password = SecurityUtils.genRandomPassword();
@@ -184,8 +186,56 @@ public class GoodOwnerController extends BaseController implements GoodOwnerServ
             lstBin.add(new Bin("Salt", salt));
             lstBin.add(new Bin("PhoneNumber", request.getPhoneNumber()));
             lstBin.add(new Bin("AccountType", AccountType.GOOD_OWNER));
-            //TODO create account
+            lstBin.add(new Bin("FullName", request.getFullName()));
+            String accountCode = "US" + request.getPhoneNumber();
+            lstBin.add(new Bin("AccountCode", accountCode));
+            
+            // init Balance
+            List<Value> balParam = new ArrayList<Value>();
+            balParam.add(Value.get(1));//BalType
+            balParam.add(Value.get(0));//Gross
+            balParam.add(Value.get(0));//Consume
+            balParam.add(Value.get(1861722000000f));//ExpDate
+            balParam.add(Value.get(0));//Reserve
+            balParam.add(Value.get("VP1" + request.getPhoneNumber()));//AcctNumber
+            balParam.add(Value.get(accountId));
             try {
+                //add Balance
+                AerospikeFactory.getInstance().execute(new ExecuteListener() {
+                    @Override
+                    public void onSuccess(Key key, Object ret) {
+                        if (ret == null) {
+                            logger.info("Query for key " + key.userKey.toString() + " not found");
+                        }
+                        logger.info("In query aerospike success for key:" + key.userKey.toString());
+                        Map mapRet = (Map) ret;
+                        Integer resultCode = Integer.parseInt((String) mapRet.get("ResultCode"));
+                        String resultText = (String) mapRet.get("ResultText");
+                        logger.debug(resultCode);
+                        logger.debug(resultText);
+                    }
+
+                    @Override
+                    public void onFailure(AerospikeException ae) {
+                        try {
+                            logger.info("In query aerospike fail:");
+                            ae.getResultCode();
+                            ae.getMessage();
+                        } catch (Exception ex) {
+                            logger.error(ex, ex);
+                        }
+                        logger.debug(ResponseConstants.SERVICE_FAIL);
+                        logger.debug(ResponseConstants.SERVICE_FAIL_DESC);
+                    }
+                },
+                        AerospikeFactory.getInstance().writePolicy,
+                        DatabaseConstants.NAMESPACE,
+                        DatabaseConstants.BALANCE,
+                        accountId,
+                        "balance-utils-admin",
+                        "createBalance",
+                        balParam.toArray(new Value[balParam.size()]));
+                //Add account
                 update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOUNT_SET, accountId, lstBin.toArray(new Bin[lstBin.size()]));
             } catch (AerospikeException e) {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
@@ -229,6 +279,11 @@ public class GoodOwnerController extends BaseController implements GoodOwnerServ
                 if (rec != null) {
                     delete(AerospikeFactory.getInstance().writePolicy,
                             DatabaseConstants.NAMESPACE, DatabaseConstants.GOOD_OWNER, request.getAccountId());
+                    delete(AerospikeFactory.getInstance().writePolicy,
+                            DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOUNT_SET, request.getAccountId());
+                    delete(AerospikeFactory.getInstance().writePolicy,
+                            DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE, request.getAccountId());
+                    response.setStatus(ResponseConstants.SUCCESS);
                     response.setStatus(ResponseConstants.SUCCESS);
                     response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
                 } else {

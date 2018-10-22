@@ -23,6 +23,7 @@ public class ResponseConstants {
     public static int SERVICE_CONTRAINT_VIOLATION_ERROR = 2292;
     public static int TOKEN_EXPIRE = 99;
 
+    public static String SERVICE_NOT_FOUND = "RECORD_NOT_FOUND";
     public static String SERVICE_GET_BALANCE_FAIL = "Cannot get balance";
     public static String SERVICE_LOGIN_FAILED_DESC = "The username or password is incorrect. Please input again ";
     public static String SERVICE_TOKEN_INVALID_DESC = "Token invalid";
