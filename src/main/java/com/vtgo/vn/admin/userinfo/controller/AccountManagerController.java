@@ -48,14 +48,14 @@ public class AccountManagerController extends BaseController implements AccountM
             String searchVal = request.getSearchParam();
             if (searchVal != null && !searchVal.isEmpty()) {
                 Map<String, Object> f = new HashMap<>();
-                f.put("field","FullName");
+                f.put("field", "FullName");
                 f.put("value", searchVal);
-                f.put("operator","contain");
+                f.put("operator", "contain");
                 argumentFilter.add(new Value.MapValue(f));
                 f = new HashMap<>();
-                f.put("field","Email");
+                f.put("field", "Email");
                 f.put("value", searchVal);
-                f.put("operator","contain");
+                f.put("operator", "contain");
                 argumentFilter.add(new Value.MapValue(f));
             }
             List<Value.MapValue> argumentSorters = new ArrayList<>();
@@ -70,7 +70,7 @@ public class AccountManagerController extends BaseController implements AccountM
             ResultSet resultSet = AerospikeFactory.getInstance()
                     .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
             if (resultSet != null) {
-                 Iterator<Object> objectIterator = resultSet.iterator();
+                Iterator<Object> objectIterator = resultSet.iterator();
                 while (objectIterator.hasNext()) {
                     ArrayList arrayList = (ArrayList) objectIterator.next();
                     for (Object o : arrayList) {

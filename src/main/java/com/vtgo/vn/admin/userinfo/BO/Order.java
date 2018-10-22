@@ -30,7 +30,7 @@ public class Order extends BaseRequest<Object> implements BaseObject {
     private String dstAddress;
     private Double dstLat;
     private Double dstLong;
-    private Double weight;
+    private Long weight;
     private Long deliverTime;
     private Long toDeliverTime;
     private Long receiveTime;
@@ -77,7 +77,7 @@ public class Order extends BaseRequest<Object> implements BaseObject {
             this.dstLat = record.getDouble("DstLat");
             this.dstLong = record.getDouble("DstLong");
             this.orderId = record.getString("OrderId");
-            this.weight = record.getDouble("Weight");
+            this.weight = record.getLong("Weight");
             this.deliverTime = record.getLong("DeliverTime ");
             this.toDeliverTime = record.getLong("ToDeliverTime");
             this.receiveTime = record.getLong("ReceiveTime");
@@ -121,7 +121,7 @@ public class Order extends BaseRequest<Object> implements BaseObject {
             this.dstLat = Double.parseDouble(String.valueOf(map.get("DstLat")));
             this.dstLong = Double.parseDouble(String.valueOf(map.get("DstLong")));
             this.orderId = (String) map.get("OrderId");
-            this.weight = Double.parseDouble(String.valueOf(map.get("Weight")));
+            this.weight = (Long) map.get("Weight");
             this.deliverTime = (Long) map.get("DeliverTime");
             this.toDeliverTime = (Long) map.get("ToDeliverTime");
             this.receiveTime = (Long) map.get("ReceiveTime");
@@ -240,11 +240,11 @@ public class Order extends BaseRequest<Object> implements BaseObject {
         this.dstLong = dstLong;
     }
 
-    public Double getWeight() {
+    public Long getWeight() {
         return weight;
     }
 
-    public void setWeight(Double weight) {
+    public void setWeight(Long weight) {
         this.weight = weight;
     }
 
