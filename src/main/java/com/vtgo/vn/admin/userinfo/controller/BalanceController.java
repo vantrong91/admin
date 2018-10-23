@@ -62,14 +62,16 @@ public class BalanceController extends BaseController implements BalanceService{
             List<Value.MapValue> argumentSorters = new ArrayList<>();
             Map<String, Object> s1 = new HashMap<>();
             s1.put("sort_key", "accountId");
-            s1.put("order", "ASC");
+            s1.put("order", "DESC");
             s1.put("type", "STRING");
             argumentSorters.add(new Value.MapValue(s1));
 
             argument.put("sorters", new Value.ListValue(argumentSorters));
             argument.put("filters", new Value.ListValue(argumentFilter));
             ResultSet resultSet = AerospikeFactory.getInstance()
-                    .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+//                    .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+                                        .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, "bankAccount", "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+
             if (resultSet != null) {
                 Iterator<Object> objectIterator = resultSet.iterator();
                 while (objectIterator.hasNext()) {

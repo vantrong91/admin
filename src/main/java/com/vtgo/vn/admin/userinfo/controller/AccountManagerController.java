@@ -61,7 +61,7 @@ public class AccountManagerController extends BaseController implements AccountM
             List<Value.MapValue> argumentSorters = new ArrayList<>();
             Map<String, Object> s = new HashMap<>();
             s.put("sort_key", "AccountId");
-            s.put("order", "ASC");
+            s.put("order", "DESC");
             s.put("type", "STRING");
             argumentSorters.add(new Value.MapValue(s));
 
