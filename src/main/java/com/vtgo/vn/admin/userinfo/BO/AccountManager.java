@@ -29,7 +29,7 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
     private String osType;
     private String deviceToken;
     private String salt;
-
+    private String accountCode;
     @Override
     public boolean parse(Record record) {
         try {
@@ -43,6 +43,7 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
             this.deviceToken = record.getString("DeviceToken");
             this.salt = record.getString("Salt");
             this.fullName = record.getString("FullName");
+            this.accountCode = record.getString("AccountCode");
 
             return true;
         } catch (Exception ex) {
@@ -64,6 +65,7 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
             this.deviceToken = (String) map.get("DeviceToken");
             this.salt = (String) map.get("Salt");
             this.fullName = (String) map.get("FullName");
+            this.accountCode = (String) map.get("AccountCode");
 
             return true;
         } catch (Exception ex) {
@@ -156,6 +158,16 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
     public void setSalt(String salt) {
         this.salt = salt;
     }
+
+    public String getAccountCode() {
+        return accountCode;
+    }
+
+    public void setAccountCode(String accountCode) {
+        this.accountCode = accountCode;
+    }
+    
+    
 
     @Override
     public String toString() {

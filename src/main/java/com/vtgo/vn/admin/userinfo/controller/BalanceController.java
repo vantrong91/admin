@@ -7,30 +7,21 @@ package com.vtgo.vn.admin.userinfo.controller;
 
 
 import com.aerospike.client.AerospikeException;
-import com.aerospike.client.Bin;
+import com.aerospike.client.Key;
 import com.aerospike.client.Record;
 import com.aerospike.client.Value;
-import com.aerospike.client.query.RecordSet;
+import com.aerospike.client.listener.ExecuteListener;
 import com.aerospike.client.query.ResultSet;
 import com.vtgo.vn.admin.aerospike.AerospikeFactory;
+import com.vtgo.vn.admin.aerospike.DatabaseMsg;
 import com.vtgo.vn.admin.base.BaseController;
 import com.vtgo.vn.admin.base.BaseResponse;
-import com.vtgo.vn.admin.constant.AccountType;
 import com.vtgo.vn.admin.constant.DatabaseConstants;
 import com.vtgo.vn.admin.constant.ResponseConstants;
-import com.vtgo.vn.admin.userinfo.BO.Account;
-import com.vtgo.vn.admin.userinfo.BO.Driver;
-import com.vtgo.vn.admin.userinfo.BO.GoodOwner;
-import com.vtgo.vn.admin.userinfo.BO.VehicleOwner;
-import com.vtgo.vn.admin.userinfo.BO.Quotation;
 import com.vtgo.vn.admin.userinfo.BO.BalanceTemp;
+import com.vtgo.vn.admin.userinfo.BO.Transaction;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
-import com.vtgo.vn.admin.userinfo.request.VehicleOwnerSearchRequest;
-import com.vtgo.vn.admin.userinfo.service.GoodOwnerService;
-import com.vtgo.vn.admin.userinfo.service.QuotationService;
 import com.vtgo.vn.admin.userinfo.service.BalanceService;
-import com.vtgo.vn.admin.util.SecurityUtils;
-import com.vtgo.vn.admin.util.SequenceManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,10 +32,7 @@ import lombok.AllArgsConstructor;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
@@ -74,14 +62,16 @@ public class BalanceController extends BaseController implements BalanceService{
             List<Value.MapValue> argumentSorters = new ArrayList<>();
             Map<String, Object> s1 = new HashMap<>();
             s1.put("sort_key", "accountId");
-            s1.put("order", "ASC");
+            s1.put("order", "DESC");
             s1.put("type", "STRING");
             argumentSorters.add(new Value.MapValue(s1));
 
             argument.put("sorters", new Value.ListValue(argumentSorters));
             argument.put("filters", new Value.ListValue(argumentFilter));
             ResultSet resultSet = AerospikeFactory.getInstance()
-                    .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+//                    .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+                                        .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, "bankAccount", "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+
             if (resultSet != null) {
                 Iterator<Object> objectIterator = resultSet.iterator();
                 while (objectIterator.hasNext()) {
@@ -126,19 +116,49 @@ public class BalanceController extends BaseController implements BalanceService{
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
-
+    
     @Override
-    public ResponseEntity update(BalanceTemp request) {
-        return null;
-    }
+    public ResponseEntity transaction(Transaction request) {
+        BaseResponse response = new BaseResponse();
+        long accountId = request.getAccountId();
+        List<Value> lstParam = new ArrayList<Value>();
+        lstParam.add(Value.get(request.getBalType()));
+        lstParam.add(Value.get(request.getChange()));
 
-    @Override
-    public ResponseEntity create(BalanceTemp request) {
-        return null;
-    }
+        AerospikeFactory.getInstance().execute(new ExecuteListener() {
+            @Override
+            public void onSuccess(Key key, Object ret) {
+                if (ret == null) {
+                    logger.info("Query for key " + key.userKey.toString() + " not found");
+                }
+                logger.info("In query aerospike success for key:" + key.userKey.toString());
+                Map mapRet = (Map) ret;
+                Integer resultCode = Integer.parseInt((String) mapRet.get("ResultCode"));
+                String resultText = (String) mapRet.get("ResultText");
+                response.setStatus(resultCode);
+                response.setMessage(resultText);
+            }
 
-    @Override
-    public ResponseEntity delete(BalanceTemp request) {
-        return null;
+            @Override
+            public void onFailure(AerospikeException ae) {
+                try {
+                    logger.info("In query aerospike fail:");
+                    ae.getResultCode();
+                    ae.getMessage();
+                } catch (Exception ex) {
+                    logger.error(ex, ex);
+                }
+                response.setStatus(ResponseConstants.SERVICE_FAIL);
+                response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            }
+        }, AerospikeFactory.getInstance().writePolicy,
+                DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE, accountId, "balance-utils-admin", "updateBalance",
+                lstParam.toArray(new Value[lstParam.size()]));
+
+        try {
+            Thread.sleep(500);
+        } catch (Exception e) {
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

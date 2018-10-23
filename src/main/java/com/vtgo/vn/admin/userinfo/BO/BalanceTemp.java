@@ -101,4 +101,10 @@ public class BalanceTemp extends BaseRequest<Object> implements BaseObject{
             return false;
         }
     }
+
+    @Override
+    public String toString() {
+        return "BalanceTemp{" + "accountId=" + accountId + ", balance=" + balance + ", debt=" + debt + ", code=" + code + '}';
+    }
+    
 }

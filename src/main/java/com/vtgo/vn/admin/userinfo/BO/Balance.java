@@ -134,19 +134,27 @@ public class Balance implements BaseObject, Serializable {
         }
     }
 
+  
     @Override
-    public String toString() {
-        return "Balance{" + "balType=" + balType + ", gross=" + gross + ", consume=" + consume + ", reserve=" + reserve + ", expDate=" + expDate + '}';
-    }
-
-    @Override
-    public boolean parse(Map<String, Object> map) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean parse(Map map) {
+        try{
+            
+            return true;
+        }catch(Exception ex){
+            logger.error(ex.getMessage(),ex);
+            return false;
+        }
     }
 
     @Override
     public Bin[] toBins() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+      @Override
+    public String toString() {
+        return "Balance{" + "balType=" + balType + ", gross=" + gross + ", consume=" + consume + ", reserve=" + reserve + ", expDate=" + expDate + '}';
+    }
+
 
 }

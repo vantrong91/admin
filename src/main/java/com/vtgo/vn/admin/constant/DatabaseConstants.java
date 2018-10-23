@@ -12,9 +12,10 @@ public class DatabaseConstants {
     public static String BANK_SET = "bankAccount";
     public static String ORDER_SET = "order";
     public static String QUOTATION = "quotation";
-public static String BALANCE= "balance";
+    public static String BALANCE = "balance";
     public static String BALANCE_HIS_SET = "history";
     public static String ACCOINT_MAN_SET = "account";
+    public static String TRANSFER_FEE_SET = "transferFee";
 
     public class Command {
 

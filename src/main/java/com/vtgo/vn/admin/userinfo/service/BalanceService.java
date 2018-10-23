@@ -6,20 +6,20 @@
 package com.vtgo.vn.admin.userinfo.service;
 
 import com.vtgo.vn.admin.userinfo.BO.BalanceTemp;
+import com.vtgo.vn.admin.userinfo.BO.Transaction;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import org.springframework.http.ResponseEntity;
+
 /**
  *
  * @author Admin
  */
 public interface BalanceService {
+
     public ResponseEntity searchBalance(SearchRequest request);
 
     public ResponseEntity getBalanceId(BalanceTemp request);
 
-    public ResponseEntity update(BalanceTemp request);
+    public ResponseEntity transaction(Transaction request);
 
-    public ResponseEntity create(BalanceTemp request);
-    
-    public ResponseEntity delete(BalanceTemp request);
 }
