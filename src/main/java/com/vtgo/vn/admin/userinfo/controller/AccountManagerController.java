@@ -5,8 +5,13 @@
  */
 package com.vtgo.vn.admin.userinfo.controller;
 
+import com.aerospike.client.AerospikeException;
+import com.aerospike.client.Bin;
+import com.aerospike.client.Key;
 import com.aerospike.client.Record;
 import com.aerospike.client.Value;
+import com.aerospike.client.listener.ExecuteListener;
+import com.aerospike.client.query.RecordSet;
 import com.aerospike.client.query.ResultSet;
 import com.vtgo.vn.admin.aerospike.AerospikeFactory;
 import com.vtgo.vn.admin.base.BaseController;
@@ -14,8 +19,11 @@ import com.vtgo.vn.admin.base.BaseResponse;
 import com.vtgo.vn.admin.constant.DatabaseConstants;
 import com.vtgo.vn.admin.constant.ResponseConstants;
 import com.vtgo.vn.admin.userinfo.BO.AccountManager;
+import com.vtgo.vn.admin.userinfo.BO.Account;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import com.vtgo.vn.admin.userinfo.service.AccountManagerService;
+import com.vtgo.vn.admin.util.SecurityUtils;
+import com.vtgo.vn.admin.util.SequenceManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,6 +34,7 @@ import lombok.AllArgsConstructor;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -108,6 +117,62 @@ public class AccountManagerController extends BaseController implements AccountM
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
+    @Override
+    public ResponseEntity create(AccountManager request) {
+        BaseResponse response = new BaseResponse();
+        try {
+            RecordSet rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, "Email", "EmailIdx", request.getEmail());
+            if (rs != null && rs.iterator().hasNext()) {
+                response.setStatus(ResponseConstants.SERVICE_FAIL);
+                response.setMessage("Email đã được sử dụng");
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }
+            rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, "PhoneNumber", "PhoneNumberIdx", request.getPhoneNumber());
+            if (rs != null & rs.iterator().hasNext()) {
+                response.setStatus(ResponseConstants.SERVICE_FAIL);
+                response.setMessage("Số điện thoại đã được sử dụng");
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }
+            long accountId = SequenceManager.getInstance().getSequence(Account.class.getSimpleName());
+            if (accountId <= 0) {
+                response.setStatus(ResponseConstants.SERVICE_FAIL);
+                response.setMessage("Get accoundId squence error");
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }
+
+            //TODO create account
+            List<Bin> lstBin = new ArrayList();
+            lstBin.add(new Bin("AccountId", accountId));
+            String password = request.getPassword();
+            String salt = SecurityUtils.createSalt();
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            lstBin.add(new Bin("Password", bCryptPasswordEncoder.encode(password)));
+            lstBin.add(new Bin("Salt", salt));
+            lstBin.add(new Bin("Email", request.getEmail()));
+            lstBin.add(new Bin("FullName", request.getFullName()));
+            lstBin.add(new Bin("PhoneNumber", request.getPhoneNumber()));
+            lstBin.add(new Bin("AccountType", request.getAccountType()));
+            String accountCode = "US" + request.getPhoneNumber();
+            lstBin.add(new Bin("AccountCode", accountCode));
+            try {
+               update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, accountId, lstBin.toArray(new Bin[lstBin.size()]));
+            } catch (Exception e) {
+                response.setStatus(ResponseConstants.SERVICE_FAIL);
+                response.setMessage(e.getMessage());
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }
+            response.setData(Arrays.asList(request));
+            response.setStatus(ResponseConstants.SUCCESS);
+            response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            log.error(e,e);
             response.setStatus(ResponseConstants.SERVICE_FAIL);
             response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);
