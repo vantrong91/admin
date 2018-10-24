@@ -40,5 +40,11 @@ public class AccounManagerApi {
         log.debug("request /getById: " + request.getAccountId());
         return accountManagerService.getAccountManById(request);
     }
+    
+    @PostMapping(value = "create", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity create(@RequestBody AccountManager request){
+        log.debug("request /create: " + request);
+        return accountManagerService.create(request);
+    }
 
 }

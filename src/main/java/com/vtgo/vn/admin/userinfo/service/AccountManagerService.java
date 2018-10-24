@@ -20,5 +20,5 @@ public interface AccountManagerService {
 
     public ResponseEntity getAccountManById(AccountManager request);
     
-
+    public ResponseEntity create(AccountManager request);
 }
