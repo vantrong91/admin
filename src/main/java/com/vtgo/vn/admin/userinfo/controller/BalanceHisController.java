@@ -5,6 +5,7 @@
  */
 package com.vtgo.vn.admin.userinfo.controller;
 
+import com.aerospike.client.AerospikeException;
 import com.aerospike.client.Record;
 import com.aerospike.client.Value;
 import com.aerospike.client.query.KeyRecord;
@@ -18,12 +19,14 @@ import com.vtgo.vn.admin.constant.ResponseConstants;
 import com.vtgo.vn.admin.userinfo.BO.BalanceHis;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import com.vtgo.vn.admin.userinfo.service.BalanceHisService;
+import com.vtgo.vn.admin.util.SequenceManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import lombok.AllArgsConstructor;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -132,7 +135,7 @@ public class BalanceHisController extends BaseController implements BalanceHisSe
             if (getId != null) {
                 RecordSet resultSet = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE_HIS_SET, "Account",
                         "AccountIdx", request.getAccountId());
-                if (resultSet != null && resultSet.iterator().hasNext()) {
+                if (resultSet != null) {
                     Iterator<KeyRecord> objectIterator = resultSet.iterator();
                     List<BalanceHis> lstBalan = new ArrayList<>();
                     while (objectIterator.hasNext()) {
@@ -162,6 +165,47 @@ public class BalanceHisController extends BaseController implements BalanceHisSe
             response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
+    }
+
+    @Override
+    public ResponseEntity createBalanceHis(BalanceHis request) {
+        BaseResponse response = new BaseResponse();
+        try {
+            if (request.getAccountId() != null && request.getBalanceBefor() != null && request.getBalanceAfter()
+                    != null) {
+                try {
+                    long hisId = SequenceManager.getInstance().getSequence(BalanceHis.class.getSimpleName());
+                    if (hisId < 0) {
+                        response.setStatus(ResponseConstants.SERVICE_FAIL);
+                        response.setMessage("Get hisId sequence error");
+                    }
+                    request.setHisId(hisId);
+                    update(AerospikeFactory.getInstance().onlyCreatePolicy,
+                            DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE_HIS_SET, request.getHisId(), request.toBins());
+//                    delete(AerospikeFactory.getInstance().writePolicy,
+//                            DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE_HIS_SET, request.getHisId());
+                    response.setData(Arrays.asList(request));
+                    response.setStatus(ResponseConstants.SUCCESS);
+                    response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+                    return ResponseEntity.status(HttpStatus.OK).body(response);
+                } catch (Exception ex) {
+                    log.error(ex.getMessage());
+                    response.setStatus(ResponseConstants.SERVICE_FAIL);
+                    response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+                }
+
+            } else {
+                log.error("Data invalid");
+                response.setStatus(ResponseConstants.SERVICE_FAIL);
+                response.setMessage("Data invalid");
+            }
+
+        } catch (AerospikeException ex) {
+            log.error(ex.getMessage());
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }

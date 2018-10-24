@@ -5,10 +5,13 @@
  */
 package com.vtgo.vn.admin.userinfo.BO;
 
+import com.aerospike.client.AerospikeException;
 import com.aerospike.client.Bin;
 import com.aerospike.client.Record;
 import com.vtgo.vn.admin.base.BaseObject;
 import com.vtgo.vn.admin.base.BaseRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
 
@@ -40,7 +43,7 @@ public class BalanceHis extends BaseRequest<Object> implements BaseObject {
             this.iP = record.getString("IP");
             this.balanceBefor = record.getLong("BalanceBefor");
             this.balanceAfter = record.getLong("BalanceAfter");
-            this.amount = record.getLong("Amount");     
+            this.amount = record.getLong("Amount");
             this.time = record.getLong("CreateTime");
             return true;
         } catch (Exception ex) {
@@ -71,7 +74,22 @@ public class BalanceHis extends BaseRequest<Object> implements BaseObject {
 
     @Override
     public Bin[] toBins() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            List<Bin> bins = new ArrayList<>();
+            bins.add(new Bin("HisId", hisId));
+            bins.add(new Bin("Account", accountId));
+            bins.add(new Bin("HisType", hisType));
+            bins.add(new Bin("HisContent", hisContent));
+            bins.add(new Bin("IP", iP));
+            bins.add(new Bin("BalanceBefor", balanceBefor));
+            bins.add(new Bin("BalanceAfter", balanceAfter));
+            bins.add(new Bin("Amount", amount));
+            bins.add(new Bin("CreateTime", time));
+            return bins.toArray(new Bin[bins.size()]);
+        } catch (AerospikeException ex) {
+            log.error(ex.getMessage());
+            return null;
+        }
     }
 
     public Long getTime() {
