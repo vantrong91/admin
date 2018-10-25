@@ -46,5 +46,17 @@ public class AccounManagerApi {
         log.debug("request /create: " + request);
         return accountManagerService.create(request);
     }
+    
+    @PostMapping(value = "check-login", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity checkLogin(@RequestBody AccountManager request){
+        log.debug("request /checkLogin: " + request);
+        return accountManagerService.checkLogin(request);
+    }
+    
+    @PostMapping(value = "delete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity delete(@RequestBody AccountManager request){
+        log.debug("request /delete: " + request);
+        return accountManagerService.delete(request);
+    }
 
 }
