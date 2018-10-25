@@ -66,6 +66,11 @@ public class AccountManagerController extends BaseController implements AccountM
                 f.put("value", searchVal);
                 f.put("operator", "contain");
                 argumentFilter.add(new Value.MapValue(f));
+                f = new HashMap<>();
+                f.put("field", "PhoneNumber");
+                f.put("value", searchVal);
+                f.put("operator", "contain");
+                argumentFilter.add(new Value.MapValue(f));
             }
             List<Value.MapValue> argumentSorters = new ArrayList<>();
             Map<String, Object> s = new HashMap<>();
@@ -77,7 +82,8 @@ public class AccountManagerController extends BaseController implements AccountM
             argument.put("sorters", new Value.ListValue(argumentSorters));
             argument.put("filters", new Value.ListValue(argumentFilter));
             ResultSet resultSet = AerospikeFactory.getInstance()
-                    .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+                    .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE,
+                            DatabaseConstants.ACCOINT_MAN_SET, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
             if (resultSet != null) {
                 Iterator<Object> objectIterator = resultSet.iterator();
                 while (objectIterator.hasNext()) {
@@ -85,6 +91,7 @@ public class AccountManagerController extends BaseController implements AccountM
                     for (Object o : arrayList) {
                         AccountManager accountManager = new AccountManager();
                         if (accountManager.parse((Map) o)) {
+                            accountManager.getPassword();
                             listAcc.add(accountManager);
                         }
                     }
@@ -127,13 +134,15 @@ public class AccountManagerController extends BaseController implements AccountM
     public ResponseEntity create(AccountManager request) {
         BaseResponse response = new BaseResponse();
         try {
-            RecordSet rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, "Email", "EmailIdx", request.getEmail());
+            RecordSet rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE,
+                    DatabaseConstants.ACCOINT_MAN_SET, "Email", "EmailIdx", request.getEmail());
             if (rs != null && rs.iterator().hasNext()) {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
                 response.setMessage("Email đã được sử dụng");
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
-            rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, "PhoneNumber", "PhoneNumberIdx", request.getPhoneNumber());
+            rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE,
+                    DatabaseConstants.ACCOINT_MAN_SET, "PhoneNumber", "PhoneNumberIdx", request.getPhoneNumber());
             if (rs != null & rs.iterator().hasNext()) {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
                 response.setMessage("Số điện thoại đã được sử dụng");
@@ -161,7 +170,8 @@ public class AccountManagerController extends BaseController implements AccountM
             String accountCode = "US" + request.getPhoneNumber();
             lstBin.add(new Bin("AccountCode", accountCode));
             try {
-               update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, accountId, lstBin.toArray(new Bin[lstBin.size()]));
+                update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE,
+                        DatabaseConstants.ACCOINT_MAN_SET, accountId, lstBin.toArray(new Bin[lstBin.size()]));
             } catch (Exception e) {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
                 response.setMessage(e.getMessage());
@@ -172,7 +182,105 @@ public class AccountManagerController extends BaseController implements AccountM
             response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            log.error(e,e);
+            log.error(e, e);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
+    @Override
+    public ResponseEntity checkLogin(AccountManager request) {
+        BaseResponse response = new BaseResponse();
+        List<AccountManager> listAcc = new ArrayList<>();
+        String password = "";
+        try {
+            RecordSet rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE,
+                    DatabaseConstants.ACCOINT_MAN_SET, "Email", "EmailIdx", request.getEmail());
+            if (rs != null && rs.iterator().hasNext()) {
+                try {
+                    Map<String, Object> argument = new HashMap<>();
+                    List<Value.MapValue> argumentFilter = new ArrayList<>();
+                    String searchVal = request.getEmail();
+                    if (searchVal != null && !searchVal.isEmpty()) {
+                        Map<String, Object> f = new HashMap<>();
+                        f.put("field", "Email");
+                        f.put("value", searchVal);
+                        f.put("operator", "contain");
+                        argumentFilter.add(new Value.MapValue(f));
+                    }
+                    List<Value.MapValue> argumentSorters = new ArrayList<>();
+                    Map<String, Object> s = new HashMap<>();
+                    s.put("sort_key", "AccountId");
+                    s.put("order", "DESC");
+                    s.put("type", "STRING");
+                    argumentSorters.add(new Value.MapValue(s));
+
+                    argument.put("sorters", new Value.ListValue(argumentSorters));
+                    argument.put("filters", new Value.ListValue(argumentFilter));
+                    ResultSet resultSet = AerospikeFactory.getInstance()
+                            .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE,
+                                    DatabaseConstants.ACCOINT_MAN_SET, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+                    if (resultSet != null) {
+                        Iterator<Object> objectIterator = resultSet.iterator();
+                        while (objectIterator.hasNext()) {
+                            ArrayList arrayList = (ArrayList) objectIterator.next();
+                            for (Object o : arrayList) {
+                                AccountManager accountManager = new AccountManager();
+                                if (accountManager.parse((Map) o)) {
+                                    password = accountManager.getPassword();
+                                    listAcc.add(accountManager);
+                                    BCryptPasswordEncoder bCryptPasswordEncode = new BCryptPasswordEncoder();
+                                    if (!bCryptPasswordEncode.matches(request.getPassword(), password)) {
+                                        response.setStatus(DatabaseConstants.ResultCode.FAIL);
+                                        response.setMessage("Wrong password!");
+                                    }
+                                    else{
+                                        response.setData(listAcc);
+                                        response.setStatus(ResponseConstants.SUCCESS);
+                                        response.setMessage("OK");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return ResponseEntity.status(HttpStatus.OK).body(response);
+                } catch (Exception ex) {
+                    log.debug(ex.getMessage(), ex);
+                    response.setStatus(ResponseConstants.SERVICE_FAIL);
+                    response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+                    return ResponseEntity.status(HttpStatus.OK).body(response);
+                }
+
+            }
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_ACCOUNT_NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            log.error(e, e);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
+    @Override
+    public ResponseEntity delete(AccountManager request) {
+        BaseResponse response = new BaseResponse();
+        try {
+            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId());
+            if (rec != null) {
+                delete(AerospikeFactory.getInstance().writePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId());
+                response.setStatus(ResponseConstants.SUCCESS);
+                response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+            } else {
+                response.setStatus(ResponseConstants.SERVICE_ERROR);
+                response.setMessage(ResponseConstants.SERVICE_ACCOUNT_NOT_FOUND);
+            }
+
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
             response.setStatus(ResponseConstants.SERVICE_FAIL);
             response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);

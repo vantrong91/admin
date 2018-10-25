@@ -34,6 +34,7 @@ public class ResponseConstants {
     public static String SERVICE_INTERNAL_SERVER_ERROR_DESC = "Interal Server erorr";
     public static String SERVICE_GET_LIST_VEHICLE_FAIL_DESC = "Get list vehicle fail";
     public static String SERVICE_VEHICLE_OWNER_NOT_FOUND = "Vehicle owner not found";
+    public static String SERVICE_ACCOUNT_NOT_FOUND = "Account not found";
     public static String SERVICE_INSURANCE_ORDER_NOT_FOUND = "Insurance order not found";
 
     public static String SERVICE_SUCCESS_DESC = "Successful";
