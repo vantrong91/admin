@@ -21,4 +21,5 @@ public interface BalanceHisService {
 
     public ResponseEntity getBalanceHisByAccId(BalanceHis request);
 
+    public ResponseEntity createBalanceHis(BalanceHis request);
 }

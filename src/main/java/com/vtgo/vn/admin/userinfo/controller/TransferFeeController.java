@@ -8,6 +8,7 @@ package com.vtgo.vn.admin.userinfo.controller;
 import com.aerospike.client.AerospikeException;
 import com.aerospike.client.Record;
 import com.aerospike.client.Value;
+import com.aerospike.client.query.RecordSet;
 import com.aerospike.client.query.ResultSet;
 import com.vtgo.vn.admin.aerospike.AerospikeFactory;
 import com.vtgo.vn.admin.base.BaseController;
@@ -215,8 +216,8 @@ public class TransferFeeController extends BaseController implements TransferFee
         BaseResponse response = new BaseResponse();
         try {
             if (request.getBankName() != null) {
-//                RecordSet rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE, DatabaseConstants.TRANSFER_FEE_SET, "BankName",
-//                        "BankNameIdx", request.getTransferId());
+//                RecordSet rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE, DatabaseConstants.TRANSFER_FEE_SET, "BankCode",
+//                        "BankCodeIdx", request.getTransferId());
 //                if (rs != null && rs.iterator().hasNext()) {
 //                    response.setStatus(ResponseConstants.SERVICE_FAIL);
 //                    response.setMessage("BankName was existed");
