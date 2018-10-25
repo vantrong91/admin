@@ -10,6 +10,7 @@ com\vtgo\vn\admin\userinfo\controller\TransferFeeController.class
 com\vtgo\vn\admin\userinfo\request\OrderSearchRequest.class
 com\vtgo\vn\admin\userinfo\service\GoodOwnerService.class
 com\vtgo\vn\admin\userinfo\BO\Partner.class
+com\vtgo\vn\admin\userinfo\request\OrderCompleteRequest.class
 com\vtgo\vn\admin\constant\DatabaseConstants$Command.class
 com\vtgo\vn\admin\userinfo\BO\Vehicle.class
 com\vtgo\vn\admin\userinfo\service\TransferFeeService.class

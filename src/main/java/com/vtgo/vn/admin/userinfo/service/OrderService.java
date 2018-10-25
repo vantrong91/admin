@@ -6,6 +6,7 @@
 package com.vtgo.vn.admin.userinfo.service;
 
 import com.vtgo.vn.admin.userinfo.BO.Order;
+import com.vtgo.vn.admin.userinfo.request.OrderCompleteRequest;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import org.springframework.http.ResponseEntity;
 
@@ -24,4 +25,6 @@ public interface OrderService {
     public ResponseEntity create(Order request);
 
     public ResponseEntity delete(Order request);
+    
+    public ResponseEntity completeOrder(OrderCompleteRequest request);
 }
