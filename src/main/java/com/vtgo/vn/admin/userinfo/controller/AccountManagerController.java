@@ -194,6 +194,7 @@ public class AccountManagerController extends BaseController implements AccountM
         BaseResponse response = new BaseResponse();
         List<AccountManager> listAcc = new ArrayList<>();
         String password = "";
+        Long accountType = null;
         try {
             RecordSet rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE,
                     DatabaseConstants.ACCOINT_MAN_SET, "Email", "EmailIdx", request.getEmail());
@@ -229,17 +230,25 @@ public class AccountManagerController extends BaseController implements AccountM
                                 AccountManager accountManager = new AccountManager();
                                 if (accountManager.parse((Map) o)) {
                                     password = accountManager.getPassword();
+                                    accountType = accountManager.getAccountType();
                                     listAcc.add(accountManager);
+                                    
+                                    //Check pass
                                     BCryptPasswordEncoder bCryptPasswordEncode = new BCryptPasswordEncoder();
                                     if (!bCryptPasswordEncode.matches(request.getPassword(), password)) {
                                         response.setStatus(DatabaseConstants.ResultCode.FAIL);
                                         response.setMessage("Wrong password!");
                                     }
-                                    else{
+                                    //Check Account type
+                                    else if (accountType == 0 || accountType == 5 || accountType == 6 || accountType == 7 || accountType == 8 || accountType == 9) {
                                         response.setData(listAcc);
                                         response.setStatus(ResponseConstants.SUCCESS);
                                         response.setMessage("OK");
+                                    } else {
+                                        response.setStatus(ResponseConstants.SERVICE_LOGIN_FAIL);
+                                        response.setMessage("Your account doesn't have access");
                                     }
+
                                 }
                             }
                         }
