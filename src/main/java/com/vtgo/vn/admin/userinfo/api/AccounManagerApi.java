@@ -41,6 +41,12 @@ public class AccounManagerApi {
         return accountManagerService.getAccountManById(request);
     }
     
+    @PostMapping(value = "/logout", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity logout(@RequestBody AccountManager request){
+        log.debug("request /logout: " + request.getAccountId());
+        return accountManagerService.logout(request);
+    }
+    
     @PostMapping(value = "create", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity create(@RequestBody AccountManager request){
         log.debug("request /create: " + request);

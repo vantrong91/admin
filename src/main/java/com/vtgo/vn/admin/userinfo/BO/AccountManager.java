@@ -9,6 +9,8 @@ import com.aerospike.client.Bin;
 import com.aerospike.client.Record;
 import com.vtgo.vn.admin.base.BaseObject;
 import com.vtgo.vn.admin.base.BaseRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
 
@@ -76,7 +78,19 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
 
     @Override
     public Bin[] toBins() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Bin> bins = new ArrayList<>();
+        bins.add(new Bin("AccountId", accountId));
+        bins.add(new Bin("Password", password));
+        bins.add(new Bin("Email", email));
+        bins.add(new Bin("PhoneNumber", phoneNumber));
+        bins.add(new Bin("AccountType", accountType));
+        bins.add(new Bin("AccountToken", accountToken));
+        bins.add(new Bin("OsType", osType));
+        bins.add(new Bin("DeviceToken", deviceToken));
+        bins.add(new Bin("Salt", salt));
+        bins.add(new Bin("FullName", fullName));
+        bins.add(new Bin("AccountCode", accountCode));
+        return bins.toArray(new Bin[bins.size()]);
     }
 
     public long getAccountId() {

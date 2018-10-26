@@ -26,6 +26,7 @@ import com.vtgo.vn.admin.util.SecurityUtils;
 import com.vtgo.vn.admin.util.SequenceManager;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -160,6 +161,7 @@ public class AccountManagerController extends BaseController implements AccountM
             lstBin.add(new Bin("AccountId", accountId));
             String password = request.getPassword();
             String salt = SecurityUtils.createSalt();
+            String token = SecurityUtils.createToken(String.valueOf(accountId), new Date());
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
             lstBin.add(new Bin("Password", bCryptPasswordEncoder.encode(password)));
             lstBin.add(new Bin("Salt", salt));
@@ -169,6 +171,7 @@ public class AccountManagerController extends BaseController implements AccountM
             lstBin.add(new Bin("AccountType", request.getAccountType()));
             String accountCode = "US" + request.getPhoneNumber();
             lstBin.add(new Bin("AccountCode", accountCode));
+            lstBin.add(new Bin("AccountToken", token));
             try {
                 update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE,
                         DatabaseConstants.ACCOINT_MAN_SET, accountId, lstBin.toArray(new Bin[lstBin.size()]));
@@ -195,6 +198,7 @@ public class AccountManagerController extends BaseController implements AccountM
         List<AccountManager> listAcc = new ArrayList<>();
         String password = "";
         Long accountType = null;
+        Long accountId = null;
         try {
             RecordSet rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE,
                     DatabaseConstants.ACCOINT_MAN_SET, "Email", "EmailIdx", request.getEmail());
@@ -231,16 +235,19 @@ public class AccountManagerController extends BaseController implements AccountM
                                 if (accountManager.parse((Map) o)) {
                                     password = accountManager.getPassword();
                                     accountType = accountManager.getAccountType();
-                                    listAcc.add(accountManager);
-                                    
+                                    accountId = accountManager.getAccountId();
                                     //Check pass
                                     BCryptPasswordEncoder bCryptPasswordEncode = new BCryptPasswordEncoder();
                                     if (!bCryptPasswordEncode.matches(request.getPassword(), password)) {
                                         response.setStatus(DatabaseConstants.ResultCode.FAIL);
                                         response.setMessage("Wrong password!");
-                                    }
-                                    //Check Account type
+                                    } //Check Account type
                                     else if (accountType == 0 || accountType == 5 || accountType == 6 || accountType == 7 || accountType == 8 || accountType == 9) {
+                                        String token = SecurityUtils.createToken(String.valueOf(accountId), new Date());
+                                        accountManager.setAccountToken(token);
+                                        update(AerospikeFactory.getInstance().onlyUpdatePolicy,
+                                                DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, accountId, accountManager.toBins());
+                                        listAcc.add(accountManager);
                                         response.setData(listAcc);
                                         response.setStatus(ResponseConstants.SUCCESS);
                                         response.setMessage("OK");
@@ -290,6 +297,29 @@ public class AccountManagerController extends BaseController implements AccountM
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
+    @Override
+    public ResponseEntity logout(AccountManager request) {
+        BaseResponse response = new BaseResponse();
+        try {
+            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId());
+            response.setStatus(ResponseConstants.SUCCESS);
+            response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+            if (rec != null) {
+                AccountManager accountManager = new AccountManager();
+                accountManager.parse(rec);
+                accountManager.setAccountToken("");
+                update(AerospikeFactory.getInstance().onlyUpdatePolicy,
+                        DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId(), accountManager.toBins());
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            log.error(e.getMessage(),e);
             response.setStatus(ResponseConstants.SERVICE_FAIL);
             response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);
