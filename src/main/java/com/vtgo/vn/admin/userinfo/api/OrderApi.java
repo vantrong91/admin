@@ -66,4 +66,10 @@ public class OrderApi {
         LOGGER.debug("\n\nrequest /complete: " + request.toString());
         return orderService.completeOrder(request);
     }
+    
+     @PostMapping(value = "/getComplete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity getComplete(@RequestBody Order request) {
+        LOGGER.debug("\n\nrequest /getComplete: " + request.toString());
+        return orderService.getComplete(request);
+    }
 }
