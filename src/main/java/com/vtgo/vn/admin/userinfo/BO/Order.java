@@ -61,6 +61,9 @@ public class Order extends BaseRequest<Object> implements BaseObject {
     private String loadingCode;
     private Long accountId;
 
+    //Tiền thanh toán    
+    private Long paid;
+
     public Order() {
     }
 
@@ -103,6 +106,7 @@ public class Order extends BaseRequest<Object> implements BaseObject {
             this.realToDeliverTime = record.getLong("ToRealDeliTime");
             this.realReceiveTime = record.getLong("RealReceiveTime");
             this.realToReceiveTime = record.getLong("RealToReceiveTime");
+            this.paid = record.getLong("Paid");
         } catch (Exception ex) {
             return false;
         }
@@ -113,6 +117,7 @@ public class Order extends BaseRequest<Object> implements BaseObject {
     @Override
     public boolean parse(Map map) {
         try {
+            this.orderId = (String) map.get("OrderId");
             this.accountIdDriver = (Long) map.get("AccIdDriver");
             this.srcAddress = (String) map.get("SrcAddress");
             this.srcLat = (Double) map.get("SrcLat");
@@ -120,7 +125,6 @@ public class Order extends BaseRequest<Object> implements BaseObject {
             this.dstAddress = (String) map.get("DstAddress");
             this.dstLat = Double.parseDouble(String.valueOf(map.get("DstLat")));
             this.dstLong = Double.parseDouble(String.valueOf(map.get("DstLong")));
-            this.orderId = (String) map.get("OrderId");
             this.weight = (Long) map.get("Weight");
             this.deliverTime = (Long) map.get("DeliverTime");
             this.toDeliverTime = (Long) map.get("ToDeliverTime");
@@ -151,6 +155,8 @@ public class Order extends BaseRequest<Object> implements BaseObject {
             this.loadingCode = (String) map.get("LoadingCode");
             this.accountId = (Long) map.get("AccountId");
 
+            this.paid = (Long) map.get("Paid");
+
             return true;
         } catch (Exception ex) {
 //            logger.error(ex.getMessage(), ex);
@@ -163,6 +169,44 @@ public class Order extends BaseRequest<Object> implements BaseObject {
         try {
             List<Bin> bins = new ArrayList<>();
             bins.add(new Bin("OrderId", orderId));
+            bins.add(new Bin("AccIdDriver", accountIdDriver));
+            bins.add(new Bin("SrcAddress", srcAddress));
+            bins.add(new Bin("SrcLat", srcLat));
+            bins.add(new Bin("SrcLong", srcLong));
+            bins.add(new Bin("DstAddress", dstAddress));
+            bins.add(new Bin("DstLat", dstLat));
+            bins.add(new Bin("DstLong", dstLong));
+            bins.add(new Bin("Weight", weight));
+            bins.add(new Bin("DeliverTime", deliverTime));
+            bins.add(new Bin("ToDeliverTime", toDeliverTime));
+            bins.add(new Bin("ReceiveTime", receiveTime));
+            bins.add(new Bin("ToReceiveTime", toReceiveTime));
+            bins.add(new Bin("State", state));
+            bins.add(new Bin("Products", lstProduct));
+            bins.add(new Bin("OrderComplete", orderComplete));
+            bins.add(new Bin("ProductImgLst", productImgLst));
+            bins.add(new Bin("URLFolderImg", uRLFolderProductImg));
+            bins.add(new Bin("OrderHistory", lstOrderHis));
+            bins.add(new Bin("OrderName", orderName));
+            bins.add(new Bin("TypeCar", typeCar));
+            bins.add(new Bin("SumProduct", sumProduct));
+            bins.add(new Bin("SumVolume", sumVolume));
+            bins.add(new Bin("Note", note));
+            bins.add(new Bin("ProductType", productType));
+            bins.add(new Bin("WantPrice", wantPrice));
+            bins.add(new Bin("GoodsStatus", goodStatus));
+
+            bins.add(new Bin("RealDeliTime", realDeliverTime));
+            bins.add(new Bin("ToRealDeliTime", realToDeliverTime));
+            bins.add(new Bin("RealReceTime", realReceiveTime));
+            bins.add(new Bin("RealToReceTime", realToReceiveTime));
+
+            bins.add(new Bin("QuotationId", quotationId));
+            bins.add(new Bin("CompleteCode", completeCode));
+            bins.add(new Bin("LoadingCode", loadingCode));
+            bins.add(new Bin("AccountId", accountId));
+
+            bins.add(new Bin("Paid", paid));
 
             return bins.toArray(new Bin[bins.size()]);
         } catch (Exception ex) {
@@ -173,9 +217,17 @@ public class Order extends BaseRequest<Object> implements BaseObject {
 
     @Override
     public String toString() {
-        return "Order{" + "orderId=" + orderId + ", accountIdDriver=" + accountIdDriver + ", srcAddress=" + srcAddress + ", srcLat=" + srcLat + ", srcLong=" + srcLong + ", dstAddress=" + dstAddress + ", dstLat=" + dstLat + ", dstLong=" + dstLong + ", weight=" + weight + ", deliverTime=" + deliverTime + ", toDeliverTime=" + toDeliverTime + ", receiveTime=" + receiveTime + ", toReceiveTime=" + toReceiveTime + ", state=" + state + ", lstProduct=" + lstProduct + ", orderComplete=" + orderComplete + ", productImgLst=" + productImgLst + ", uRLFolderProductImg=" + uRLFolderProductImg + ", quotationId=" + quotationId + ", lstOrderHis=" + lstOrderHis + ", orderName=" + orderName + ", typeCar=" + typeCar + ", sumProduct=" + sumProduct + ", sumVolume=" + sumVolume + ", note=" + note + ", productType=" + productType + ", wantPrice=" + wantPrice + ", goodStatus=" + goodStatus + ", realDeliverTime=" + realDeliverTime + ", realToDeliverTime=" + realToDeliverTime + ", realReceiveTime=" + realReceiveTime + ", realToReceiveTime=" + realToReceiveTime + ", completeCode=" + completeCode + ", loadingCode=" + loadingCode + ", accountId=" + accountId + '}';
+        return "Order{" + "orderId=" + orderId + ", accountIdDriver=" + accountIdDriver + ", paid= " + paid + ", srcAddress=" + srcAddress + ", srcLat=" + srcLat + ", srcLong=" + srcLong + ", dstAddress=" + dstAddress + ", dstLat=" + dstLat + ", dstLong=" + dstLong + ", weight=" + weight + ", deliverTime=" + deliverTime + ", toDeliverTime=" + toDeliverTime + ", receiveTime=" + receiveTime + ", toReceiveTime=" + toReceiveTime + ", state=" + state + ", lstProduct=" + lstProduct + ", orderComplete=" + orderComplete + ", productImgLst=" + productImgLst + ", uRLFolderProductImg=" + uRLFolderProductImg + ", quotationId=" + quotationId + ", lstOrderHis=" + lstOrderHis + ", orderName=" + orderName + ", typeCar=" + typeCar + ", sumProduct=" + sumProduct + ", sumVolume=" + sumVolume + ", note=" + note + ", productType=" + productType + ", wantPrice=" + wantPrice + ", goodStatus=" + goodStatus + ", realDeliverTime=" + realDeliverTime + ", realToDeliverTime=" + realToDeliverTime + ", realReceiveTime=" + realReceiveTime + ", realToReceiveTime=" + realToReceiveTime + ", completeCode=" + completeCode + ", loadingCode=" + loadingCode + ", accountId=" + accountId + '}';
     }
-    
+
+    public Long getPaid() {
+        return paid;
+    }
+
+    public void setPaid(Long paid) {
+        this.paid = paid;
+    }
+
     public String getOrderId() {
         return orderId;
     }
@@ -455,7 +507,5 @@ public class Order extends BaseRequest<Object> implements BaseObject {
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
-
-    
 
 }

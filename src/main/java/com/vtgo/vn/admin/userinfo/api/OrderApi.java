@@ -6,6 +6,7 @@
 package com.vtgo.vn.admin.userinfo.api;
 
 import com.vtgo.vn.admin.userinfo.BO.Order;
+import com.vtgo.vn.admin.userinfo.request.OrderCompleteRequest;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import com.vtgo.vn.admin.userinfo.service.OrderService;
 import lombok.AllArgsConstructor;
@@ -47,10 +48,22 @@ public class OrderApi {
         LOGGER.debug("\n\nrequest /create: " + request.toString());
         return orderService.create(request);
     }
+    
+    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity update(@RequestBody Order request) {
+        LOGGER.debug("\n\nrequest /update: " + request.toString());
+        return orderService.update(request);
+    }
 
     @PostMapping(value = "/delete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity delete(@RequestBody Order request) {
         LOGGER.debug("\n\nrequest /delete: " + request.toString());
         return orderService.delete(request);
+    }
+    
+    @PostMapping(value = "/complete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity complete(@RequestBody OrderCompleteRequest request) {
+        LOGGER.debug("\n\nrequest /complete: " + request.toString());
+        return orderService.completeOrder(request);
     }
 }
