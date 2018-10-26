@@ -146,6 +146,78 @@ public class OrderController extends BaseController implements OrderService {
     }
 
     @Override
+    public ResponseEntity getComplete(Order request) {
+        BaseResponse response = new BaseResponse();
+        List<Order> listOrder = new ArrayList<>();
+        try {
+            Map<String, Object> argument = new HashMap<>();
+            List<Value.MapValue> argumentFilter = new ArrayList<>();
+            Integer state = Integer.parseInt(String.valueOf(request.getState()));
+
+            if (state != null) {
+                Map<String, Object> f = new HashMap<>();
+                switch (state) {
+                    case 1:
+                        f.put("field", "State");
+                        f.put("value", 8L);
+                        f.put("operator", "=");
+                        argumentFilter.add(new Value.MapValue(f));
+                        break;
+//                    case 2:
+//                        f.put("field", "State");
+//                        f.put("value", 8L);
+//                        f.put("operator", "!=");
+//                        argumentFilter.add(new Value.MapValue(f));
+//                        break;
+                    default:
+                        f.put("field", "State");
+                        f.put("value", "");
+                        f.put("operator", "contain");
+                        argumentFilter.add(new Value.MapValue(f));
+                        break;
+                }
+
+            }
+
+            List<Value.MapValue> argumentSorters = new ArrayList<>();
+            Map<String, Object> s1 = new HashMap<>();
+            s1.put("sort_key", "OrderId");
+            s1.put("order", "ASC");
+            s1.put("type", "STRING");
+            argumentSorters.add(new Value.MapValue(s1));
+
+            argument.put("sorters", new Value.ListValue(argumentSorters));
+            argument.put("filters", new Value.ListValue(argumentFilter));
+            ResultSet resultSet = AerospikeFactory.getInstance()
+                    .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.ORDER_SET, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+
+            if (resultSet != null) {
+                Iterator<Object> objecIterator = resultSet.iterator();
+                while (objecIterator.hasNext()) {
+                    ArrayList arrayList = (ArrayList) objecIterator.next();
+                    arrayList.forEach((o) -> {
+                        Order myOrder = new Order();
+                        if (myOrder.parse((Map) o)) {
+                            listOrder.add(myOrder);
+                        }
+                    });
+                }
+                response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+            } else {
+                response.setMessage("No record");
+            }
+            response.setData(listOrder);
+            response.setStatus(ResponseConstants.SUCCESS);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (AerospikeException ex) {
+            LOGGER.error(ex.getMessage(), ex);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
+    @Override
     public ResponseEntity completeOrder(OrderCompleteRequest request) {
         BaseResponse response = new BaseResponse();
         try {
@@ -192,18 +264,17 @@ public class OrderController extends BaseController implements OrderService {
 
                     update(AerospikeFactory.getInstance().onlyUpdatePolicy,
                             DatabaseConstants.NAMESPACE, DatabaseConstants.ORDER_SET, request.getOrderId(), newOrder.toBins());
-                    
+
 //                    notifi to Driver
-//                    notificationToDriver(request.getMessage(), request.getOrderId(), newOrder.getAccountIdDriver());
-                    
+                    notificationToDriver(request.getMessage(), request.getOrderId(), newOrder.getAccountIdDriver());
                     response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
                     response.setData(Arrays.asList(newOrder));
+                    response.setStatus(ResponseConstants.SUCCESS);
 
                 } else {
                     response.setMessage("No record");
+                    response.setStatus(ResponseConstants.SERVICE_FAIL);
                 }
-
-                response.setStatus(ResponseConstants.SUCCESS);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
@@ -219,26 +290,27 @@ public class OrderController extends BaseController implements OrderService {
 
     private void notificationToDriver(String mess, String orderId, Long driverId) throws IOException, TimeoutException {
 
-            MsgPushQueue msgPushQueue = new MsgPushQueue();
-            msgPushQueue.setTypeReceive(Constant.RECEIVE_TYPE.DRIVER);
-            NotificationObjectPushToDriver objectPushToDriver = new NotificationObjectPushToDriver();
-            objectPushToDriver.setAccountId(driverId);//accountId
-            objectPushToDriver.setNotifyType(Constant.NOTIFY_TYPE.FCM_PUSH);
-            MsgNotifyDriver msgNotifyDriver = new MsgNotifyDriver();
-            TitleObj titleObj = new TitleObj();
-            titleObj.setTitle("VTGO");
-            titleObj.setBody("Bạn nhận được thông báo mới");
-            msgNotifyDriver.setNotification(titleObj);
-            DataDriver dataDriver = new DataDriver();
-            dataDriver.setOrderId(orderId);
-            dataDriver.setMsg(mess + "\n" + "Mã ĐH: " + orderId);
-            dataDriver.setType("7");
-            msgNotifyDriver.setData(dataDriver);
-            objectPushToDriver.setMessage(msgNotifyDriver);
-            msgPushQueue.setData(Arrays.asList(objectPushToDriver));
+        MsgPushQueue msgPushQueue = new MsgPushQueue();
+        msgPushQueue.setTypeReceive(Constant.RECEIVE_TYPE.DRIVER);
+        NotificationObjectPushToDriver objectPushToDriver = new NotificationObjectPushToDriver();
+        objectPushToDriver.setAccountId(driverId);//accountId
+        objectPushToDriver.setNotifyType(Constant.NOTIFY_TYPE.FCM_PUSH);
+        MsgNotifyDriver msgNotifyDriver = new MsgNotifyDriver();
+        TitleObj titleObj = new TitleObj();
+        titleObj.setTitle("VTGO");
+        titleObj.setBody("Bạn nhận được thông báo mới");
+        msgNotifyDriver.setNotification(titleObj);
+        DataDriver dataDriver = new DataDriver();
+        dataDriver.setOrderId(orderId);
+        dataDriver.setMsg(mess + "\n" + "Mã ĐH: " + orderId);
+        dataDriver.setType("7");
+        msgNotifyDriver.setData(dataDriver);
+        objectPushToDriver.setMessage(msgNotifyDriver);
+        msgPushQueue.setData(Arrays.asList(objectPushToDriver));
 
-            String message = new String(JsonStream.serialize(msgPushQueue).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
-            Publish.publishMessage(message, Constant.QUEUE.RABBITMQ_EXCHANGE, Constant.QUEUE.KEY_CHANNEL_PUSH_FROM_ADMIN);
-       
+        String message = new String(JsonStream.serialize(msgPushQueue).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+        Publish.publishMessage(message, Constant.QUEUE.RABBITMQ_EXCHANGE, Constant.QUEUE.KEY_CHANNEL_PUSH_FROM_ADMIN);
+
     }
+
 }

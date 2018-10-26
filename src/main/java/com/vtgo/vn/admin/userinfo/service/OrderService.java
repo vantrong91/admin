@@ -27,4 +27,6 @@ public interface OrderService {
     public ResponseEntity delete(Order request);
     
     public ResponseEntity completeOrder(OrderCompleteRequest request);
+    
+    public ResponseEntity getComplete(Order request);
 }
