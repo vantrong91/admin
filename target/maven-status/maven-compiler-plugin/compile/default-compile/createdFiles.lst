@@ -8,8 +8,10 @@ com\vtgo\vn\admin\userinfo\controller\VehicleOwnerController$1.class
 com\vtgo\vn\admin\userinfo\api\BalanceHisApi.class
 com\vtgo\vn\admin\userinfo\controller\TransferFeeController.class
 com\vtgo\vn\admin\userinfo\request\OrderSearchRequest.class
+com\vtgo\vn\admin\userinfo\api\CategoryApi.class
 com\vtgo\vn\admin\userinfo\service\GoodOwnerService.class
 com\vtgo\vn\admin\userinfo\BO\Partner.class
+com\vtgo\vn\admin\userinfo\BO\Category.class
 com\vtgo\vn\admin\userinfo\request\OrderCompleteRequest.class
 com\vtgo\vn\admin\constant\DatabaseConstants$Command.class
 com\vtgo\vn\admin\userinfo\BO\Vehicle.class
@@ -23,6 +25,7 @@ com\vtgo\vn\admin\userinfo\api\AccounManagerApi.class
 com\vtgo\vn\admin\pushnotify\MsgPushQueue.class
 com\vtgo\vn\admin\userinfo\request\VehicleOwnerSearchRequest.class
 com\vtgo\vn\admin\pushnotify\MsgNotifyDriver.class
+com\vtgo\vn\admin\userinfo\controller\CategoryController.class
 com\vtgo\vn\admin\base\BaseObject.class
 com\vtgo\vn\admin\userinfo\controller\VehicleController.class
 com\vtgo\vn\admin\userinfo\service\QuotationService.class
@@ -93,6 +96,7 @@ com\vtgo\vn\admin\pushnotify\TitleObj.class
 com\vtgo\vn\admin\Stop.class
 com\vtgo\vn\admin\userinfo\BO\BalanceTemp.class
 com\vtgo\vn\admin\userinfo\controller\GoodOwnerController.class
+com\vtgo\vn\admin\userinfo\service\CategoryService.class
 com\vtgo\vn\admin\userinfo\BO\GoodOwner.class
 com\vtgo\vn\admin\base\BaseController.class
 com\vtgo\vn\admin\userinfo\BO\TransferFee.class

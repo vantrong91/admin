@@ -6,6 +6,7 @@ public class DatabaseConstants {
     public static String VEHICLE_SET = "vehicle";
     public static String INSURANCE_ORDER_SET = "insuranceOrder";
     public static String VEHICLE_OWNER_SET = "vehicleOwner";
+    public static String CATEGORY_SET = "category";
     public static String DRIVER_SET = "driver";
     public static String GOOD_OWNER = "goodsOwner";
     public static String ACCOUNT_SET = "account";
