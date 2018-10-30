@@ -38,7 +38,7 @@ public class Driver extends BaseRequest<Object> implements BaseObject {
     private Long vehicleId;
     private Map<String, String> contactAddress;
     private Map<String, String> address;
-    private Map<Integer, Map<String, String>> attachProperties;
+    private Map<String, List<String>> attachProperties;
     private Long state;
     private String driverCode;
 
@@ -218,11 +218,11 @@ public class Driver extends BaseRequest<Object> implements BaseObject {
         this.address = address;
     }
 
-    public Map<Integer, Map<String, String>> getAttachProperties() {
+    public Map<String, List<String>> getAttachProperties() {
         return attachProperties;
     }
 
-    public void setAttachProperties(Map<Integer, Map<String, String>> attachProperties) {
+    public void setAttachProperties(Map<String, List<String>> attachProperties) {
         this.attachProperties = attachProperties;
     }
 
@@ -263,7 +263,7 @@ public class Driver extends BaseRequest<Object> implements BaseObject {
             this.state = record.getLong("State");
             this.contactAddress = (Map<String, String>) record.getMap("ContactAddress");
             this.address = (Map<String, String>) record.getMap("Address");
-            this.attachProperties = (Map<Integer, Map<String, String>>) record.getMap("AttachProp");
+            this.attachProperties = (Map<String, List<String>>) record.getMap("AttachProp");
             this.driverCode = record.getString("DriverCode");
 
         } catch (Exception ex) {
@@ -324,7 +324,7 @@ public class Driver extends BaseRequest<Object> implements BaseObject {
             this.state = (Long) map.get("State");
             this.contactAddress = (Map<String, String>) map.get("ContactAddress");
             this.address = (Map<String, String>) map.get("Address");
-            this.attachProperties = (Map<Integer, Map<String, String>>) map.get("AttachProp");
+            this.attachProperties = (Map<String, List<String>>) map.get("AttachProp");
             this.driverCode = (String) map.get("DriverCode");
 
             return true;

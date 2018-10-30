@@ -253,7 +253,7 @@ public class VehicleOwnerController extends BaseController implements VehicleOwn
             balParam.add(Value.get(1));//BalType
             balParam.add(Value.get(0));//Gross
             balParam.add(Value.get(0));//Consume
-            balParam.add(Value.get(1861722000000f));//ExpDate
+            balParam.add(Value.get(8141644800000f));//ExpDate
             balParam.add(Value.get(0));//Reserve
             balParam.add(Value.get("VH" + request.getContactPhone()));//AcctNumber
             balParam.add(Value.get(accountId));

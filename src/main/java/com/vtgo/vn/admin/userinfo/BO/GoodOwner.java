@@ -28,7 +28,7 @@ public class GoodOwner extends BaseRequest<Object> implements BaseObject {
     private Long issueDate;
     private String issueBy;
     private Long gender;
-    private Map<String, Object> attachProperties;
+    private Map<String, List<String>> attachProperties;
     private String phoneNumber;
     private String address;
     private String identityNo;
@@ -84,11 +84,11 @@ public class GoodOwner extends BaseRequest<Object> implements BaseObject {
         this.gender = gender;
     }
 
-    public Map<String, Object> getAttachProperties() {
+    public Map<String, List<String>> getAttachProperties() {
         return attachProperties;
     }
 
-    public void setAttachProperties(Map<String, Object> attachProperties) {
+    public void setAttachProperties(Map<String, List<String>> attachProperties) {
         this.attachProperties = attachProperties;
     }
 
@@ -138,7 +138,7 @@ public class GoodOwner extends BaseRequest<Object> implements BaseObject {
             this.issueDate = record.getLong("IssueDate");
             this.issueBy = record.getString("IssueBy");
             this.dateOfBirth = record.getLong("DateOfBirth");
-            this.attachProperties = (Map<String, Object>) record.getMap("AttachProp");
+            this.attachProperties = (Map<String, List<String>>) record.getMap("AttachProp");
         } catch (Exception ex) {
             logger.error(ex, ex);
             return false;
@@ -184,7 +184,7 @@ public class GoodOwner extends BaseRequest<Object> implements BaseObject {
             this.issueDate = (Long) map.get("IssueDate");
             this.issueBy = (String) map.get("IssueBy");
             this.dateOfBirth = (Long) map.get("DateOfBirth");
-            this.attachProperties = (Map<String, Object>)map.get("AttachProp");
+            this.attachProperties = (Map<String, List<String>>)map.get("AttachProp");
             return true;
         } catch (Exception ex) {
             logger.error(ex, ex);

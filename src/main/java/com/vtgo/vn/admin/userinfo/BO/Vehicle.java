@@ -48,7 +48,7 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
     private Long state;
     private Long driverId;
     private String driverName;
-    private Map<Integer, Map<String, String>> attachProperties;
+    private Map<String, List<String>> attachProperties;
 
     public Long getVehicleId() {
         return vehicleId;
@@ -226,11 +226,11 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
         this.registrationExpDate = registrationExpDate;
     }
 
-    public Map<Integer, Map<String, String>> getAttachProperties() {
+    public Map<String, List<String>> getAttachProperties() {
         return attachProperties;
     }
 
-    public void setAttachProperties(Map<Integer, Map<String, String>> attachProperties) {
+    public void setAttachProperties(Map<String, List<String>> attachProperties) {
         this.attachProperties = attachProperties;
     }
 
@@ -320,7 +320,7 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
             this.driverId = record.getLong("DriverId");
             this.driverName = record.getString("DriverName");
             this.state = record.getLong("State");
-            this.attachProperties = (Map<Integer, Map<String, String>>) record.getMap("AttachProp");
+            this.attachProperties = (Map<String, List<String>>) record.getMap("AttachProp");
         } catch (Exception ex) {
             logger.error(ex, ex);
             return false;
@@ -364,7 +364,7 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
             this.driverId = (Long) map.get("DriverId");
             this.driverName = (String) map.get("DriverName");
             this.state = (Long) map.get("State");
-            this.attachProperties = (Map<Integer, Map<String, String>>) map.get("AttachProp");
+            this.attachProperties = (Map<String, List<String>>) map.get("AttachProp");
             return true;
         } catch (Exception ex) {
             logger.error(ex, ex);
