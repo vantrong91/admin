@@ -55,7 +55,7 @@ public class VehicleOwner extends BaseRequest<Object> implements BaseObject {
     private Long vehicleOwnerType;
     private Map<String, String> contactAddress;
     private Map<String, String> address;
-    private Map<Integer, Map<String, String>> attachProperties;
+    private Map<String, List<String>> attachProperties;
 
     private List<BankAccount> bankAccountLst;
 
@@ -307,11 +307,11 @@ public class VehicleOwner extends BaseRequest<Object> implements BaseObject {
         this.address = address;
     }
 
-    public Map<Integer, Map<String, String>> getAttachProperties() {
+    public Map<String, List<String>> getAttachProperties() {
         return attachProperties;
     }
 
-    public void setAttachProperties(Map<Integer, Map<String, String>> attachProperties) {
+    public void setAttachProperties(Map<String, List<String>> attachProperties) {
         this.attachProperties = attachProperties;
     }
 
@@ -360,7 +360,7 @@ public class VehicleOwner extends BaseRequest<Object> implements BaseObject {
             this.contactAddress = contactAddressMap == null ? new HashMap<>() : contactAddressMap;
             Map<String, String> addressMap = (Map<String, String>) record.getMap("Address");
             this.address = addressMap == null ? new HashMap<>() : addressMap;
-            Map<Integer, Map<String, String>> attachPropertiesMap = (Map<Integer, Map<String, String>>) record.getMap("AttachProp");
+            Map<String, List<String>> attachPropertiesMap = (Map<String, List<String>>) record.getMap("AttachProp");
             this.attachProperties = attachPropertiesMap == null ? new HashMap<>() : attachPropertiesMap;
         } catch (Exception ex) {
             logger.error(ex, ex);
@@ -450,7 +450,7 @@ public class VehicleOwner extends BaseRequest<Object> implements BaseObject {
             this.contactAddress = contactAddressMap == null ? new HashMap<>() : contactAddressMap;
             Map<String, String> addressMap = (Map<String, String>) map.get("Address");
             this.address = addressMap == null ? new HashMap<>() : addressMap;
-            Map<Integer, Map<String, String>> attachPropertiesMap = (Map<Integer, Map<String, String>>) map.get("AttachProp");
+            Map<String, List<String>> attachPropertiesMap = (Map<String, List<String>>) map.get("AttachProp");
             this.attachProperties = attachPropertiesMap == null ? new HashMap<>() : attachPropertiesMap;
             return true;
         } catch (Exception ex) {

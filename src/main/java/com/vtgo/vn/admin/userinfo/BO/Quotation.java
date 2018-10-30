@@ -5,7 +5,6 @@
  */
 package com.vtgo.vn.admin.userinfo.BO;
 
-
 import com.aerospike.client.Bin;
 import com.aerospike.client.Record;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,6 +21,7 @@ import org.apache.log4j.Logger;
  * @author Admin
  */
 public class Quotation extends BaseRequest<Object> implements BaseObject {
+
     private String quotationId;
     private String orderId;
     private Long vehicleId;
@@ -43,8 +43,7 @@ public class Quotation extends BaseRequest<Object> implements BaseObject {
     private Long deliverTime;
     private Long toDeliverTime;
     private Long numQuotation;
-    
-    
+
     private static final Logger logger = Logger.getLogger(Quotation.class);
 
     public String getQuotationId() {
@@ -79,8 +78,6 @@ public class Quotation extends BaseRequest<Object> implements BaseObject {
         this.driverId = driverId;
     }
 
-    
-
     public Long getPrice() {
         return price;
     }
@@ -112,7 +109,7 @@ public class Quotation extends BaseRequest<Object> implements BaseObject {
     public void setCommission(Double commission) {
         this.commission = commission;
     }
-    
+
     public Double getFinesAmount() {
         return finesAmount;
     }
@@ -221,7 +218,7 @@ public class Quotation extends BaseRequest<Object> implements BaseObject {
     @Override
     public boolean parse(Record record) {
         try {
-            this.quotationId = record.getString("QuotationId");        
+            this.quotationId = record.getString("QuotationId");
             this.orderId = record.getString("OrderId");
             this.vehicleId = record.getLong("VehicleId");
             this.driverId = record.getLong("DriverId");
@@ -241,15 +238,14 @@ public class Quotation extends BaseRequest<Object> implements BaseObject {
             this.toReceiveTime = record.getLong("ToReceiveTime");
             this.deliverTime = record.getLong("DeliverTime");
             this.toDeliverTime = record.getLong("ToDeliverTime");
-            this.numQuotation = record.getLong("NumQuotation");            
+            this.numQuotation = record.getLong("NumQuotation");
         } catch (Exception ex) {
             logger.error(ex, ex);
             return false;
         }
         return true;
     }
-    
-    
+
     @JsonIgnore
     @Override
     public Bin[] toBins() {
@@ -276,36 +272,58 @@ public class Quotation extends BaseRequest<Object> implements BaseObject {
             bins.add(new Bin("DeliverTime", deliverTime));
             bins.add(new Bin("ToDeliverTime", toDeliverTime));
             bins.add(new Bin("NumQuotation", numQuotation));
-            
+
             return bins.toArray(new Bin[bins.size()]);
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         }
         return null;
     }
-    
-    
+
     @JsonIgnore
     @Override
     public boolean parse(Map map) {
-       try {
+        try {
             this.quotationId = (String) map.get("QuotationId");
             this.orderId = (String) map.get("OrderId");
             this.vehicleId = (Long) map.get("VehicleId");
             this.driverId = (Long) map.get("DriverId");
             this.price = (Long) map.get("Price");
             this.state = (Long) map.get("State");
-            this.vat = (Double) map.get("Vat");
-            this.commission = (Double) map.get("Commission");
-            this.finesAmount = (Double) map.get("FinesAmount");
-            this.delayPrice = (Double) map.get("DelayPrice");
-            this.receivePrice = (Double) map.get("ReceivePrice");
-            this.deliverPrice = (Double) map.get("DeliverPrice");
-            this.driverVatTax = (Double) map.get("DriverVatTax");
-            this.perDriverTax = (Double) map.get("PerDriverTax");
-            this.reserveDriver = (Double) map.get("ReserveDriver");
-            this.reserveOrder = (Double) map.get("ReserveOrder");
-            this.receiveTime = (Long) map.get("ReceiveTime");
+            if (map.get("DelayPrice") != null) {
+                this.vat = (Double.parseDouble(String.valueOf(map.get("Vat"))));
+            }
+            if (map.get("Commission") != null) {
+                this.commission = (Double.parseDouble(String.valueOf(map.get("Commission"))));
+            }
+            if (map.get("FinesAmount") != null) {
+                this.finesAmount = (Double.parseDouble(String.valueOf(map.get("FinesAmount"))));
+            }
+            if (map.get("DelayPrice") != null) {
+                this.delayPrice = (Double.parseDouble(String.valueOf(map.get("DelayPrice"))));
+            }
+            if (map.get("ReceivePrice") != null) {
+                this.receivePrice = (Double.parseDouble(String.valueOf(map.get("ReceivePrice"))));
+            }
+            if (map.get("DeliverPrice") != null) {
+                this.deliverPrice = (Double.parseDouble(String.valueOf(map.get("DeliverPrice"))));
+            }
+            if (map.get("DriverVatTax") != null) {
+                this.driverVatTax = (Double.parseDouble(String.valueOf(map.get("DriverVatTax"))));
+            }
+            if (map.get("PerDriverTax") != null) {
+                this.perDriverTax = (Double.parseDouble(String.valueOf(map.get("PerDriverTax"))));
+            }
+            if (map.get("ReserveDriver") != null) {
+                this.reserveDriver = (Double.parseDouble(String.valueOf(map.get("ReserveDriver"))));
+            }
+            if (map.get("ReserveOrder") != null) {
+                this.reserveOrder = (Double.parseDouble(String.valueOf(map.get("ReserveOrder"))));
+            }
+            if (map.get("ReceiveTime") != null) {
+                this.receiveTime = (Long) map.get("ReceiveTime");
+            }
+
             this.toReceiveTime = (Long) map.get("ToReceiveTime");
             this.deliverTime = (Long) map.get("DeliverTime");
             this.toDeliverTime = (Long) map.get("ToDeliverTime");
@@ -316,6 +334,5 @@ public class Quotation extends BaseRequest<Object> implements BaseObject {
             return false;
         }
     }
-    
-    
+
 }

@@ -5,7 +5,6 @@
  */
 package com.vtgo.vn.admin.userinfo.controller;
 
-
 import com.aerospike.client.AerospikeException;
 import com.aerospike.client.Key;
 import com.aerospike.client.Record;
@@ -40,7 +39,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @AllArgsConstructor
-public class BalanceController extends BaseController implements BalanceService{
+public class BalanceController extends BaseController implements BalanceService {
+
     private static final Logger logger = Logger.getLogger(BalanceController.class.getName());
 
     @Override
@@ -57,7 +57,7 @@ public class BalanceController extends BaseController implements BalanceService{
                 f.put("field", "accountId");
                 f.put("value", searchValue);
                 f.put("operator", "contain");
-                argumentFilter.add(new Value.MapValue(f));                
+                argumentFilter.add(new Value.MapValue(f));
             }
             List<Value.MapValue> argumentSorters = new ArrayList<>();
             Map<String, Object> s1 = new HashMap<>();
@@ -69,8 +69,7 @@ public class BalanceController extends BaseController implements BalanceService{
             argument.put("sorters", new Value.ListValue(argumentSorters));
             argument.put("filters", new Value.ListValue(argumentFilter));
             ResultSet resultSet = AerospikeFactory.getInstance()
-//                    .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
-                                        .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, "bankAccount", "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+                    .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.BALANCE, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
 
             if (resultSet != null) {
                 Iterator<Object> objectIterator = resultSet.iterator();
@@ -116,7 +115,7 @@ public class BalanceController extends BaseController implements BalanceService{
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
-    
+
     @Override
     public ResponseEntity transaction(Transaction request) {
         BaseResponse response = new BaseResponse();
