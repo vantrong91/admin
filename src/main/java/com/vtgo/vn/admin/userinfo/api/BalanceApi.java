@@ -36,6 +36,12 @@ public class BalanceApi {
         return balanceService.searchBalance(request);
     }
     
+    @PostMapping(value = "/account-bal", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity searchAccountBalance() {
+        LOGGER.debug("request /list acc Balance: ");
+        return balanceService.searchAccountBalance();
+    }
+    
     @PostMapping(value = "/get-by-id", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity getById(@RequestBody BalanceTemp request) {
         LOGGER.debug("request  /getById: " + request);

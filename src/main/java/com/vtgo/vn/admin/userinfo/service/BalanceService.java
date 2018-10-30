@@ -18,6 +18,8 @@ public interface BalanceService {
 
     public ResponseEntity searchBalance(SearchRequest request);
 
+    public ResponseEntity searchAccountBalance();
+
     public ResponseEntity getBalanceId(BalanceTemp request);
 
     public ResponseEntity transaction(Transaction request);

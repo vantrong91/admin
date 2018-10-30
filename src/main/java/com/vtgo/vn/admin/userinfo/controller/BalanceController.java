@@ -17,6 +17,7 @@ import com.vtgo.vn.admin.base.BaseController;
 import com.vtgo.vn.admin.base.BaseResponse;
 import com.vtgo.vn.admin.constant.DatabaseConstants;
 import com.vtgo.vn.admin.constant.ResponseConstants;
+import com.vtgo.vn.admin.userinfo.BO.AccountManager;
 import com.vtgo.vn.admin.userinfo.BO.BalanceTemp;
 import com.vtgo.vn.admin.userinfo.BO.Transaction;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
@@ -159,5 +160,60 @@ public class BalanceController extends BaseController implements BalanceService 
         } catch (Exception e) {
         }
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Override
+    public ResponseEntity searchAccountBalance() {
+
+        BaseResponse response = new BaseResponse();
+        List<AccountManager> listAcc = new ArrayList<>();
+        try {
+            Map<String, Object> argument = new HashMap<>();
+            List<Value.MapValue> argumentFilter = new ArrayList<>();
+
+            Map<String, Object> f = new HashMap<>();
+
+            for (int i = 1; i <= 3; i++) {
+                f.put("field", "AccountType");
+                f.put("value", i);
+                f.put("operator", "=");
+                argumentFilter.add(new Value.MapValue(f));
+
+                List<Value.MapValue> argumentSorters = new ArrayList<>();
+                Map<String, Object> s = new HashMap<>();
+                s.put("sort_key", "AccountId");
+                s.put("order", "DESC");
+                s.put("type", "STRING");
+                argumentSorters.add(new Value.MapValue(s));
+
+                argument.put("sorters", new Value.ListValue(argumentSorters));
+                argument.put("filters", new Value.ListValue(argumentFilter));
+                ResultSet resultSet = AerospikeFactory.getInstance()
+                        .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE,
+                                DatabaseConstants.ACCOINT_MAN_SET, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+                if (resultSet != null) {
+                    Iterator<Object> objectIterator = resultSet.iterator();
+                    while (objectIterator.hasNext()) {
+                        ArrayList arrayList = (ArrayList) objectIterator.next();
+                        for (Object o : arrayList) {
+                            AccountManager accountManager = new AccountManager();
+                            if (accountManager.parse((Map) o)) {
+                                accountManager.getPassword();
+                                listAcc.add(accountManager);
+                            }
+                        }
+                    }
+                }
+            }
+            response.setData(listAcc);
+            response.setStatus(ResponseConstants.SUCCESS);
+            response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception ex) {
+            logger.debug(ex.getMessage(), ex);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
     }
 }

@@ -206,7 +206,7 @@ public class DriverController extends BaseController implements DriverService {
             balParam.add(Value.get(1));//BalType
             balParam.add(Value.get(0));//Gross
             balParam.add(Value.get(0));//Consume
-            balParam.add(Value.get(1861722000000f));//ExpDate
+            balParam.add(Value.get(8141644800000f));//ExpDate
             balParam.add(Value.get(0));//Reserve
             balParam.add(Value.get("VP1" + request.getPhoneNumber()));//AcctNumber
             balParam.add(Value.get(accountId));
