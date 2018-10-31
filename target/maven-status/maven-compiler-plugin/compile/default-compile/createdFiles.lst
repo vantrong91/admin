@@ -67,8 +67,10 @@ com\vtgo\vn\admin\util\SequenceManager$SEQUENCE_MODE.class
 com\vtgo\vn\admin\userinfo\api\QuotationApi.class
 com\vtgo\vn\admin\aerospike\handler\AerospikeExecuteHandler.class
 com\vtgo\vn\admin\pushnotify\DataDriver.class
+com\vtgo\vn\admin\userinfo\BO\MyFile.class
 com\vtgo\vn\admin\userinfo\controller\BalanceController$1.class
 com\vtgo\vn\admin\userinfo\api\VehicleApi.class
+com\vtgo\vn\admin\userinfo\controller\UpLoadFileController.class
 com\vtgo\vn\admin\userinfo\api\DriverApi.class
 com\vtgo\vn\admin\config\Config.class
 com\vtgo\vn\admin\userinfo\BO\Balance.class
@@ -93,6 +95,7 @@ com\vtgo\vn\admin\userinfo\BO\AccountManager.class
 com\vtgo\vn\admin\userinfo\BO\BalanceHis.class
 com\vtgo\vn\admin\util\SequenceManager.class
 com\vtgo\vn\admin\pushnotify\TitleObj.class
+com\vtgo\vn\admin\userinfo\service\UpLoadFileService.class
 com\vtgo\vn\admin\Stop.class
 com\vtgo\vn\admin\userinfo\BO\BalanceTemp.class
 com\vtgo\vn\admin\userinfo\controller\GoodOwnerController.class
@@ -105,6 +108,7 @@ com\vtgo\vn\admin\userinfo\service\BalanceHisService.class
 com\vtgo\vn\admin\constant\DatabaseConstants$ResultCode.class
 com\vtgo\vn\admin\userinfo\api\OrderApi.class
 com\vtgo\vn\admin\http\filter\CorsFilter.class
+com\vtgo\vn\admin\userinfo\api\UpLoadFileApi.class
 com\vtgo\vn\admin\util\DateTimeUtils.class
 com\vtgo\vn\admin\userinfo\controller\BalanceHisController.class
 com\vtgo\vn\admin\userinfo\service\BalanceService.class
