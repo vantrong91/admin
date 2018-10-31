@@ -36,6 +36,7 @@ public class ResponseConstants {
     public static String SERVICE_VEHICLE_OWNER_NOT_FOUND = "Vehicle owner not found";
     public static String SERVICE_ACCOUNT_NOT_FOUND = "Account not found";
     public static String SERVICE_INSURANCE_ORDER_NOT_FOUND = "Insurance order not found";
+    public static String SERVICE_CATEGORY_NOT_FOUND = "Category not found";
 
     public static String SERVICE_SUCCESS_DESC = "Successful";
     public static String SERVICE_FAIL_DESC = "Fail";

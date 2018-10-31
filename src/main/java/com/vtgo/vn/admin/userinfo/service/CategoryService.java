@@ -5,6 +5,7 @@
  */
 package com.vtgo.vn.admin.userinfo.service;
 
+import com.vtgo.vn.admin.userinfo.BO.Category;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import org.springframework.http.ResponseEntity;
 
@@ -14,4 +15,8 @@ import org.springframework.http.ResponseEntity;
  */
 public interface CategoryService {
     public ResponseEntity searchCategory(SearchRequest request);
+    
+    public ResponseEntity getById(Category request);
+    
+    public ResponseEntity update(Category request);
 }

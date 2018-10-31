@@ -5,6 +5,7 @@
  */
 package com.vtgo.vn.admin.userinfo.api;
 
+import com.vtgo.vn.admin.userinfo.BO.Category;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import com.vtgo.vn.admin.userinfo.service.CategoryService;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,18 @@ public class CategoryApi {
     public ResponseEntity search(@RequestBody SearchRequest request){
         LOGGER.debug("request /searchCategory: " + request);
         return categoryService.searchCategory(request);
+    }
+    
+    @PostMapping(value = "/get-by-id", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity getById(@RequestBody Category request){
+        LOGGER.debug("request /getById: " + request);
+        return categoryService.getById(request);
+    }
+    
+    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity update(@RequestBody Category request){
+        LOGGER.debug("request /update: " + request);
+        return categoryService.update(request);
     }
     
 }
