@@ -32,6 +32,9 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
     private String deviceToken;
     private String salt;
     private String accountCode;
+    private String fileAvata;
+
+    
     @Override
     public boolean parse(Record record) {
         try {
@@ -46,7 +49,7 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
             this.salt = record.getString("Salt");
             this.fullName = record.getString("FullName");
             this.accountCode = record.getString("AccountCode");
-
+            this.fileAvata = record.getString("FileAvata");
             return true;
         } catch (Exception ex) {
             log.debug(ex.getMessage(), ex);
@@ -68,7 +71,7 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
             this.salt = (String) map.get("Salt");
             this.fullName = (String) map.get("FullName");
             this.accountCode = (String) map.get("AccountCode");
-
+            this.fileAvata = (String) map.get("FileAvata");
             return true;
         } catch (Exception ex) {
             log.debug(ex.getMessage(), ex);
@@ -90,9 +93,17 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
         bins.add(new Bin("Salt", salt));
         bins.add(new Bin("FullName", fullName));
         bins.add(new Bin("AccountCode", accountCode));
+        bins.add(new Bin("FileAvata", fileAvata));
         return bins.toArray(new Bin[bins.size()]);
     }
 
+    public String getFileAvata() {
+        return fileAvata;
+    }
+
+    public void setFileAvata(String fileAvata) {
+        this.fileAvata = fileAvata;
+    }
     public long getAccountId() {
         return accountId;
     }

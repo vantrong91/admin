@@ -95,6 +95,7 @@ public class CategoryController extends BaseController implements CategoryServic
             if (rec != null) {
                 Category category = new Category();
                 category.parse(rec);
+                category.setPk(request.getPk());
                 response.setData(Arrays.asList(category));
             }
             return ResponseEntity.status(HttpStatus.OK).body(response);
