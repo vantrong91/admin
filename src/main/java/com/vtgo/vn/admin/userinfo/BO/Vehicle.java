@@ -26,7 +26,7 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
     private Long vehicleId;
     private Long ownerId;
     private String vehicleCode;
-    private List<String> route;
+    private Long route;
     private Integer vehicleType;
     private String licencePlate;
     private Long weight;
@@ -194,11 +194,11 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
         this.itineraryMonitoringExpDate = itineraryMonitoringExpDate;
     }
 
-    public List<String> getRoute() {
+    public Long getRoute() {
         return route;
     }
 
-    public void setRoute(List<String> route) {
+    public void setRoute(Long route) {
         this.route = route;
     }
 
@@ -298,7 +298,7 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
             this.vehicleId = record.getLong("VehicleId");
             this.ownerId = record.getLong("OwnerId");
             this.vehicleCode = record.getString("VehicleCode");
-            this.route = (List<String>) record.getList("Route");
+            this.route = record.getLong("Route");
             this.vehicleType = (Integer) record.getInt("VehicleType");
             this.licencePlate = record.getString("LicencePlate");
             this.weight = record.getLong("Weight");
@@ -335,7 +335,7 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
             this.vehicleId = (Long) map.get("VehicleId");
             this.ownerId = (Long) map.get("OwnerId");
             this.vehicleCode = (String) map.get("VehicleCode");
-            this.route = (List<String>) map.get("Route");
+            this.route = (Long) map.get("Route");
             if (map.get("VehicleType") != null) {
                 if (map.get("VehicleType") instanceof Integer) {
                     this.vehicleType = (Integer) map.get("VehicleType");

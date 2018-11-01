@@ -32,9 +32,8 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
     private String deviceToken;
     private String salt;
     private String accountCode;
-    private String fileAvata;
+    private Map<String, List<String>> fileAvata;
 
-    
     @Override
     public boolean parse(Record record) {
         try {
@@ -49,7 +48,7 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
             this.salt = record.getString("Salt");
             this.fullName = record.getString("FullName");
             this.accountCode = record.getString("AccountCode");
-            this.fileAvata = record.getString("FileAvata");
+            this.fileAvata = (Map<String, List<String>>) record.getMap("FileAvata");
             return true;
         } catch (Exception ex) {
             log.debug(ex.getMessage(), ex);
@@ -71,7 +70,7 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
             this.salt = (String) map.get("Salt");
             this.fullName = (String) map.get("FullName");
             this.accountCode = (String) map.get("AccountCode");
-            this.fileAvata = (String) map.get("FileAvata");
+            this.fileAvata = (Map<String, List<String>>) map.get("FileAvata");
             return true;
         } catch (Exception ex) {
             log.debug(ex.getMessage(), ex);
@@ -97,19 +96,20 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
         return bins.toArray(new Bin[bins.size()]);
     }
 
-    public String getFileAvata() {
-        return fileAvata;
-    }
-
-    public void setFileAvata(String fileAvata) {
-        this.fileAvata = fileAvata;
-    }
     public long getAccountId() {
         return accountId;
     }
 
     public void setAccountId(long accountId) {
         this.accountId = accountId;
+    }
+
+    public Map<String, List<String>> getFileAvata() {
+        return fileAvata;
+    }
+
+    public void setFileAvata(Map<String, List<String>> fileAvata) {
+        this.fileAvata = fileAvata;
     }
 
     public String getPassword() {
@@ -191,8 +191,6 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
     public void setAccountCode(String accountCode) {
         this.accountCode = accountCode;
     }
-    
-    
 
     @Override
     public String toString() {

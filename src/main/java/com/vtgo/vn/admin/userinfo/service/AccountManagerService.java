@@ -27,4 +27,6 @@ public interface AccountManagerService {
     public ResponseEntity delete(AccountManager request);
     
     public ResponseEntity logout(AccountManager request);
+    
+    public ResponseEntity update(AccountManager request);
 }

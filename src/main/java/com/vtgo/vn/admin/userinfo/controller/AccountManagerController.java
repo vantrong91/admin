@@ -326,4 +326,32 @@ public class AccountManagerController extends BaseController implements AccountM
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
+
+    @Override
+    public ResponseEntity update(AccountManager request) {
+        BaseResponse response = new BaseResponse();
+        try {
+            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId());
+            if (rec != null) {
+                String password = request.getPassword();
+                String salt = SecurityUtils.createSalt();;            
+                BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+                request.setPassword(bCryptPasswordEncoder.encode(password)); 
+                request.setSalt(salt); 
+                update(AerospikeFactory.getInstance().onlyUpdatePolicy,
+                        DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId(), request.toBins());
+                response.setStatus(ResponseConstants.SUCCESS);
+                response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+            } else {
+                response.setStatus(ResponseConstants.SERVICE_ERROR);
+                response.setMessage(ResponseConstants.SERVICE_ACCOUNT_NOT_FOUND);
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
 }
