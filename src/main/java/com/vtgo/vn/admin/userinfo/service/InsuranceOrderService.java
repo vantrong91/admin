@@ -21,7 +21,7 @@ public interface InsuranceOrderService {
     
     public ResponseEntity delete(InsuranceOrder request);
     
-    public ResponseEntity getInsuOrderById(InsuranceOrder request);
+    public ResponseEntity getById(InsuranceOrder request);
     
     public ResponseEntity getGoodsOwnerById(InsuranceOrder request);
 }

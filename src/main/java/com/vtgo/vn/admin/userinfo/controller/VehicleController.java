@@ -120,8 +120,12 @@ public class VehicleController extends BaseController implements VehicleService 
             if (request.getVehicleId() != null) {
                 Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.VEHICLE_SET, request.getVehicleId());
                 if (rec != null) {
+                    Vehicle vehicle = new Vehicle();
+                    vehicle.parse(rec);
+                    String plate = vehicle.getLicencePlate();
+                    vehicle.setVehicleCode("VH" + plate);
                     update(AerospikeFactory.getInstance().onlyUpdatePolicy,
-                            DatabaseConstants.NAMESPACE, DatabaseConstants.VEHICLE_SET, request.getVehicleId(), request.toBins());
+                            DatabaseConstants.NAMESPACE, DatabaseConstants.VEHICLE_SET, request.getVehicleId(), vehicle.toBins());
                     response.setStatus(ResponseConstants.SUCCESS);
                     response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
                 } else {
@@ -160,6 +164,8 @@ public class VehicleController extends BaseController implements VehicleService 
                     response.setMessage("Get vehicleId sequence error");
                     return ResponseEntity.status(HttpStatus.OK).body(response);
                 }
+                String vehicleCode = "VH" + request.getLicencePlate();
+                request.setVehicleCode(vehicleCode);
                 request.setVehicleId(vehicleId);
                 update(AerospikeFactory.getInstance().onlyCreatePolicy,
                         DatabaseConstants.NAMESPACE, DatabaseConstants.VEHICLE_SET, request.getVehicleId(), request.toBins());

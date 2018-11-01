@@ -86,19 +86,16 @@ public class InsuranceOrderController extends BaseController implements Insuranc
         BaseResponse response = new BaseResponse();
         try {
             if (request.getAccountId() != null) {
-                Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getAccountId());
-                if (rec != null) {
-                    update(AerospikeFactory.getInstance().onlyUpdatePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getAccountId(), request.toBins());
+                
+                    update(AerospikeFactory.getInstance().onlyUpdatePolicy, DatabaseConstants.NAMESPACE, 
+                            DatabaseConstants.INSURANCE_ORDER_SET, request.getAccountId(), request.toBins());
                     
                     response.setStatus(ResponseConstants.SUCCESS);
                     response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
 //                    InsuranceOrder insuOrder = new InsuranceOrder();
 //                    insuOrder.parse(rec);
 //                    response.setData(Arrays.asList(insuOrder));
-                } else {
-                    response.setStatus(ResponseConstants.SERVICE_ERROR);
-                    response.setMessage(ResponseConstants.SERVICE_INSURANCE_ORDER_NOT_FOUND);
-                }
+                
             } else {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
                 response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
@@ -140,10 +137,11 @@ public class InsuranceOrderController extends BaseController implements Insuranc
     }
 
     @Override
-    public ResponseEntity getInsuOrderById(InsuranceOrder request) {
+    public ResponseEntity getById(InsuranceOrder request) {
         BaseResponse response = new BaseResponse();
         try {
-            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getAccountId());
+            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, 
+                    request.getAccountId());
             response.setStatus(ResponseConstants.SUCCESS);
             response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
             if (rec != null) {
