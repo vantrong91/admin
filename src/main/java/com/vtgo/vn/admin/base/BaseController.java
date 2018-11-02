@@ -22,6 +22,11 @@ public class BaseController {
         Record rec = AerospikeFactory.getInstance().query(namespace, set, key, bins);
         return rec;
     }
+    
+    public Record getById(String namespace, String set, String key, String... bins) throws Exception {
+        Record rec = AerospikeFactory.getInstance().query(namespace, set, key, bins);
+        return rec;
+    }
 
     public RecordSet getByIdx(String namespace, String set, String binName, String indexName, String indexValue) throws Exception {
         RecordSet rec = AerospikeFactory.getInstance().queryByIndex(namespace, set, binName, indexName, indexValue);

@@ -6,6 +6,7 @@ com\vtgo\vn\admin\userinfo\controller\DriverController$1.class
 com\vtgo\vn\admin\userinfo\BO\BankAccount.class
 com\vtgo\vn\admin\userinfo\controller\VehicleOwnerController$1.class
 com\vtgo\vn\admin\userinfo\api\BalanceHisApi.class
+com\vtgo\vn\admin\userinfo\controller\PolicyController.class
 com\vtgo\vn\admin\userinfo\controller\TransferFeeController.class
 com\vtgo\vn\admin\userinfo\request\OrderSearchRequest.class
 com\vtgo\vn\admin\userinfo\api\CategoryApi.class
@@ -27,6 +28,7 @@ com\vtgo\vn\admin\userinfo\request\VehicleOwnerSearchRequest.class
 com\vtgo\vn\admin\pushnotify\MsgNotifyDriver.class
 com\vtgo\vn\admin\userinfo\controller\CategoryController.class
 com\vtgo\vn\admin\base\BaseObject.class
+com\vtgo\vn\admin\userinfo\service\PolicyService.class
 com\vtgo\vn\admin\userinfo\controller\VehicleController.class
 com\vtgo\vn\admin\userinfo\service\QuotationService.class
 com\vtgo\vn\admin\userinfo\service\OrderService.class
@@ -38,6 +40,7 @@ com\vtgo\vn\admin\userinfo\request\GoodOwnerSearchRequest.class
 com\vtgo\vn\admin\util\SequenceManager$SequenceObject.class
 com\vtgo\vn\admin\userinfo\controller\DriverController.class
 com\vtgo\vn\admin\util\SecurityUtils.class
+com\vtgo\vn\admin\userinfo\api\PolicyApi.class
 com\vtgo\vn\admin\config\ConfigContainer.class
 com\vtgo\vn\admin\pushnotify\Publish.class
 com\vtgo\vn\admin\userinfo\controller\AccountManagerController.class
@@ -62,6 +65,7 @@ com\vtgo\vn\admin\pushnotify\Constant$NOTIFY_TYPE.class
 com\vtgo\vn\admin\config\SwaggerConfig.class
 com\vtgo\vn\admin\userinfo\request\VehicleSearchRequest.class
 com\vtgo\vn\admin\pushnotify\MsgVehicleOwner.class
+com\vtgo\vn\admin\userinfo\BO\Policy.class
 com\vtgo\vn\admin\userinfo\controller\InsuranceOrderController.class
 com\vtgo\vn\admin\util\SequenceManager$SEQUENCE_MODE.class
 com\vtgo\vn\admin\userinfo\api\QuotationApi.class

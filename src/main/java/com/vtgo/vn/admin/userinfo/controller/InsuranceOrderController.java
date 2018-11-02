@@ -85,16 +85,20 @@ public class InsuranceOrderController extends BaseController implements Insuranc
     public ResponseEntity update(InsuranceOrder request) {
         BaseResponse response = new BaseResponse();
         try {
-            if (request.getAccountId() != null) {
-                
+            if (request.getOrderId()!= null) {
+                Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getOrderId());
+                if(rec != null){
                     update(AerospikeFactory.getInstance().onlyUpdatePolicy, DatabaseConstants.NAMESPACE, 
-                            DatabaseConstants.INSURANCE_ORDER_SET, request.getAccountId(), request.toBins());
+                            DatabaseConstants.INSURANCE_ORDER_SET, request.getOrderId(), request.toBins());
                     
                     response.setStatus(ResponseConstants.SUCCESS);
                     response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
-//                    InsuranceOrder insuOrder = new InsuranceOrder();
-//                    insuOrder.parse(rec);
-//                    response.setData(Arrays.asList(insuOrder));
+                    InsuranceOrder insuOrder = new InsuranceOrder();
+                    insuOrder.parse(rec);
+                    response.setData(Arrays.asList(insuOrder));
+                }
+                
+                    
                 
             } else {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
@@ -141,7 +145,7 @@ public class InsuranceOrderController extends BaseController implements Insuranc
         BaseResponse response = new BaseResponse();
         try {
             Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, 
-                    request.getAccountId());
+                    request.getOrderId());
             response.setStatus(ResponseConstants.SUCCESS);
             response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
             if (rec != null) {

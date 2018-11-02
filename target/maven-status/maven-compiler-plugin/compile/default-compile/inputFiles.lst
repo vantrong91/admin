@@ -17,6 +17,7 @@ D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\base\BaseReques
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\controller\TransferFeeController.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\controller\InsuranceOrderController.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\ServiceManager.java
+D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\BO\Policy.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\constant\ResponseConstants.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\api\OrderApi.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\controller\VehicleController.java
@@ -32,6 +33,7 @@ D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\base\BaseRespon
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\request\VehicleSearchRequest.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\http\filter\CorsFilter.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\controller\UpLoadFileController.java
+D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\controller\PolicyController.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\BO\VehicleOwner.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\request\VehicleOwnerSearchRequest.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\pushnotify\NotificationObjectPushToDriver.java
@@ -84,6 +86,7 @@ D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\pushnotify\Data
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\api\BalanceApi.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\config\SwaggerConfig.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\controller\CategoryController.java
+D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\service\PolicyService.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\api\VehicleApi.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\BO\Driver.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\service\UpLoadFileService.java
@@ -96,6 +99,7 @@ D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\BO\Par
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\base\BaseController.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\pushnotify\NotificationObjectPushToVehicleOwner.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\BO\MyFile.java
+D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\api\PolicyApi.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\api\UpLoadFileApi.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\BO\Balance.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\pushnotify\MsgNotifyDriver.java
