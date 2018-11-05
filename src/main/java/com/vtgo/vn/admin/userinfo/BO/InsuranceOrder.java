@@ -28,6 +28,24 @@ public class InsuranceOrder extends BaseRequest<Object> implements BaseObject {
     private String contractNo;
     private Long insuranPrice;
     private Long insuranSpend;
+    private Integer state;
+    private Long updateTime;
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public Long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Long updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public Long getAccountId() {
         return accountId;
@@ -86,6 +104,8 @@ public class InsuranceOrder extends BaseRequest<Object> implements BaseObject {
             this.insuranSpend = record.getLong("InsuranSpend");
             this.orderId = record.getString("OrderId");
             this.sumInsuPrice = record.getLong("SumInsuPrice");
+            this.state = record.getInt("State");
+            this.updateTime = record.getLong("UpdateTime");
         } catch (Exception e) {
             logger.error(e, e);
             return false;
@@ -102,6 +122,8 @@ public class InsuranceOrder extends BaseRequest<Object> implements BaseObject {
             this.insuranSpend = (Long) map.get("InsuranSpend");
             this.orderId = (String) map.get("OrderId");
             this.sumInsuPrice = (Long) map.get("SumInsuPrice");
+            this.state = Integer.parseInt(String.valueOf(map.get("State")));
+            this.updateTime = (Long) map.get("UpdateTime");
             return true;
         } catch (Exception e) {
             logger.error(e, e);
@@ -118,6 +140,8 @@ public class InsuranceOrder extends BaseRequest<Object> implements BaseObject {
         bins.add(new Bin("ContractNo", contractNo));
         bins.add(new Bin("InsuranPrice", insuranPrice ));
         bins.add(new Bin("InsuranSpend", insuranSpend));
+        bins.add(new Bin("State", state));
+        bins.add(new Bin("UpdateTime", updateTime));
         return bins.toArray(new Bin[bins.size()]);
     }
 

@@ -60,8 +60,8 @@ public class InsuranceOrderController extends BaseController implements Insuranc
                 response.setMessage("Get account Id sequence error");
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
-            request.setAccountId(accountId);
-            update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getAccountId(), request.toBins());
+            request.setState(1);
+            update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getOrderId(), request.toBins());
 
             response.setData(Arrays.asList(request));
             response.setStatus(ResponseConstants.SUCCESS);
@@ -88,6 +88,7 @@ public class InsuranceOrderController extends BaseController implements Insuranc
             if (request.getOrderId()!= null) {
                 Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getOrderId());
                 if(rec != null){
+                    request.setState(1);
                     update(AerospikeFactory.getInstance().onlyUpdatePolicy, DatabaseConstants.NAMESPACE, 
                             DatabaseConstants.INSURANCE_ORDER_SET, request.getOrderId(), request.toBins());
                     
@@ -117,10 +118,10 @@ public class InsuranceOrderController extends BaseController implements Insuranc
     public ResponseEntity delete(InsuranceOrder request) {
         BaseResponse response = new BaseResponse();
         try {
-            if (request.getAccountId() != null) {
-                Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getAccountId());
+            if (request.getOrderId()!= null) {
+                Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getOrderId());
                 if (rec != null) {
-                    delete(AerospikeFactory.getInstance().writePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getAccountId());
+                    delete(AerospikeFactory.getInstance().writePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getOrderId());
                     response.setStatus(ResponseConstants.SUCCESS);
                     response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
                 } else {

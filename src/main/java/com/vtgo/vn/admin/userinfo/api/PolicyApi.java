@@ -46,4 +46,16 @@ public class PolicyApi {
         LOGGER.debug("request /update: " + request);
         return policyService.update(request);
     }
+    
+    @PostMapping(value = "create", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity create(@RequestBody Policy request){
+        LOGGER.debug("request /create: " + request);
+        return policyService.create(request);
+    }
+    
+    @PostMapping(value = "delete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity delete(@RequestBody Policy request){
+        LOGGER.debug("request /delete: " +  request);
+        return policyService.delete(request);
+    }
 }

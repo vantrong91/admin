@@ -20,5 +20,9 @@ public interface PolicyService {
     public ResponseEntity getById(Policy request);
     
     public ResponseEntity update(Policy request);
+    
+    public ResponseEntity create(Policy request);
+    
+    public ResponseEntity delete(Policy request);
 
 }
