@@ -5,6 +5,7 @@
  */
 package com.vtgo.vn.admin.userinfo.service;
 import com.vtgo.vn.admin.userinfo.BO.InsuranceOrder;
+import com.vtgo.vn.admin.userinfo.request.InsuOrderCompleteRequest;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import org.springframework.http.ResponseEntity;
 
@@ -24,4 +25,8 @@ public interface InsuranceOrderService {
     public ResponseEntity getById(InsuranceOrder request);
     
     public ResponseEntity getGoodsOwnerById(InsuranceOrder request);
+    
+    public ResponseEntity getComplete(InsuranceOrder request);
+    
+    public ResponseEntity completeInsuOrder(InsuOrderCompleteRequest request);
 }

@@ -97,6 +97,7 @@ com\vtgo\vn\admin\aerospike\handler\AerospikeGetHandler.class
 com\vtgo\vn\admin\constant\DatabaseConstants.class
 com\vtgo\vn\admin\userinfo\BO\AccountManager.class
 com\vtgo\vn\admin\userinfo\BO\BalanceHis.class
+com\vtgo\vn\admin\userinfo\request\InsuOrderCompleteRequest.class
 com\vtgo\vn\admin\util\SequenceManager.class
 com\vtgo\vn\admin\pushnotify\TitleObj.class
 com\vtgo\vn\admin\userinfo\service\UpLoadFileService.class

@@ -6,6 +6,8 @@
 package com.vtgo.vn.admin.userinfo.api;
 
 import com.vtgo.vn.admin.userinfo.BO.InsuranceOrder;
+import com.vtgo.vn.admin.userinfo.request.InsuOrderCompleteRequest;
+import com.vtgo.vn.admin.userinfo.request.OrderCompleteRequest;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import com.vtgo.vn.admin.userinfo.service.InsuranceOrderService;
 
@@ -64,5 +66,17 @@ public class InsuranceOrderApi {
     public ResponseEntity getGoodOwnerById(@RequestBody InsuranceOrder request){
         LOGGER.debug("request /getGoodOwnerById: " + request);
         return insuranceOrderService.getGoodsOwnerById(request);
+    }
+    
+    @PostMapping(value = "/complete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces= MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity complete(@RequestBody InsuOrderCompleteRequest request){
+        LOGGER.debug("request /complete" + request);
+        return insuranceOrderService.completeInsuOrder(request);
+    }
+    
+    @PostMapping(value = "/getComplete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity getComplete(@RequestBody InsuranceOrder request){
+        LOGGER.debug("request /getComplete" + request);
+        return insuranceOrderService.getComplete(request);
     }
 }
