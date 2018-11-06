@@ -108,7 +108,8 @@ public class QuotationController extends BaseController implements QuotationServ
     public ResponseEntity getQuotationId(Quotation request) {
         BaseResponse response = new BaseResponse();
         try {
-            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.QUOTATION, Long.parseLong(request.getQuotationId()));
+            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.QUOTATION, request.getQuotationId());
+//        (DatabaseConstants.NAMESPACE, DatabaseConstants.QUOTATION, Long.parseLong(request.getQuotationId()));
             response.setStatus(ResponseConstants.SUCCESS);
             response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
             if (rec != null) {

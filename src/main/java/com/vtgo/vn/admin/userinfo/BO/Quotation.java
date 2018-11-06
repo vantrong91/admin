@@ -222,7 +222,7 @@ public class Quotation extends BaseRequest<Object> implements BaseObject {
             this.orderId = record.getString("OrderId");
             this.vehicleId = record.getLong("VehicleId");
             this.driverId = record.getLong("DriverId");
-            this.price = record.getLong("Price");
+            this.price = record.getValue("Price") instanceof Long ? record.getLong("Price") : Double.valueOf(record.getDouble("Price")).longValue();
             this.state = record.getLong("State");
             this.vat = record.getDouble("Vat");
             this.commission = record.getDouble("Commission");
