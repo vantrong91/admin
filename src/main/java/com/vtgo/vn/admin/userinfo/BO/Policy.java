@@ -130,13 +130,14 @@ public class Policy extends BaseRequest<Object> implements BaseObject {
     public boolean parse(Map map) {
         try {
             this.policyId = (Long) map.get("PolicyId");
-            this.ratioVat = Double.parseDouble(String.valueOf(map.get("RatioVat")));
-            this.constant = Double.parseDouble(String.valueOf(map.get("Constant")));
-            this.ratiRoseNoVat = Double.parseDouble(String.valueOf(map.get("RatiRoseNoVat")));
-            this.ratioRoseVat = Double.parseDouble(String.valueOf(map.get("RatioRoseVat")));
-            this.ratioVatTax = Double.parseDouble(String.valueOf(map.get("RatioVatTax")));
-            this.ratioPerTax = Double.parseDouble(String.valueOf(map.get("RatioPerTax")));
+            this.ratioVat = (Double) map.get("RatioVat");
+            this.constant = (Double) map.get("Constant");
+            this.ratiRoseNoVat = (Double) map.get("RatiRoseNoVat");
+            this.ratioRoseVat = (Double) map.get("RatioRoseVat");
+            this.ratioVatTax = (Double) map.get("RatioVatTax");
+            this.ratioPerTax = (Double) map.get("RatioPerTax");
             this.description = (String) map.get("Description");
+            //Double.parseDouble(String.valueOf(map.get("RatioPerTax")));
 //            this.pk = (Long) map.get("PK");
             return true;
         } catch (Exception e) {

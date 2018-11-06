@@ -8,6 +8,7 @@ package com.vtgo.vn.admin.userinfo.controller;
 import com.aerospike.client.Bin;
 import com.aerospike.client.Record;
 import com.aerospike.client.Value;
+import com.aerospike.client.query.RecordSet;
 import com.aerospike.client.query.ResultSet;
 import com.vtgo.vn.admin.aerospike.AerospikeFactory;
 import com.vtgo.vn.admin.base.BaseController;
@@ -88,12 +89,16 @@ public class PolicyController extends BaseController implements PolicyService {
         BaseResponse response = new BaseResponse();
         try {
             Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.POLICY_SET, request.getPolicyId());
-            response.setStatus(ResponseConstants.SUCCESS);
-            response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+
             if (rec != null) {
+                response.setStatus(ResponseConstants.SUCCESS);
+                response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
                 Policy policy = new Policy();
                 policy.parse(rec);
                 response.setData(Arrays.asList(policy));
+            } else {
+                response.setStatus(ResponseConstants.SERVICE_FAIL);
+                response.setMessage(ResponseConstants.SERVICE_POLICY_NOT_FOUND);
             }
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
@@ -138,33 +143,33 @@ public class PolicyController extends BaseController implements PolicyService {
     public ResponseEntity create(Policy request) {
         BaseResponse response = new BaseResponse();
         try {
-            long policyId = SequenceManager.getInstance().getSequence(Policy.class.getSimpleName());
-            if (policyId <= 0) {
+            if (request.getPolicyId() != null) {
+                Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.POLICY_SET, request.getPolicyId());
+
+                if (rec != null) {
+                    response.setStatus(ResponseConstants.SERVICE_ERROR);
+                    response.setMessage("ID đã được sử dụng");
+                } else {
+                    List<Bin> lstBin = new ArrayList();
+                    lstBin.add(new Bin("PolicyId", request.getPolicyId()));
+                    lstBin.add(new Bin("Constant", request.getConstant()));
+                    lstBin.add(new Bin("RatioVat", request.getRatioVat()));
+                    lstBin.add(new Bin("RatiRoseNoVat", request.getRatiRoseNoVat()));
+                    lstBin.add(new Bin("RatioRoseVat", request.getRatioRoseVat()));
+                    lstBin.add(new Bin("RatioVatTax", request.getRatioVatTax()));
+                    lstBin.add(new Bin("RatioPerTax", request.getRatioPerTax()));
+                    lstBin.add(new Bin("Description", request.getDescription()));
+                    update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE,
+                            DatabaseConstants.POLICY_SET, request.getPolicyId(), lstBin.toArray(new Bin[lstBin.size()]));
+                    response.setData(Arrays.asList(request));
+                    response.setStatus(ResponseConstants.SUCCESS);
+                    response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+                }
+            } else {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
-                response.setMessage("Get policyId squence error");
-                return ResponseEntity.status(HttpStatus.OK).body(response);
+                response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             }
 
-            List<Bin> lstBin = new ArrayList();
-            lstBin.add(new Bin("PolicyId", policyId));
-            lstBin.add(new Bin("Constant", request.getConstant()));
-            lstBin.add(new Bin("RatioVat", request.getRatioVat()));
-            lstBin.add(new Bin("RatiRoseNoVat", request.getRatiRoseNoVat()));
-            lstBin.add(new Bin("RatioRoseVat", request.getRatioRoseVat()));
-            lstBin.add(new Bin("RatioVatTax", request.getRatioVatTax()));
-            lstBin.add(new Bin("RatioPerTax", request.getRatioPerTax()));
-            lstBin.add(new Bin("Description", request.getDescription()));
-            try {
-                update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE,
-                        DatabaseConstants.POLICY_SET, policyId, lstBin.toArray(new Bin[lstBin.size()]));
-            } catch (Exception e) {
-                response.setStatus(ResponseConstants.SERVICE_FAIL);
-                response.setMessage(e.getMessage());
-                return ResponseEntity.status(HttpStatus.OK).body(response);
-            }
-            response.setData(Arrays.asList(request));
-            response.setStatus(ResponseConstants.SUCCESS);
-            response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             logger.error(e, e);
@@ -179,17 +184,17 @@ public class PolicyController extends BaseController implements PolicyService {
         BaseResponse response = new BaseResponse();
         try {
             Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.POLICY_SET, request.getPolicyId());
-            if(rec != null){
+            if (rec != null) {
                 delete(AerospikeFactory.getInstance().writePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.POLICY_SET, request.getPolicyId());
                 response.setStatus(ResponseConstants.SUCCESS);
                 response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
-            }else{
+            } else {
                 response.setStatus(ResponseConstants.SERVICE_ERROR);
                 response.setMessage(ResponseConstants.SERVICE_POLICY_NOT_FOUND);
             }
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
             response.setStatus(ResponseConstants.SERVICE_FAIL);
             response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);
