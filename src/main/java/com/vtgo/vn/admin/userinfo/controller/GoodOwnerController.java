@@ -113,13 +113,13 @@ public class GoodOwnerController extends BaseController implements GoodOwnerServ
     public ResponseEntity getGoodOwnerById(GoodOwner request) {
         BaseResponse response = new BaseResponse();
         try {
-            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.GOOD_OWNER, request.getUserId());
+            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.GOOD_OWNER, request.getAccountId());
             response.setStatus(ResponseConstants.SUCCESS);
             response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
             if (rec != null) {
-                VehicleOwner vehicleOwner = new VehicleOwner();
-                vehicleOwner.parse(rec);
-                response.setData(Arrays.asList(vehicleOwner));
+                GoodOwner goodOwner = new GoodOwner();
+                goodOwner.parse(rec);
+                response.setData(Arrays.asList(goodOwner));
             }
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception ex) {
