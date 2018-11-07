@@ -64,15 +64,15 @@ public class QuotationController extends BaseController implements QuotationServ
             String searchValue = request.getSearchParam();
             if (searchValue != null && !searchValue.isEmpty()) {
                 Map<String, Object> f = new HashMap<>();
-                f.put("field", "quotationID");
+                f.put("field", "QuotationID");
                 f.put("value", searchValue);
                 f.put("operator", "contain");
-                argumentFilter.add(new Value.MapValue(f));                
+                argumentFilter.add(new Value.MapValue(f));
             }
             List<Value.MapValue> argumentSorters = new ArrayList<>();
             Map<String, Object> s1 = new HashMap<>();
-            s1.put("sort_key", "quotationID");
-            s1.put("order", "ASC");
+            s1.put("sort_key", "QuotationID");
+            s1.put("order", "DESC");
             s1.put("type", "STRING");
             argumentSorters.add(new Value.MapValue(s1));
 
@@ -139,6 +139,58 @@ public class QuotationController extends BaseController implements QuotationServ
     @Override
     public ResponseEntity delete(Quotation request) {
         return null;
+    }
+
+    @Override
+    public ResponseEntity getQuotationByOrderId(SearchRequest request) {
+
+        BaseResponse response = new BaseResponse();
+        List<Quotation> quotation = new ArrayList<>();
+        try {
+            Map<String, Object> argument = new HashMap<>();
+            List<Value.MapValue> argumentFilter = new ArrayList<>();
+
+            String searchValue = request.getSearchParam();
+            
+            Map<String, Object> f = new HashMap<>();
+            f.put("field", "OrderId");
+            f.put("value", searchValue);
+            f.put("operator", "=");
+            argumentFilter.add(new Value.MapValue(f));
+
+            List<Value.MapValue> argumentSorters = new ArrayList<>();
+            Map<String, Object> s1 = new HashMap<>();
+            s1.put("sort_key", "QuotationID");
+            s1.put("order", "DESC");
+            s1.put("type", "STRING");
+            argumentSorters.add(new Value.MapValue(s1));
+
+            argument.put("sorters", new Value.ListValue(argumentSorters));
+            argument.put("filters", new Value.ListValue(argumentFilter));
+            ResultSet resultSet = AerospikeFactory.getInstance()
+                    .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.QUOTATION, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+            if (resultSet != null) {
+                Iterator<Object> objectIterator = resultSet.iterator();
+                while (objectIterator.hasNext()) {
+                    ArrayList arrayList = (ArrayList) objectIterator.next();
+                    for (Object o : arrayList) {
+                        Quotation temp = new Quotation();
+                        if (temp.parse((Map) o)) {
+                            quotation.add(temp);
+                        }
+                    }
+                }
+            }
+            response.setData(quotation);
+            response.setStatus(ResponseConstants.SUCCESS);
+            response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
     }
 
 }

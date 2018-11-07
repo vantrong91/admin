@@ -5,7 +5,6 @@
  */
 package com.vtgo.vn.admin.userinfo.api;
 
-
 import com.vtgo.vn.admin.userinfo.BO.Quotation;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import com.vtgo.vn.admin.userinfo.service.QuotationService;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 /**
  *
  * @author Admin
@@ -26,21 +26,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("v1/quotation")
 @AllArgsConstructor
 public class QuotationApi {
+
     private static final Logger LOGGER = Logger.getLogger(QuotationApi.class.getName());
     private final QuotationService quotationService;
-    
+
     @PostMapping(value = "/search", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity search(@RequestBody SearchRequest request) {
         LOGGER.debug("request /searchQuotation: " + request);
         return quotationService.searchQuotation(request);
     }
-    
+
     @PostMapping(value = "/get-by-id", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity getById(@RequestBody Quotation request) {
         LOGGER.debug("request /getById: " + request);
         return quotationService.getQuotationId(request);
     }
-    
+
+    @PostMapping(value = "/get-by-order-id", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity getByOrderId(@RequestBody SearchRequest request) {
+        LOGGER.debug("request/ getQuotationByOrderId: " + request.toString());
+        return quotationService.getQuotationByOrderId(request);
+    }
+
     @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity update(@RequestBody Quotation request) {
         LOGGER.debug("request /update: " + request);
@@ -58,5 +65,5 @@ public class QuotationApi {
         LOGGER.debug("request /delete: " + request);
         return quotationService.delete(request);
     }
-    
+
 }
