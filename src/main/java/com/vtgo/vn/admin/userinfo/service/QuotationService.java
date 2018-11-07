@@ -14,13 +14,16 @@ import org.springframework.http.ResponseEntity;
  * @author Admin
  */
 public interface QuotationService {
+
     public ResponseEntity searchQuotation(SearchRequest request);
 
     public ResponseEntity getQuotationId(Quotation request);
 
+    public ResponseEntity getQuotationByOrderId(SearchRequest request);
+
     public ResponseEntity update(Quotation request);
 
     public ResponseEntity create(Quotation request);
-    
+
     public ResponseEntity delete(Quotation request);
 }
