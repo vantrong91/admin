@@ -54,6 +54,14 @@ public class CategoryController extends BaseController implements CategoryServic
                 f.put("operator", "contain");
                 argumentFilter.add(new Value.MapValue(f));
             }
+            List<Value.MapValue> argumentSorters = new ArrayList<>();
+            Map<String, Object> s1 = new HashMap<>();
+            s1.put("sort_key", "PK");
+            s1.put("order", "ASC");
+            s1.put("type", "LONG");
+            argumentSorters.add(new Value.MapValue(s1));
+
+            argument.put("sorters", new Value.ListValue(argumentSorters));
 
             argument.put("filters", new Value.ListValue(argumentFilter));
             ResultSet resultSet = AerospikeFactory.getInstance().aggregate(AerospikeFactory.getInstance().queryPolicy,
@@ -121,7 +129,7 @@ public class CategoryController extends BaseController implements CategoryServic
                     response.setStatus(ResponseConstants.SERVICE_ERROR);
                     response.setMessage(ResponseConstants.SERVICE_CATEGORY_NOT_FOUND);
                 }
-            }else{
+            } else {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
                 response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             }

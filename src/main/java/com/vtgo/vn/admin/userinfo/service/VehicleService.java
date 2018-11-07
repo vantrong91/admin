@@ -26,4 +26,6 @@ public interface VehicleService {
     public ResponseEntity delete(Vehicle request);    
 
     public ResponseEntity getListVehicleByOwner(Vehicle request);
+    
+    public ResponseEntity getListVehicleType(SearchRequest request);
 }

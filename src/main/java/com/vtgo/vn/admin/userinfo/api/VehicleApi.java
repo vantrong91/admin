@@ -57,6 +57,12 @@ public class VehicleApi {
     public ResponseEntity delete(@RequestBody Vehicle request) {
         LOGGER.debug("request /delete: " + request);
         return vehicleService.delete(request);
-}
+    }
+    
+    @PostMapping(value = "get-vehicle-type", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity getVehicleType(@RequestBody SearchRequest request){
+        LOGGER.debug("request /getVehicleType: " + request);
+        return vehicleService.getListVehicleType(request);
+    }
 
 }

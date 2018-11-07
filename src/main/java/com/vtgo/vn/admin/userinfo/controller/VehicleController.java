@@ -14,6 +14,7 @@ import com.vtgo.vn.admin.base.BaseController;
 import com.vtgo.vn.admin.base.BaseResponse;
 import com.vtgo.vn.admin.constant.DatabaseConstants;
 import com.vtgo.vn.admin.constant.ResponseConstants;
+import com.vtgo.vn.admin.userinfo.BO.Category;
 import com.vtgo.vn.admin.userinfo.BO.Vehicle;
 import com.vtgo.vn.admin.userinfo.BO.VehicleOwner;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
@@ -118,20 +119,12 @@ public class VehicleController extends BaseController implements VehicleService 
         BaseResponse response = new BaseResponse();
         try {
             if (request.getVehicleId() != null) {
-                Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.VEHICLE_SET, request.getVehicleId());
-                if (rec != null) {
-                    Vehicle vehicle = new Vehicle();
-                    vehicle.parse(rec);
-                    String plate = vehicle.getLicencePlate();
-                    vehicle.setVehicleCode("VH" + plate);
-                    update(AerospikeFactory.getInstance().onlyUpdatePolicy,
-                            DatabaseConstants.NAMESPACE, DatabaseConstants.VEHICLE_SET, request.getVehicleId(), vehicle.toBins());
-                    response.setStatus(ResponseConstants.SUCCESS);
-                    response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
-                } else {
-                    response.setStatus(ResponseConstants.SERVICE_ERROR);
-                    response.setMessage(ResponseConstants.SERVICE_VEHICLE_OWNER_NOT_FOUND);
-                }
+                String vehicleCode = "VH" +  request.getLicencePlate();
+                request.setVehicleCode(vehicleCode);
+                update(AerospikeFactory.getInstance().onlyUpdatePolicy,
+                        DatabaseConstants.NAMESPACE, DatabaseConstants.VEHICLE_SET, request.getVehicleId(), request.toBins());
+                response.setStatus(ResponseConstants.SUCCESS);
+                response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
             } else {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
                 response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
@@ -148,7 +141,7 @@ public class VehicleController extends BaseController implements VehicleService 
 
     @Override
     public ResponseEntity create(Vehicle request) {
-        BaseResponse response = new BaseResponse ();
+        BaseResponse response = new BaseResponse();
         try {
             if (request.getLicencePlate() != null) {
                 RecordSet rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE, DatabaseConstants.VEHICLE_SET, "LisencePlate",
@@ -229,6 +222,57 @@ public class VehicleController extends BaseController implements VehicleService 
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
+    @Override
+    public ResponseEntity getListVehicleType(SearchRequest request) {
+        BaseResponse response = new BaseResponse();
+        List<Category> lstCategory = new ArrayList<>();
+        try {
+            Map<String, Object> argument = new HashMap<>();
+            List<Value.MapValue> argumentFilter = new ArrayList<>();
+            
+            String searchValue = request.getSearchParam();
+            if(searchValue != null && ! searchValue.isEmpty()){
+                Map<String, Object> f = new HashMap<>();
+                f.put("field", "ID_CHA");
+                f.put("value", searchValue);
+                f.put("operator", "contain");
+                argumentFilter.add(new Value.MapValue(f));
+            }
+            List<Value.MapValue> argumentSorters = new ArrayList<>();
+            Map<String, Object> s1 = new HashMap<>();
+            s1.put("sort_key", "PK");
+            s1.put("order","ASC");
+            s1.put("type","LONG");
+            argumentSorters.add(new Value.MapValue(s1));
+            
+            argument.put("sorters", new Value.ListValue(argumentSorters));
+            argument.put("filters", new Value.ListValue(argumentFilter));
+            
+            ResultSet rs = AerospikeFactory.getInstance().aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.CATEGORY_SET,"FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+            if(rs != null){
+                Iterator<Object> obIterator = rs.iterator();
+                while(obIterator.hasNext()){
+                    ArrayList arr = (ArrayList) obIterator.next();
+                    for(Object o : arr) {
+                        Category category = new Category();
+                        if(category.parse((Map) o)){
+                            lstCategory.add(category);
+                        }
+                    }
+                }
+            }
+            response.setData(lstCategory);
+            response.setStatus(ResponseConstants.SUCCESS);
+            response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             response.setStatus(ResponseConstants.SERVICE_FAIL);
             response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);
