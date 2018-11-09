@@ -132,6 +132,60 @@ public class AccountManagerController extends BaseController implements AccountM
     }
 
     @Override
+    public ResponseEntity searchByEmail(SearchRequest request) {
+        BaseResponse response = new BaseResponse();
+        List<AccountManager> listAcc = new ArrayList<>();
+        try {
+            Map<String, Object> argument = new HashMap<>();
+            List<Value.MapValue> argumentFilter = new ArrayList<>();
+            String searchVal = request.getSearchParam();
+            if (searchVal != null && !searchVal.isEmpty()) {
+                Map<String, Object> f = new HashMap<>();
+                f.put("field", "Email");
+                f.put("value", searchVal);
+                f.put("operator", "=");
+                argumentFilter.add(new Value.MapValue(f));
+
+                List<Value.MapValue> argumentSorters = new ArrayList<>();
+                Map<String, Object> s = new HashMap<>();
+                s.put("sort_key", "AccountId");
+                s.put("order", "DESC");
+                s.put("type", "STRING");
+                argumentSorters.add(new Value.MapValue(s));
+
+                argument.put("sorters", new Value.ListValue(argumentSorters));
+                argument.put("filters", new Value.ListValue(argumentFilter));
+                ResultSet resultSet = AerospikeFactory.getInstance()
+                        .aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE,
+                                DatabaseConstants.ACCOINT_MAN_SET, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+                if (resultSet != null) {
+                    Iterator<Object> objectIterator = resultSet.iterator();
+                    while (objectIterator.hasNext()) {
+                        ArrayList arrayList = (ArrayList) objectIterator.next();
+                        for (Object o : arrayList) {
+                            AccountManager accountManager = new AccountManager();
+                            if (accountManager.parse((Map) o)) {
+                                accountManager.getPassword();
+                                listAcc.add(accountManager);
+                            }
+                        }
+                    }
+                }
+            }
+
+            response.setData(listAcc);
+            response.setStatus(ResponseConstants.SUCCESS);
+            response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception ex) {
+            log.debug(ex.getMessage(), ex);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
+    @Override
     public ResponseEntity create(AccountManager request) {
         BaseResponse response = new BaseResponse();
         try {
@@ -172,7 +226,7 @@ public class AccountManagerController extends BaseController implements AccountM
             String accountCode = "US" + request.getPhoneNumber();
             lstBin.add(new Bin("AccountCode", accountCode));
             lstBin.add(new Bin("AccountToken", token));
-            lstBin.add(new Bin("FileAvata", request.getFileAvata()));
+//            lstBin.add(new Bin("FileAvata", request.getFileAvata()));
             try {
                 update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE,
                         DatabaseConstants.ACCOINT_MAN_SET, accountId, lstBin.toArray(new Bin[lstBin.size()]));
@@ -320,7 +374,7 @@ public class AccountManagerController extends BaseController implements AccountM
             }
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            log.error(e.getMessage(),e);
+            log.error(e.getMessage(), e);
             response.setStatus(ResponseConstants.SERVICE_FAIL);
             response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -334,10 +388,10 @@ public class AccountManagerController extends BaseController implements AccountM
             Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId());
             if (rec != null) {
                 String password = request.getPassword();
-                String salt = SecurityUtils.createSalt();;            
+                String salt = SecurityUtils.createSalt();;
                 BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-                request.setPassword(bCryptPasswordEncoder.encode(password)); 
-                request.setSalt(salt); 
+                request.setPassword(bCryptPasswordEncoder.encode(password));
+                request.setSalt(salt);
                 update(AerospikeFactory.getInstance().onlyUpdatePolicy,
                         DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId(), request.toBins());
                 response.setStatus(ResponseConstants.SUCCESS);

@@ -20,6 +20,8 @@ public interface AccountManagerService {
 
     public ResponseEntity getAccountManById(AccountManager request);
     
+    public ResponseEntity searchByEmail(SearchRequest request);
+    
     public ResponseEntity create(AccountManager request);
     
     public ResponseEntity checkLogin(AccountManager request);
