@@ -106,8 +106,8 @@ public class VehicleOwnerController extends BaseController implements VehicleOwn
             }
             List<Value.MapValue> argumentSorters = new ArrayList<>();
             Map<String, Object> s1 = new HashMap<>();
-            s1.put("sort_key", "FullName");
-            s1.put("order", "ASC");
+            s1.put("sort_key", "AccountId");
+            s1.put("order", "DESC");
             s1.put("type", "STRING");
             argumentSorters.add(new Value.MapValue(s1));
 

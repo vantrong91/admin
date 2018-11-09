@@ -26,6 +26,7 @@ public class Driver extends BaseRequest<Object> implements BaseObject {
     private String fullName;
     private String nationality;
     private String licenseNo;
+    private String typeLicenseNo;
     private Long issueDate;
     private String issueBy;
     private Long gender;
@@ -68,6 +69,14 @@ public class Driver extends BaseRequest<Object> implements BaseObject {
 
     public String getNationality() {
         return nationality;
+    }
+    
+    public String getTypeLicenseNo() {
+        return typeLicenseNo;
+    }
+
+    public void setTypeLicenseNo(String typeLicenseNo) {
+        this.typeLicenseNo = typeLicenseNo;
     }
 
     public void setNationality(String nationality) {
@@ -265,6 +274,7 @@ public class Driver extends BaseRequest<Object> implements BaseObject {
             this.address = (Map<String, String>) record.getMap("Address");
             this.attachProperties = (Map<String, List<String>>) record.getMap("AttachProp");
             this.driverCode = record.getString("DriverCode");
+            this.typeLicenseNo = record.getString("TypeLicenseNo");
 
         } catch (Exception ex) {
             logger.error(ex, ex);
@@ -282,6 +292,7 @@ public class Driver extends BaseRequest<Object> implements BaseObject {
             bins.add(new Bin("FullName", fullName));
             bins.add(new Bin("Email", email));
             bins.add(new Bin("Nationality", nationality));
+            bins.add(new Bin("TypeLicenseNo", typeLicenseNo));
             bins.add(new Bin("LicenseNo", licenseNo));
             bins.add(new Bin("IssueDate", issueDate));
             bins.add(new Bin("IssueBy", issueBy));
@@ -311,6 +322,7 @@ public class Driver extends BaseRequest<Object> implements BaseObject {
             this.fullName = (String) map.get("FullName");
             this.email = (String) map.get("Email");
             this.nationality = (String) map.get("Nationality");
+            this.typeLicenseNo = (String) map.get("TypeLicenseNo");
             this.licenseNo = (String) map.get("LicenseNo");
             this.issueDate = (Long) map.get("IssueDate");
             this.issueBy = (String) map.get("IssueBy");
