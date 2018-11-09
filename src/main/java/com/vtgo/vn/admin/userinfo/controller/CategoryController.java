@@ -46,12 +46,12 @@ public class CategoryController extends BaseController implements CategoryServic
         try {
             Map<String, Object> argument = new HashMap<>();
             List<Value.MapValue> argumentFilter = new ArrayList<>();
-            String searchValue = request.getSearchParam();
-            if (searchValue != null && !searchValue.isEmpty()) {
+            Long searchValue = request.getSearchParam2();
+            if (searchValue != null) {
                 Map<String, Object> f = new HashMap<>();
-                f.put("field", "Type");
+                f.put("field", "ID_CHA");
                 f.put("value", searchValue);
-                f.put("operator", "contain");
+                f.put("operator", "=");
                 argumentFilter.add(new Value.MapValue(f));
             }
             List<Value.MapValue> argumentSorters = new ArrayList<>();
