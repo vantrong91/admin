@@ -187,7 +187,34 @@ public class VehicleOwnerController extends BaseController implements VehicleOwn
                 Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.VEHICLE_OWNER_SET, request.getAccountId());
                 if (rec != null) {
                     update(AerospikeFactory.getInstance().onlyUpdatePolicy,
-                            DatabaseConstants.NAMESPACE, DatabaseConstants.VEHICLE_OWNER_SET, request.getAccountId().toString(), request.toBins());
+                            DatabaseConstants.NAMESPACE, DatabaseConstants.VEHICLE_OWNER_SET, request.getAccountId(), request.toBins());
+
+                    //update Bank
+                    if (request.getBankAccountLst() != null && !request.getBankAccountLst().isEmpty()) {
+                        List<BankAccount> lstBankCard = request.getBankAccountLst();
+                        List<Bin> bins = new ArrayList<>();
+                        bins.add(new Bin("AccountId", request.getAccountId()));
+                        Map<Integer, Map<String, String>> mapBank = new HashMap<>();
+                        int j = 1;
+                        for (BankAccount bankCard : lstBankCard) {
+                            Map<String, String> infoBank = new HashMap<>();
+                            infoBank.put("BankCode", bankCard.getBankCode());
+                            infoBank.put("AccountNumber", bankCard.getAccountNumber());
+                            infoBank.put("OwnerName", bankCard.getOwnerName());
+                            infoBank.put("Branch", bankCard.getBranch());
+                            mapBank.put(j, infoBank);
+                            j++;
+                        }
+                        if (!mapBank.isEmpty()) {
+                            Record recBank = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.BANK_SET, request.getAccountId());
+                            if (recBank != null) {
+                                bins.add(new Bin("BankInfo", mapBank));
+                                update(AerospikeFactory.getInstance().onlyUpdatePolicy,
+                                        DatabaseConstants.NAMESPACE, DatabaseConstants.BANK_SET, request.getAccountId(), bins.toArray(new Bin[bins.size()]));
+                            }
+                        }
+                    }
+
                     response.setStatus(ResponseConstants.SUCCESS);
                     response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
                 } else {
