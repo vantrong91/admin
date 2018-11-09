@@ -14,6 +14,15 @@ import java.io.Serializable;
  */
 public class SearchRequest extends BaseRequest<Object> implements Serializable {
     private String searchParam;
+    private Long searchParam2;
+
+    public Long getSearchParam2() {
+        return searchParam2;
+    }
+
+    public void setSearchParam2(Long searchParam2) {
+        this.searchParam2 = searchParam2;
+    }
 
     public String getSearchParam() {
         return searchParam;

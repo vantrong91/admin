@@ -1,3 +1,4 @@
+D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\api\AdministrationApi.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\pushnotify\MsgVehicleOwner.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\aerospike\handler\AerospikePutHandler.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\api\DriverApi.java
@@ -30,6 +31,7 @@ D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\BO\Tra
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\request\OrderSearchRequest.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\service\BalanceHisService.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\base\BaseResponse.java
+D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\controller\AdministrationController.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\request\VehicleSearchRequest.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\http\filter\CorsFilter.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\controller\UpLoadFileController.java
@@ -76,6 +78,7 @@ D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\pushnotify\Data
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\util\ObjectUtils.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\BO\AccountManager.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\constant\AccountType.java
+D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\BO\Administration.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\aerospike\handler\AerospikeGetHandler.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\controller\AccountManagerController.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\request\OrderCompleteRequest.java
@@ -105,4 +108,5 @@ D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\api\Up
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\BO\Balance.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\pushnotify\MsgNotifyDriver.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\service\OrderService.java
+D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\userinfo\service\AdministrationService.java
 D:\Angular\backend-v3\vtgo-admin\src\main\java\com\vtgo\vn\admin\base\BaseObject.java
