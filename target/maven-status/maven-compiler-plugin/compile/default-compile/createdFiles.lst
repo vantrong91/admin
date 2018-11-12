@@ -1,3 +1,4 @@
+com\vtgo\vn\admin\userinfo\api\EmailApi.class
 com\vtgo\vn\admin\userinfo\controller\AdministrationController.class
 com\vtgo\vn\admin\userinfo\api\GoodOwnerApi.class
 com\vtgo\vn\admin\pushnotify\NotificationObjectPushToVehicleOwner.class
@@ -45,6 +46,7 @@ com\vtgo\vn\admin\util\SecurityUtils.class
 com\vtgo\vn\admin\userinfo\api\PolicyApi.class
 com\vtgo\vn\admin\config\ConfigContainer.class
 com\vtgo\vn\admin\pushnotify\Publish.class
+com\vtgo\vn\admin\userinfo\request\SaltRequest.class
 com\vtgo\vn\admin\userinfo\controller\AccountManagerController.class
 com\vtgo\vn\admin\pushnotify\MsgNotifyGoodsOwner.class
 com\vtgo\vn\admin\userinfo\BO\Transaction.class
@@ -53,6 +55,7 @@ com\vtgo\vn\admin\constant\DatabaseConstants$ResultText.class
 com\vtgo\vn\admin\userinfo\service\VehicleService.class
 com\vtgo\vn\admin\userinfo\service\AccountManagerService.class
 com\vtgo\vn\admin\userinfo\BO\InsuranceOrder.class
+com\vtgo\vn\admin\userinfo\service\EmailService.class
 com\vtgo\vn\admin\util\ObjectUtils.class
 com\vtgo\vn\admin\userinfo\BO\Administration.class
 com\vtgo\vn\admin\userinfo\api\InsuranceOrderApi.class
@@ -101,8 +104,10 @@ com\vtgo\vn\admin\aerospike\handler\AerospikeGetHandler.class
 com\vtgo\vn\admin\constant\DatabaseConstants.class
 com\vtgo\vn\admin\userinfo\BO\AccountManager.class
 com\vtgo\vn\admin\userinfo\BO\BalanceHis.class
+com\vtgo\vn\admin\userinfo\controller\EmailController.class
 com\vtgo\vn\admin\userinfo\request\InsuOrderCompleteRequest.class
 com\vtgo\vn\admin\userinfo\service\AdministrationService.class
+com\vtgo\vn\admin\userinfo\request\SendMailRequest.class
 com\vtgo\vn\admin\util\SequenceManager.class
 com\vtgo\vn\admin\pushnotify\TitleObj.class
 com\vtgo\vn\admin\userinfo\service\UpLoadFileService.class

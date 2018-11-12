@@ -18,6 +18,8 @@ public interface AccountManagerService {
 
     public ResponseEntity searchAccountMan(SearchRequest request);
     
+    public ResponseEntity getAccountManById(AccountManager request);
+    
     public ResponseEntity searchByEmail(SearchRequest request);
     
     public ResponseEntity create(AccountManager request);

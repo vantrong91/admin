@@ -35,6 +35,12 @@ public class AccounManagerApi {
         return accountManagerService.searchAccountMan(search);
     }
     
+    @PostMapping(value = "/get-by-id", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity getById(@RequestBody AccountManager request) {
+        log.debug("request /getById: " + request.getAccountId());
+        return accountManagerService.getAccountManById(request);
+    }
+    
     @PostMapping(value = "/search-by-email", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity searchByEmail(@RequestBody SearchRequest search) {
          log.debug(search.getSearchParam());
