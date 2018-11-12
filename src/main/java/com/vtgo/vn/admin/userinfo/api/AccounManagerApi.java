@@ -41,6 +41,12 @@ public class AccounManagerApi {
         return accountManagerService.getAccountManById(request);
     }
     
+    @PostMapping(value = "/search-by-email", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity searchByEmail(@RequestBody SearchRequest search) {
+         log.debug(search.getSearchParam());
+        return accountManagerService.searchByEmail(search);
+    }
+    
     @PostMapping(value = "/logout", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity logout(@RequestBody AccountManager request){
         log.debug("request /logout: " + request.getAccountId());
