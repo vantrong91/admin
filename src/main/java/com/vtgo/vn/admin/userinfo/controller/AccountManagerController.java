@@ -111,27 +111,6 @@ public class AccountManagerController extends BaseController implements AccountM
     }
 
     @Override
-    public ResponseEntity getAccountManById(AccountManager request) {
-        BaseResponse response = new BaseResponse();
-        try {
-            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId());
-            response.setStatus(ResponseConstants.SUCCESS);
-            response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
-            if (rec != null) {
-                AccountManager accountManager = new AccountManager();
-                accountManager.parse(rec);
-                response.setData(Arrays.asList(accountManager));
-            }
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (Exception ex) {
-            log.error(ex.getMessage(), ex);
-            response.setStatus(ResponseConstants.SERVICE_FAIL);
-            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
-    }
-
-    @Override
     public ResponseEntity searchByEmail(SearchRequest request) {
         BaseResponse response = new BaseResponse();
         List<AccountManager> listAcc = new ArrayList<>();

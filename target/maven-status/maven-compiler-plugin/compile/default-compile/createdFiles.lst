@@ -83,6 +83,7 @@ com\vtgo\vn\admin\config\Config.class
 com\vtgo\vn\admin\userinfo\BO\Balance.class
 com\vtgo\vn\admin\userinfo\BO\Driver.class
 com\vtgo\vn\admin\pushnotify\DataGoodsOwner.class
+com\vtgo\vn\admin\userinfo\BO\User.class
 com\vtgo\vn\admin\aerospike\DatabaseMsg.class
 com\vtgo\vn\admin\pushnotify\NotificationObjectPushToDriver.class
 com\vtgo\vn\admin\userinfo\request\DriverSearchRequest.class
