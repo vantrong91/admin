@@ -17,18 +17,18 @@ import org.springframework.http.ResponseEntity;
 public interface AccountManagerService {
 
     public ResponseEntity searchAccountMan(SearchRequest request);
-    
-    public ResponseEntity getAccountManById(AccountManager request);
-    
+
     public ResponseEntity searchByEmail(SearchRequest request);
-    
+
+    public ResponseEntity getAccountManById(AccountManager request);
+
     public ResponseEntity create(AccountManager request);
-    
+
     public ResponseEntity checkLogin(AccountManager request);
-    
+
     public ResponseEntity delete(AccountManager request);
-    
+
     public ResponseEntity logout(AccountManager request);
-    
+
     public ResponseEntity update(AccountManager request);
 }

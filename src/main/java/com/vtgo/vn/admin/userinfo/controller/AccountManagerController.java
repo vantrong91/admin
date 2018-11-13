@@ -109,7 +109,7 @@ public class AccountManagerController extends BaseController implements AccountM
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
-    
+
     @Override
     public ResponseEntity getAccountManById(AccountManager request) {
         BaseResponse response = new BaseResponse();
@@ -226,7 +226,7 @@ public class AccountManagerController extends BaseController implements AccountM
             String accountCode = "US" + request.getPhoneNumber();
             lstBin.add(new Bin("AccountCode", accountCode));
             lstBin.add(new Bin("AccountToken", token));
-//            lstBin.add(new Bin("FileAvata", request.getFileAvata()));
+            lstBin.add(new Bin("FileAvata", request.getFileAvata()));
             try {
                 update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE,
                         DatabaseConstants.ACCOINT_MAN_SET, accountId, lstBin.toArray(new Bin[lstBin.size()]));

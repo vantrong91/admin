@@ -10,9 +10,10 @@ import java.io.Serializable;
 
 /**
  *
- * @author Admin
+ * @author tvhdh
  */
-public class SaltRequest extends BaseRequest<Object> implements Serializable{
+public class SaltRequest extends BaseRequest<Object> implements Serializable {
+
     private String salt;
 
     public String getSalt() {
@@ -22,6 +23,4 @@ public class SaltRequest extends BaseRequest<Object> implements Serializable{
     public void setSalt(String salt) {
         this.salt = salt;
     }
-    
-    
 }

@@ -32,7 +32,7 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
     private String deviceToken;
     private String salt;
     private String accountCode;
-    private Map<String, List<String>> fileAvata;
+    private String fileAvata;
 
     @Override
     public boolean parse(Record record) {
@@ -48,7 +48,7 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
             this.salt = record.getString("Salt");
             this.fullName = record.getString("FullName");
             this.accountCode = record.getString("AccountCode");
-            this.fileAvata = (Map<String, List<String>>) record.getMap("FileAvata");
+            this.fileAvata = record.getString("FileAvata");
             return true;
         } catch (Exception ex) {
             log.debug(ex.getMessage(), ex);
@@ -57,7 +57,7 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
     }
 
     @Override
-    public boolean parse(Map<String, Object> map) {
+    public boolean parse(Map map) {
         try {
             this.accountId = (Long) map.get("AccountId");
             this.password = (String) map.get("Password");
@@ -70,7 +70,7 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
             this.salt = (String) map.get("Salt");
             this.fullName = (String) map.get("FullName");
             this.accountCode = (String) map.get("AccountCode");
-            this.fileAvata = (Map<String, List<String>>) map.get("FileAvata");
+            this.fileAvata = (String) map.get("FileAvata");
             return true;
         } catch (Exception ex) {
             log.debug(ex.getMessage(), ex);
@@ -104,11 +104,11 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
         this.accountId = accountId;
     }
 
-    public Map<String, List<String>> getFileAvata() {
+    public String getFileAvata() {
         return fileAvata;
     }
 
-    public void setFileAvata(Map<String, List<String>> fileAvata) {
+    public void setFileAvata(String fileAvata) {
         this.fileAvata = fileAvata;
     }
 

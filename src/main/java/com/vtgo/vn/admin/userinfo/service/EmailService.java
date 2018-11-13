@@ -11,10 +11,12 @@ import org.springframework.http.ResponseEntity;
 
 /**
  *
- * @author Admin
+ * @author tvhdh
  */
 public interface EmailService {
+
     public ResponseEntity sendEmail(SendMailRequest request);
-    
+
     public ResponseEntity resetPassword(SaltRequest request);
+
 }

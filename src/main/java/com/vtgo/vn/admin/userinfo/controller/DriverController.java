@@ -99,6 +99,7 @@ public class DriverController extends BaseController implements DriverService {
                 }
             }
             response.setData(lstVehicleOwners);
+            response.setData(lstVehicleOwners);
             response.setStatus(ResponseConstants.SUCCESS);
             response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);

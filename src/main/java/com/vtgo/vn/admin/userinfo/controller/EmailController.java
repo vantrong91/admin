@@ -43,6 +43,7 @@ import org.springframework.stereotype.Service;
 /**
  *
  * @author Admin
+ * @author tvhdh
  */
 @Service
 @AllArgsConstructor
@@ -112,7 +113,7 @@ public class EmailController extends BaseController implements EmailService {
     @Override
     public ResponseEntity resetPassword(SaltRequest request) {
         String salt = request.getSalt();
-        
+
         BaseResponse response = new BaseResponse();
         List<AccountManager> listAcc = new ArrayList<>();
         Map<String, Object> argument = new HashMap<>();
@@ -165,7 +166,8 @@ public class EmailController extends BaseController implements EmailService {
         requestEmail.setPhoneNumber(listAcc.get(0).getPhoneNumber());
         requestEmail.setSalt(listAcc.get(0).getSalt());
         requestEmail.setUserId(listAcc.get(0).getUserId());
-        
+        requestEmail.setFileAvata(listAcc.get(0).getFileAvata());
+
         BaseResponse responseEmail = new BaseResponse();
         try {
             Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, requestEmail.getAccountId());
@@ -191,5 +193,4 @@ public class EmailController extends BaseController implements EmailService {
             return ResponseEntity.status(HttpStatus.OK).body(responseEmail);
         }
     }
-
 }

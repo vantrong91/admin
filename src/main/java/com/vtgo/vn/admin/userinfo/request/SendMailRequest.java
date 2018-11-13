@@ -7,11 +7,13 @@ package com.vtgo.vn.admin.userinfo.request;
 
 import com.vtgo.vn.admin.base.BaseRequest;
 import java.io.Serializable;
+
 /**
  *
- * @author Admin
+ * @author tvhdh
  */
-public class SendMailRequest extends BaseRequest<Object> implements Serializable{
+public class SendMailRequest extends BaseRequest<Object> implements Serializable {
+
     private String email;
 
     public String getEmail() {
