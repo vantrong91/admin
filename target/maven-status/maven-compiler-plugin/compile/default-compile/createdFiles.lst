@@ -40,6 +40,7 @@ com\vtgo\vn\admin\userinfo\controller\OrderController.class
 com\vtgo\vn\admin\userinfo\BO\VehicleOwner.class
 com\vtgo\vn\admin\userinfo\controller\QuotationController.class
 com\vtgo\vn\admin\userinfo\request\GoodOwnerSearchRequest.class
+.netbeans_automatic_build
 com\vtgo\vn\admin\util\SequenceManager$SequenceObject.class
 com\vtgo\vn\admin\userinfo\controller\DriverController.class
 com\vtgo\vn\admin\util\SecurityUtils.class
