@@ -73,6 +73,13 @@ public class AccountManagerController extends BaseController implements AccountM
                 f.put("operator", "contain");
                 argumentFilter.add(new Value.MapValue(f));
             }
+            if (request.getSearchParam2() != null) {
+                Map<String, Object> f = new HashMap<>();
+                f.put("field", "AccountType");
+                f.put("value", request.getSearchParam2() );
+                f.put("operator", "=");
+                argumentFilter.add(new Value.MapValue(f));
+            }
             List<Value.MapValue> argumentSorters = new ArrayList<>();
             Map<String, Object> s = new HashMap<>();
             s.put("sort_key", "AccountId");
