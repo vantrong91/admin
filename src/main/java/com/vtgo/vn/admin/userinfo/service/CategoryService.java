@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 public interface CategoryService {
     public ResponseEntity searchCategory(SearchRequest request);
     
+    public ResponseEntity searchString(SearchRequest request);
+    
     public ResponseEntity getById(Category request);
     
     public ResponseEntity update(Category request);

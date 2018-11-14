@@ -76,5 +76,11 @@ public class AccounManagerApi {
         log.debug("request /update" + request);
         return accountManagerService.update(request);
     }
+    
+    @PostMapping(value = "updateInfo", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity updateInfo(@RequestBody AccountManager request){
+        log.debug("request /updateInfo: " + request);
+        return accountManagerService.updateInfo(request);
+    }
 
 }

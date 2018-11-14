@@ -73,6 +73,13 @@ public class AccountManagerController extends BaseController implements AccountM
                 f.put("operator", "contain");
                 argumentFilter.add(new Value.MapValue(f));
             }
+            if (request.getSearchParam2() != null) {
+                Map<String, Object> f = new HashMap<>();
+                f.put("field", "AccountType");
+                f.put("value", request.getSearchParam2() );
+                f.put("operator", "=");
+                argumentFilter.add(new Value.MapValue(f));
+            }
             List<Value.MapValue> argumentSorters = new ArrayList<>();
             Map<String, Object> s = new HashMap<>();
             s.put("sort_key", "AccountId");
@@ -403,6 +410,25 @@ public class AccountManagerController extends BaseController implements AccountM
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
+    @Override
+    public ResponseEntity updateInfo(AccountManager request) {
+        BaseResponse response = new BaseResponse();
+        try {
+            List<Bin> lstBin = new ArrayList();
+            lstBin.add(new Bin("FileAvata", request.getFileAvata()));
+            update(AerospikeFactory.getInstance().onlyUpdatePolicy,
+                    DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId(), lstBin.toArray(new Bin[lstBin.size()]));
+            response.setStatus(ResponseConstants.SUCCESS);
+            response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
             response.setStatus(ResponseConstants.SERVICE_FAIL);
             response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);

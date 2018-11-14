@@ -31,4 +31,6 @@ public interface AccountManagerService {
     public ResponseEntity logout(AccountManager request);
 
     public ResponseEntity update(AccountManager request);
+    
+    public ResponseEntity updateInfo(AccountManager request);
 }

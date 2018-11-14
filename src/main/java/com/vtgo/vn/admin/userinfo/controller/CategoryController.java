@@ -142,4 +142,59 @@ public class CategoryController extends BaseController implements CategoryServic
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
+
+    //Seach type
+    @Override
+    public ResponseEntity searchString(SearchRequest request) {
+        BaseResponse response = new BaseResponse();
+        List<Category> lstCategory = new ArrayList<>();
+        try {
+            Map<String, Object> argument = new HashMap<>();
+            List<Value.MapValue> argumentFilter = new ArrayList<>();
+            Long searchValue = request.getSearchParam2();
+            if (searchValue != null) {
+                Map<String, Object> f = new HashMap<>();
+                f.put("field", "Type");
+                f.put("value", searchValue);
+                f.put("operator", "=");
+                argumentFilter.add(new Value.MapValue(f));
+            }
+            List<Value.MapValue> argumentSorters = new ArrayList<>();
+            Map<String, Object> s1 = new HashMap<>();
+            s1.put("sort_key", "PK");
+            s1.put("order", "ASC");
+            s1.put("type", "LONG");
+            argumentSorters.add(new Value.MapValue(s1));
+
+            argument.put("sorters", new Value.ListValue(argumentSorters));
+
+            argument.put("filters", new Value.ListValue(argumentFilter));
+            ResultSet resultSet = AerospikeFactory.getInstance().aggregate(AerospikeFactory.getInstance().queryPolicy,
+                    DatabaseConstants.NAMESPACE, DatabaseConstants.CATEGORY_SET,
+                    "FILTER_RECORD", "FILTER_RECORD", Value.get(argument)
+            );
+            if (resultSet != null) {
+                Iterator<Object> objectIterator = resultSet.iterator();
+                while (objectIterator.hasNext()) {
+                    ArrayList arrayList = (ArrayList) objectIterator.next();
+                    for (Object o : arrayList) {
+                        Category category = new Category();
+                        if (category.parse((Map) o)) {
+                            lstCategory.add(category);
+                        }
+                    }
+                }
+            }
+            response.setData(lstCategory);
+            response.setStatus(ResponseConstants.SUCCESS);
+            response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
 }

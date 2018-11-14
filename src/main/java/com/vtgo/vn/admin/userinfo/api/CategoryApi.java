@@ -34,6 +34,12 @@ public class CategoryApi {
         return categoryService.searchCategory(request);
     }
     
+    @PostMapping(value = "/searchType", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity searchType(@RequestBody SearchRequest request){
+        LOGGER.debug("request /searchTypeCategory" + request);
+        return categoryService.searchString(request);
+    }
+    
     @PostMapping(value = "/get-by-id", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity getById(@RequestBody Category request){
         LOGGER.debug("request /getById: " + request);
