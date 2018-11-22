@@ -14,11 +14,16 @@ import org.springframework.http.ResponseEntity;
  * @author tvhdh
  */
 public interface CategoryService {
+
     public ResponseEntity searchCategory(SearchRequest request);
-    
+
     public ResponseEntity searchString(SearchRequest request);
-    
+
     public ResponseEntity getById(Category request);
-    
+
     public ResponseEntity update(Category request);
+
+    public ResponseEntity create(Category request);
+
+    public ResponseEntity delete(Category request);
 }

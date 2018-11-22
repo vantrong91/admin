@@ -16,6 +16,7 @@ import com.vtgo.vn.admin.constant.ResponseConstants;
 import com.vtgo.vn.admin.userinfo.BO.Category;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import com.vtgo.vn.admin.userinfo.service.CategoryService;
+import com.vtgo.vn.admin.util.SequenceManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -190,6 +191,57 @@ public class CategoryController extends BaseController implements CategoryServic
             response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);
 
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
+    @Override
+    public ResponseEntity create(Category request) {
+        BaseResponse response = new BaseResponse();
+        try {
+            long pk = SequenceManager.getInstance().getSequence(Category.class.getSimpleName());
+            if(pk <= 0){
+                response.setStatus(ResponseConstants.SERVICE_FAIL);
+                response.setMessage("Get PK sequence error");
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            }
+            request.setPk(pk);
+            update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.CATEGORY_SET, request.getPk(), request.toBins());
+            response.setData(Arrays.asList(request));
+            response.setStatus(ResponseConstants.SUCCESS);
+            response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
+    @Override
+    public ResponseEntity delete(Category request) {
+        BaseResponse response = new BaseResponse();
+        try {
+            if(request.getPk() != null){
+                Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.CATEGORY_SET, request.getPk());
+                if(rec != null){
+                    delete(AerospikeFactory.getInstance().writePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.CATEGORY_SET, request.getPk());
+                    response.setStatus(ResponseConstants.SUCCESS);
+                    response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+                }else{
+                    response.setStatus(ResponseConstants.SERVICE_ERROR);
+                    response.setMessage(ResponseConstants.SERVICE_CATEGORY_NOT_FOUND);
+                }
+            }else{
+                response.setStatus(ResponseConstants.SERVICE_FAIL);
+                response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             response.setStatus(ResponseConstants.SERVICE_FAIL);

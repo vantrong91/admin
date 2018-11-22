@@ -422,6 +422,8 @@ public class AccountManagerController extends BaseController implements AccountM
         try {
             List<Bin> lstBin = new ArrayList();
             lstBin.add(new Bin("FileAvata", request.getFileAvata()));
+            lstBin.add(new Bin("FullName", request.getFullName()));
+            lstBin.add(new Bin("PhoneNumber", request.getPhoneNumber()));
             update(AerospikeFactory.getInstance().onlyUpdatePolicy,
                     DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId(), lstBin.toArray(new Bin[lstBin.size()]));
             response.setStatus(ResponseConstants.SUCCESS);

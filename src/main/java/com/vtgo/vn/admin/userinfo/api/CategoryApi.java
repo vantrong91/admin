@@ -52,4 +52,16 @@ public class CategoryApi {
         return categoryService.update(request);
     }
     
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity create(@RequestBody Category request){
+        LOGGER.debug("request /create: " + request.getPk());
+        return categoryService.create(request);
+    }
+    
+    @PostMapping(value = "/delete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity delete(@RequestBody Category request){
+        LOGGER.debug("request /delete: " + request.getPk());
+        return categoryService.delete(request);
+    }
+    
 }
