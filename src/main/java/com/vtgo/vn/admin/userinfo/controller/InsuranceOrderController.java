@@ -305,7 +305,7 @@ public class InsuranceOrderController extends BaseController implements Insuranc
                     newOrder.setUpdateTime(request.getUpdateTime());
                     update(AerospikeFactory.getInstance().onlyUpdatePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getOrderId(), newOrder.toBins());
                     
-                    notificationToGoodsOwner(request.getMessage(), request.getOrderId(), newOrder.getAccountId());
+                    notificationToGoodsOwner(request.getMessage(), request.getOrderId(), newOrder.getAccountId(), newOrder.getSumInsuPrice());
                     response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
                     response.setData(Arrays.asList(newOrder));
                     response.setStatus(ResponseConstants.SUCCESS);
@@ -327,7 +327,7 @@ public class InsuranceOrderController extends BaseController implements Insuranc
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     
-    private void notificationToGoodsOwner(String mess, String orderId, Long accoutId) throws TimeoutException, IOException{
+    private void notificationToGoodsOwner(String mess, String orderId, Long accoutId, Long sumInsuPrice) throws TimeoutException, IOException{
         MsgPushQueue msgPushQueue = new MsgPushQueue();
         msgPushQueue.setTypeReceive(Constant.RECEIVE_TYPE.OWNER);
         NotificationObjectPushToGoodsOwner objectPushToGoodsOwner = new NotificationObjectPushToGoodsOwner();
@@ -342,12 +342,11 @@ public class InsuranceOrderController extends BaseController implements Insuranc
         dataGoodsOwner.setType("9");
         dataGoodsOwner.setOrderId(orderId);
         dataGoodsOwner.setPromotionCode("PROMO");
-        dataGoodsOwner.setMsg(mess + "\n" + "Mã ĐH: " + orderId);
+        dataGoodsOwner.setMsg(mess + "\n" + "Mã ĐH: " + orderId + " Tổng giá trị bảo hiểm: " + sumInsuPrice);
         msgNotifyGoodsOwner.setData(dataGoodsOwner);
         objectPushToGoodsOwner.setMessage(msgNotifyGoodsOwner);
         msgPushQueue.setData(Arrays.asList(objectPushToGoodsOwner));
         String message = new String(JsonStream.serialize(msgPushQueue).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
         Publish.publishMessage(message, Constant.QUEUE.RABBITMQ_EXCHANGE, Constant.QUEUE.KEY_CHANNEL_PUSH_FROM_ADMIN);
     }
-
 }

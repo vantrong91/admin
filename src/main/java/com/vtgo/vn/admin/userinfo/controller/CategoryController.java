@@ -5,6 +5,7 @@
  */
 package com.vtgo.vn.admin.userinfo.controller;
 
+import com.aerospike.client.Bin;
 import com.aerospike.client.Record;
 import com.aerospike.client.Value;
 import com.aerospike.client.query.ResultSet;
@@ -203,17 +204,28 @@ public class CategoryController extends BaseController implements CategoryServic
     public ResponseEntity create(Category request) {
         BaseResponse response = new BaseResponse();
         try {
-            long pk = SequenceManager.getInstance().getSequence(Category.class.getSimpleName());
-            if(pk <= 0){
+            if (request.getPk() != null) {
+                Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.CATEGORY_SET, request.getPk());
+                if (rec != null) {
+                    response.setStatus(ResponseConstants.SERVICE_ERROR);
+                    response.setMessage("ID đã được sử dụng");
+                } else {
+                    List<Bin> lstBin = new ArrayList();
+                    lstBin.add(new Bin("PK", request.getPk()));
+                    lstBin.add(new Bin("ID_CHA", request.getId_cha()));
+                    lstBin.add(new Bin("Type", request.getType()));
+                    lstBin.add(new Bin("Item", request.getItem()));
+                    lstBin.add(new Bin("FeeCharge", request.getFeeCharge()));
+                    lstBin.add(new Bin("Latefine", request.getLatefine()));
+                    update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.CATEGORY_SET, request.getPk(), lstBin.toArray(new Bin[lstBin.size()]));
+                    response.setData(Arrays.asList(request));
+                    response.setStatus(ResponseConstants.SUCCESS);
+                    response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+                }
+            } else {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
-                response.setMessage("Get PK sequence error");
-                return ResponseEntity.status(HttpStatus.OK).body(response);
+                response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             }
-            request.setPk(pk);
-            update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.CATEGORY_SET, request.getPk(), request.toBins());
-            response.setData(Arrays.asList(request));
-            response.setStatus(ResponseConstants.SUCCESS);
-            response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -227,17 +239,17 @@ public class CategoryController extends BaseController implements CategoryServic
     public ResponseEntity delete(Category request) {
         BaseResponse response = new BaseResponse();
         try {
-            if(request.getPk() != null){
+            if (request.getPk() != null) {
                 Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.CATEGORY_SET, request.getPk());
-                if(rec != null){
+                if (rec != null) {
                     delete(AerospikeFactory.getInstance().writePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.CATEGORY_SET, request.getPk());
                     response.setStatus(ResponseConstants.SUCCESS);
                     response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
-                }else{
+                } else {
                     response.setStatus(ResponseConstants.SERVICE_ERROR);
                     response.setMessage(ResponseConstants.SERVICE_CATEGORY_NOT_FOUND);
                 }
-            }else{
+            } else {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
                 response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             }

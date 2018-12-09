@@ -49,10 +49,14 @@ public class AerospikeFactory {
         writePolicy.timeout = 1000;
         writePolicy.timeoutDelay = 100;
         writePolicy.retryOnTimeout = true;
+        writePolicy.sendKey = true;
+        
+        
 
         scanPolicy = new ScanPolicy();
 
         onlyCreatePolicy = new WritePolicy();
+        onlyCreatePolicy.sendKey = true;
         onlyCreatePolicy.maxRetries = 10;
         onlyCreatePolicy.timeout = 1000;
         onlyCreatePolicy.timeoutDelay = 100;
@@ -60,6 +64,7 @@ public class AerospikeFactory {
         onlyCreatePolicy.recordExistsAction = RecordExistsAction.CREATE_ONLY;
 
         updatePolicy = new WritePolicy();
+        updatePolicy.sendKey = true;
         updatePolicy.maxRetries = 10;
         updatePolicy.timeout = 5000;
         updatePolicy.timeoutDelay = 100;
@@ -67,6 +72,7 @@ public class AerospikeFactory {
         updatePolicy.recordExistsAction = RecordExistsAction.UPDATE;
 
         onlyUpdatePolicy = new WritePolicy();
+        onlyUpdatePolicy.sendKey = true;
         onlyUpdatePolicy.maxRetries = 10;
         onlyUpdatePolicy.timeout = 5000;
         onlyUpdatePolicy.timeoutDelay = 100;
