@@ -136,7 +136,30 @@ public class OrderController extends BaseController implements OrderService {
 
     @Override
     public ResponseEntity update(Order request) {
-        return null;
+        BaseResponse response = new BaseResponse();
+        try {
+            if (request.getOrderId() != null) {
+                Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.ORDER_SET, request.getOrderId());
+                if (rec != null) {
+                    update(AerospikeFactory.getInstance().onlyUpdatePolicy,
+                            DatabaseConstants.NAMESPACE, DatabaseConstants.ORDER_SET, request.getOrderId(), request.toBins());
+                    response.setStatus(ResponseConstants.SUCCESS);
+                    response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+                } else {
+                    response.setStatus(ResponseConstants.SERVICE_ERROR);
+                    response.setMessage(ResponseConstants.SERVICE_NOT_FOUND);
+                }
+            } else {
+                response.setStatus(ResponseConstants.SERVICE_FAIL);
+                response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage(), ex);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
     }
 
     @Override

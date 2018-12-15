@@ -211,7 +211,7 @@ public class Order extends BaseRequest<Object> implements BaseObject {
             bins.add(new Bin("AccountId", accountId));
 
             bins.add(new Bin("Paid", paid));
-            bins.add(new Bin("BankCode", paid));
+            bins.add(new Bin("BankCode", bankCode));
             return bins.toArray(new Bin[bins.size()]);
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
