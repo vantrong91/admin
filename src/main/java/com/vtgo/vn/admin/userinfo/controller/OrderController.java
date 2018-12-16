@@ -188,7 +188,7 @@ public class OrderController extends BaseController implements OrderService {
                         break;
 //                    case 2:
 //                        f.put("field", "State");
-//                        f.put("value", 8L);
+//                        f.put("value", 7L);
 //                        f.put("operator", "!=");
 //                        argumentFilter.add(new Value.MapValue(f));
 //                        break;
@@ -282,7 +282,7 @@ public class OrderController extends BaseController implements OrderService {
                     Order newOrder = new Order();
                     newOrder = (Order) listOrder.get(0);
 //                    newOrder.setMessage(request.getMessage());
-                    newOrder.setState(8L);
+                    newOrder.setState(7L);
                     newOrder.setPaid(request.getPaid());
 
                     update(AerospikeFactory.getInstance().onlyUpdatePolicy,
