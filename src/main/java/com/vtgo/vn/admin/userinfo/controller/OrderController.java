@@ -182,7 +182,7 @@ public class OrderController extends BaseController implements OrderService {
                 switch (state) {
                     case 1:
                         f.put("field", "State");
-                        f.put("value", 8L);
+                        f.put("value",7L);
                         f.put("operator", "=");
                         argumentFilter.add(new Value.MapValue(f));
                         break;
