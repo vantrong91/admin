@@ -325,8 +325,8 @@ public class OrderController extends BaseController implements OrderService {
         msgNotifyDriver.setNotification(titleObj);
         DataDriver dataDriver = new DataDriver();
         dataDriver.setOrderId(orderId);
-        dataDriver.setMsg(mess + "\n" + "Mã ĐH: " + orderId);
-        dataDriver.setType("7");
+        dataDriver.setMsg(mess);
+        dataDriver.setType("6");
         msgNotifyDriver.setData(dataDriver);
         objectPushToDriver.setMessage(msgNotifyDriver);
         msgPushQueue.setData(Arrays.asList(objectPushToDriver));
