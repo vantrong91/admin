@@ -30,7 +30,7 @@ public class Order extends BaseRequest<Object> implements BaseObject {
     private String dstAddress;
     private Double dstLat;
     private Double dstLong;
-    private Long weight;
+    private Double weight;
     private Long deliverTime;
     private Long toDeliverTime;
     private Long receiveTime;
@@ -64,6 +64,9 @@ public class Order extends BaseRequest<Object> implements BaseObject {
     //Tiền thanh toán    
     private Long paid;
 
+    //Ngân hàng
+    private String bankCode;
+
     public Order() {
     }
 
@@ -80,7 +83,7 @@ public class Order extends BaseRequest<Object> implements BaseObject {
             this.dstLat = record.getDouble("DstLat");
             this.dstLong = record.getDouble("DstLong");
             this.orderId = record.getString("OrderId");
-            this.weight = record.getLong("Weight");
+            this.weight = record.getDouble("Weight");
             this.deliverTime = record.getLong("DeliverTime ");
             this.toDeliverTime = record.getLong("ToDeliverTime");
             this.receiveTime = record.getLong("ReceiveTime");
@@ -107,6 +110,7 @@ public class Order extends BaseRequest<Object> implements BaseObject {
             this.realReceiveTime = record.getLong("RealReceiveTime");
             this.realToReceiveTime = record.getLong("RealToReceiveTime");
             this.paid = record.getLong("Paid");
+            this.bankCode = record.getString("BankCode");
         } catch (Exception ex) {
             return false;
         }
@@ -125,7 +129,7 @@ public class Order extends BaseRequest<Object> implements BaseObject {
             this.dstAddress = (String) map.get("DstAddress");
             this.dstLat = Double.parseDouble(String.valueOf(map.get("DstLat")));
             this.dstLong = Double.parseDouble(String.valueOf(map.get("DstLong")));
-            this.weight = (Long) map.get("Weight");
+            this.weight = Double.parseDouble(String.valueOf(map.get("Weight")));
             this.deliverTime = (Long) map.get("DeliverTime");
             this.toDeliverTime = (Long) map.get("ToDeliverTime");
             this.receiveTime = (Long) map.get("ReceiveTime");
@@ -156,10 +160,10 @@ public class Order extends BaseRequest<Object> implements BaseObject {
             this.accountId = (Long) map.get("AccountId");
 
             this.paid = (Long) map.get("Paid");
-
+            this.bankCode = (String) map.get("BankCode");
             return true;
         } catch (Exception ex) {
-//            logger.error(ex.getMessage(), ex);
+            logger.error(ex.getMessage(), ex);
             return false;
         }
     }
@@ -207,7 +211,7 @@ public class Order extends BaseRequest<Object> implements BaseObject {
             bins.add(new Bin("AccountId", accountId));
 
             bins.add(new Bin("Paid", paid));
-
+            bins.add(new Bin("BankCode", bankCode));
             return bins.toArray(new Bin[bins.size()]);
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
@@ -292,11 +296,11 @@ public class Order extends BaseRequest<Object> implements BaseObject {
         this.dstLong = dstLong;
     }
 
-    public Long getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
-    public void setWeight(Long weight) {
+    public void setWeight(Double weight) {
         this.weight = weight;
     }
 
@@ -506,6 +510,14 @@ public class Order extends BaseRequest<Object> implements BaseObject {
 
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
+    }
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
     }
 
 }

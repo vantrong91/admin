@@ -136,7 +136,30 @@ public class OrderController extends BaseController implements OrderService {
 
     @Override
     public ResponseEntity update(Order request) {
-        return null;
+        BaseResponse response = new BaseResponse();
+        try {
+            if (request.getOrderId() != null) {
+                Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.ORDER_SET, request.getOrderId());
+                if (rec != null) {
+                    update(AerospikeFactory.getInstance().onlyUpdatePolicy,
+                            DatabaseConstants.NAMESPACE, DatabaseConstants.ORDER_SET, request.getOrderId(), request.toBins());
+                    response.setStatus(ResponseConstants.SUCCESS);
+                    response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+                } else {
+                    response.setStatus(ResponseConstants.SERVICE_ERROR);
+                    response.setMessage(ResponseConstants.SERVICE_NOT_FOUND);
+                }
+            } else {
+                response.setStatus(ResponseConstants.SERVICE_FAIL);
+                response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage(), ex);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
     }
 
     @Override
@@ -159,13 +182,13 @@ public class OrderController extends BaseController implements OrderService {
                 switch (state) {
                     case 1:
                         f.put("field", "State");
-                        f.put("value", 8L);
+                        f.put("value",7L);
                         f.put("operator", "=");
                         argumentFilter.add(new Value.MapValue(f));
                         break;
 //                    case 2:
 //                        f.put("field", "State");
-//                        f.put("value", 8L);
+//                        f.put("value", 7L);
 //                        f.put("operator", "!=");
 //                        argumentFilter.add(new Value.MapValue(f));
 //                        break;
@@ -259,7 +282,7 @@ public class OrderController extends BaseController implements OrderService {
                     Order newOrder = new Order();
                     newOrder = (Order) listOrder.get(0);
 //                    newOrder.setMessage(request.getMessage());
-                    newOrder.setState(8L);
+                    newOrder.setState(7L);
                     newOrder.setPaid(request.getPaid());
 
                     update(AerospikeFactory.getInstance().onlyUpdatePolicy,
@@ -302,8 +325,8 @@ public class OrderController extends BaseController implements OrderService {
         msgNotifyDriver.setNotification(titleObj);
         DataDriver dataDriver = new DataDriver();
         dataDriver.setOrderId(orderId);
-        dataDriver.setMsg(mess + "\n" + "Mã ĐH: " + orderId);
-        dataDriver.setType("7");
+        dataDriver.setMsg(mess);
+        dataDriver.setType("6");
         msgNotifyDriver.setData(dataDriver);
         objectPushToDriver.setMessage(msgNotifyDriver);
         msgPushQueue.setData(Arrays.asList(objectPushToDriver));
