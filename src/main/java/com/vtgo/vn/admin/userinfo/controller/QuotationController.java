@@ -64,14 +64,14 @@ public class QuotationController extends BaseController implements QuotationServ
             String searchValue = request.getSearchParam();
             if (searchValue != null && !searchValue.isEmpty()) {
                 Map<String, Object> f = new HashMap<>();
-                f.put("field", "QuotationID");
+                f.put("field", "QuotationId");
                 f.put("value", searchValue);
                 f.put("operator", "contain");
                 argumentFilter.add(new Value.MapValue(f));
             }
             List<Value.MapValue> argumentSorters = new ArrayList<>();
             Map<String, Object> s1 = new HashMap<>();
-            s1.put("sort_key", "QuotationID");
+            s1.put("sort_key", "QuotationId");
             s1.put("order", "DESC");
             s1.put("type", "STRING");
             argumentSorters.add(new Value.MapValue(s1));
