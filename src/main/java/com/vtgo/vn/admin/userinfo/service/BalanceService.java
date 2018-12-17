@@ -18,7 +18,7 @@ public interface BalanceService {
 
     public ResponseEntity searchBalance(SearchRequest request);
 
-    public ResponseEntity searchAccountBalance();
+    public ResponseEntity searchAccountBalance(SearchRequest request);
 
     public ResponseEntity getBalanceId(BalanceTemp request);
 

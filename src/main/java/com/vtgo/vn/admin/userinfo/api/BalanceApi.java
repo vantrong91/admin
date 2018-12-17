@@ -37,9 +37,9 @@ public class BalanceApi {
     }
     
     @PostMapping(value = "/account-bal", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity searchAccountBalance() {
+    public ResponseEntity searchAccountBalance(@RequestBody SearchRequest request) {
         LOGGER.debug("request /list acc Balance: ");
-        return balanceService.searchAccountBalance();
+        return balanceService.searchAccountBalance(request);
     }
     
     @PostMapping(value = "/get-by-id", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

@@ -8,7 +8,6 @@ package com.vtgo.vn.admin.userinfo.controller;
 import com.aerospike.client.Record;
 import com.aerospike.client.Value;
 
-import com.aerospike.client.query.RecordSet;
 import com.aerospike.client.query.ResultSet;
 import com.jsoniter.output.JsonStream;
 import com.vtgo.vn.admin.aerospike.AerospikeFactory;
@@ -25,6 +24,7 @@ import com.vtgo.vn.admin.pushnotify.Publish;
 import com.vtgo.vn.admin.pushnotify.TitleObj;
 import com.vtgo.vn.admin.userinfo.BO.GoodOwner;
 import com.vtgo.vn.admin.userinfo.BO.InsuranceOrder;
+import com.vtgo.vn.admin.userinfo.BO.Order;
 import com.vtgo.vn.admin.userinfo.request.InsuOrderCompleteRequest;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import com.vtgo.vn.admin.userinfo.service.InsuranceOrderService;
@@ -40,7 +40,6 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 import lombok.AllArgsConstructor;
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -97,19 +96,19 @@ public class InsuranceOrderController extends BaseController implements Insuranc
     public ResponseEntity update(InsuranceOrder request) {
         BaseResponse response = new BaseResponse();
         try {
-            if (request.getOrderId()!= null) {
+            if (request.getOrderId() != null) {
                 Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getOrderId());
-                if(rec != null){
+                if (rec != null) {
                     request.setState(1);
-                    update(AerospikeFactory.getInstance().onlyUpdatePolicy, DatabaseConstants.NAMESPACE, 
+                    update(AerospikeFactory.getInstance().onlyUpdatePolicy, DatabaseConstants.NAMESPACE,
                             DatabaseConstants.INSURANCE_ORDER_SET, request.getOrderId(), request.toBins());
-                    
+
                     response.setStatus(ResponseConstants.SUCCESS);
                     response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
                     InsuranceOrder insuOrder = new InsuranceOrder();
                     insuOrder.parse(rec);
                     response.setData(Arrays.asList(insuOrder));
-                }  else{
+                } else {
                     response.setStatus(ResponseConstants.SERVICE_ERROR);
                     response.setMessage(ResponseConstants.SERVICE_INSURANCE_ORDER_NOT_FOUND);
                 }
@@ -130,7 +129,7 @@ public class InsuranceOrderController extends BaseController implements Insuranc
     public ResponseEntity delete(InsuranceOrder request) {
         BaseResponse response = new BaseResponse();
         try {
-            if (request.getOrderId()!= null) {
+            if (request.getOrderId() != null) {
                 Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getOrderId());
                 if (rec != null) {
                     delete(AerospikeFactory.getInstance().writePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getOrderId());
@@ -157,7 +156,7 @@ public class InsuranceOrderController extends BaseController implements Insuranc
     public ResponseEntity getById(InsuranceOrder request) {
         BaseResponse response = new BaseResponse();
         try {
-            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, 
+            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET,
                     request.getOrderId());
             response.setStatus(ResponseConstants.SUCCESS);
             response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
@@ -257,77 +256,91 @@ public class InsuranceOrderController extends BaseController implements Insuranc
     public ResponseEntity completeInsuOrder(InsuOrderCompleteRequest request) {
         BaseResponse response = new BaseResponse();
         try {
-            if(request.getOrderId() !=null){
-                String orderId = request.getOrderId();
-                List<InsuranceOrder> lstInsuOrder = new ArrayList<>();
-                Map<String, Object> argument = new HashMap<>();
-                List<Value.MapValue> argumentFilter = new ArrayList<>();
-                
-                Map<String, Object> f = new HashMap<>();
-                f.put("field", "OrderId");
-                f.put("value", orderId);
-                f.put("operator", "=");
-                argumentFilter.add(new Value.MapValue(f));
-                
-                List<Value.MapValue> argumentSorter = new ArrayList<>();
-                Map<String, Object> s1 = new HashMap<>();
-                s1.put("sort_key", "OrderId");
-                s1.put("order", "ASC");
-                s1.put("type", "STRING");
-                argumentSorter.add(new Value.MapValue(s1));
-                
-                argument.put("sorters", new Value.ListValue(argumentSorter));
-                argument.put("filters", new Value.ListValue(argumentFilter));
-                
-                ResultSet rs = AerospikeFactory.getInstance().aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
-                
-                Iterator<Object> objectIterator = rs.iterator();
-                while(objectIterator.hasNext()){
-                    ArrayList arrList = (ArrayList) objectIterator.next();
-                    arrList.forEach((o) -> {
-                        InsuranceOrder myOrder = new InsuranceOrder();
-                        if(myOrder.parse((Map) o)){
-                            lstInsuOrder.add(myOrder);
-                        }
-                    });
-                }
-                
-                if(lstInsuOrder.size() >0){
-                    InsuranceOrder newOrder = new InsuranceOrder();
-                    newOrder = lstInsuOrder.get(0);
-                    newOrder.setState(2);
-                    newOrder.setAccountId(request.getAccountId());
-                    newOrder.setContractNo(request.getContractNo());
-                    newOrder.setInsuranPrice(request.getInsuranPrice());
-                    newOrder.setInsuranSpend(request.getInsuranSpend());
-                    newOrder.setOrderId(orderId);
-                    newOrder.setSumInsuPrice(request.getSumInsuPrice());
-                    newOrder.setUpdateTime(request.getUpdateTime());
-                    update(AerospikeFactory.getInstance().onlyUpdatePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getOrderId(), newOrder.toBins());
-                    
-                    notificationToGoodsOwner(request.getMessage(), request.getOrderId(), newOrder.getAccountId(), newOrder.getSumInsuPrice());
-                    response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
-                    response.setData(Arrays.asList(newOrder));
-                    response.setStatus(ResponseConstants.SUCCESS);
-                }else{
-                    response.setMessage("No record");
+            if (request.getOrderId() != null) {
+                Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.ORDER_SET, request.getOrderId());
+                if (rec == null) {
                     response.setStatus(ResponseConstants.SERVICE_FAIL);
+                    response.setMessage("Cannot find ORDER");
+                    return ResponseEntity.status(HttpStatus.OK).body(response);
+                } else {
+                    Order orderRec = new Order();
+                    orderRec.parse(rec);
+                    if (orderRec.getState() != 7 && orderRec.getState() != 8) {
+                        String orderId = request.getOrderId();
+                        List<InsuranceOrder> lstInsuOrder = new ArrayList<>();
+                        Map<String, Object> argument = new HashMap<>();
+                        List<Value.MapValue> argumentFilter = new ArrayList<>();
+
+                        Map<String, Object> f = new HashMap<>();
+                        f.put("field", "OrderId");
+                        f.put("value", orderId);
+                        f.put("operator", "=");
+                        argumentFilter.add(new Value.MapValue(f));
+
+                        List<Value.MapValue> argumentSorter = new ArrayList<>();
+                        Map<String, Object> s1 = new HashMap<>();
+                        s1.put("sort_key", "OrderId");
+                        s1.put("order", "ASC");
+                        s1.put("type", "STRING");
+                        argumentSorter.add(new Value.MapValue(s1));
+
+                        argument.put("sorters", new Value.ListValue(argumentSorter));
+                        argument.put("filters", new Value.ListValue(argumentFilter));
+
+                        ResultSet rs = AerospikeFactory.getInstance().aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+
+                        Iterator<Object> objectIterator = rs.iterator();
+                        while (objectIterator.hasNext()) {
+                            ArrayList arrList = (ArrayList) objectIterator.next();
+                            arrList.forEach((o) -> {
+                                InsuranceOrder myOrder = new InsuranceOrder();
+                                if (myOrder.parse((Map) o)) {
+                                    lstInsuOrder.add(myOrder);
+                                }
+                            });
+                        }
+
+                        if (lstInsuOrder.size() > 0) {
+                            InsuranceOrder newOrder = new InsuranceOrder();
+                            newOrder = lstInsuOrder.get(0);
+                            newOrder.setState(2);
+                            newOrder.setAccountId(request.getAccountId());
+                            newOrder.setContractNo(request.getContractNo());
+                            newOrder.setInsuranPrice(request.getInsuranPrice());
+                            newOrder.setInsuranSpend(request.getInsuranSpend());
+                            newOrder.setOrderId(orderId);
+                            newOrder.setSumInsuPrice(request.getSumInsuPrice());
+                            newOrder.setUpdateTime(request.getUpdateTime());
+                            update(AerospikeFactory.getInstance().onlyUpdatePolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.INSURANCE_ORDER_SET, request.getOrderId(), newOrder.toBins());
+
+                            notificationToGoodsOwner(request.getMessage(), request.getOrderId(), newOrder.getAccountId(), newOrder.getSumInsuPrice());
+                            response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+                            response.setData(Arrays.asList(newOrder));
+                            response.setStatus(ResponseConstants.SUCCESS);
+                        } else {
+                            response.setMessage("No record");
+                            response.setStatus(ResponseConstants.SERVICE_FAIL);
+                        }
+                    } else {
+                        response.setStatus(ResponseConstants.SERVICE_FAIL);
+                        response.setMessage("Đơn hàng đã thanh toán");
+                    }
+                    return ResponseEntity.status(HttpStatus.OK).body(response);
                 }
-                return ResponseEntity.status(HttpStatus.OK).body(response);
-                
-            }else{
+
+            } else {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
                 response.setMessage(ResponseConstants.SERVICE_FAIL_DESC + ".Cannot get OrderId");
             }
         } catch (Exception e) {
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
             response.setStatus(ResponseConstants.SERVICE_FAIL);
             response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
         }
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-    
-    private void notificationToGoodsOwner(String mess, String orderId, Long accoutId, Long sumInsuPrice) throws TimeoutException, IOException{
+
+    private void notificationToGoodsOwner(String mess, String orderId, Long accoutId, Long sumInsuPrice) throws TimeoutException, IOException {
         MsgPushQueue msgPushQueue = new MsgPushQueue();
         msgPushQueue.setTypeReceive(Constant.RECEIVE_TYPE.OWNER);
         NotificationObjectPushToGoodsOwner objectPushToGoodsOwner = new NotificationObjectPushToGoodsOwner();

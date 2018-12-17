@@ -218,7 +218,7 @@ public class BalanceController extends BaseController implements BalanceService 
     }
 
     @Override
-    public ResponseEntity searchAccountBalance() {
+    public ResponseEntity searchAccountBalance(SearchRequest request) {
 
         BaseResponse response = new BaseResponse();
         List<AccountManager> listAcc = new ArrayList<>();
@@ -227,8 +227,29 @@ public class BalanceController extends BaseController implements BalanceService 
             List<Value.MapValue> argumentFilter = new ArrayList<>();
 
             Map<String, Object> f = new HashMap<>();
+            String searchValue = request.getSearchParam();
+            if (searchValue != null && !searchValue.isEmpty()) {
+                logger.debug(searchValue);
+                f.put("field", "FullName");
+                f.put("value", searchValue);
+                f.put("operator", "contain");
+                argumentFilter.add(new Value.MapValue(f));
+
+                f = new HashMap<>();
+                f.put("field", "Email");
+                f.put("value", searchValue);
+                f.put("operator", "contain");
+                argumentFilter.add(new Value.MapValue(f));
+
+                f = new HashMap<>();
+                f.put("field", "PhoneNumber");
+                f.put("value", searchValue);
+                f.put("operator", "contain");
+                argumentFilter.add(new Value.MapValue(f));
+            }
 
             for (int i = 1; i <= 3; i++) {
+                f = new HashMap<>();
                 f.put("field", "AccountType");
                 f.put("value", i);
                 f.put("operator", "=");
@@ -260,6 +281,7 @@ public class BalanceController extends BaseController implements BalanceService 
                     }
                 }
             }
+
             response.setData(listAcc);
             response.setStatus(ResponseConstants.SUCCESS);
             response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
