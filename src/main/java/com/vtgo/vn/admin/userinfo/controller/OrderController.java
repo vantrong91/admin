@@ -281,7 +281,6 @@ public class OrderController extends BaseController implements OrderService {
                 if (listOrder.size() > 0) {
                     Order newOrder = new Order();
                     newOrder = (Order) listOrder.get(0);
-//                    newOrder.setMessage(request.getMessage());
                     newOrder.setState(7L);
                     newOrder.setPaid(request.getPaid());
 

@@ -22,7 +22,7 @@ public class Transaction implements BaseObject, Serializable {
     private long accountId;
     private long balType;
     private long change;
-
+    private String content;
     public long getAccountId() {
         return accountId;
     }
@@ -47,6 +47,14 @@ public class Transaction implements BaseObject, Serializable {
         this.change = change;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+    
     @Override
     public String toString() {
         return "Transaction{" + "accountId=" + accountId + ", balType=" + balType + ", change=" + change + '}';

@@ -24,27 +24,31 @@ public class Publish {
     private static final Logger logger = Logger.getLogger(Publish.class);
 
     public static void main(String[] args) throws IOException, TimeoutException {
-        PropertyConfigurator.configure("./etc/log4j.properties");
-        MsgPushQueue msgPushQueue = new MsgPushQueue();
-        msgPushQueue.setTypeReceive(Constant.RECEIVE_TYPE.DRIVER);
-        NotificationObjectPushToDriver objectPushToDriver = new NotificationObjectPushToDriver();
-        objectPushToDriver.setAccountId(13302L);//accountId 
-        objectPushToDriver.setNotifyType(Constant.NOTIFY_TYPE.FCM_PUSH);
-        MsgNotifyDriver msgNotifyDriver = new MsgNotifyDriver();
-        TitleObj titleObj = new TitleObj();
-        titleObj.setTitle("VTGO");
-        titleObj.setBody("Bạn nhận được thông báo mới");
-        msgNotifyDriver.setNotification(titleObj);
-        DataDriver dataDriver = new DataDriver();
-        dataDriver.setOrderId("ĐHxxxxxxxxx");
-        dataDriver.setMsg("Admin xác nhận thanh toán đơn hàng ĐHxxxxxxxxx");
-        dataDriver.setType("7");
-        msgNotifyDriver.setData(dataDriver);
-        objectPushToDriver.setMessage(msgNotifyDriver);
-        msgPushQueue.setData(Arrays.asList(objectPushToDriver));
+//        SendNotify.sendToDriver(18803L, Constant.DRIVER_NOTIFY_TYPE.ACCOUNT_RECHARGE, "VTGO", "Bạn nhận được thông báo mới", "Test notify to driver");//test
+//        SendNotify.sendToGoodOwner(21002L, Constant.OWNER_NOTIFY_TYPE.ACCOUNT_RECHARGE, "VTGO", "Bạn nhận được thông báo mới", "Test notify goodowner");//test
+        SendNotify.sendToVehicleOwner(19904L, Constant.VEHICLE_OWNER_NOTIFY_TYPE.ACCOUNT_RECHARGE, "VTGO", "Bạn nhận được thông báo mới", "Test notify VehicleOwner");//test
 
-        String message = new String(JsonStream.serialize(msgPushQueue).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
-        Publish.publishMessage(message, Constant.QUEUE.RABBITMQ_EXCHANGE, Constant.QUEUE.KEY_CHANNEL_PUSH_FROM_ADMIN);
+//        PropertyConfigurator.configure("./etc/log4j.properties");
+//        MsgPushQueue msgPushQueue = new MsgPushQueue();
+//        msgPushQueue.setTypeReceive(Constant.RECEIVE_TYPE.DRIVER);
+//        NotificationObjectPushToDriver objectPushToDriver = new NotificationObjectPushToDriver();
+//        objectPushToDriver.setAccountId(13302L);//accountId 
+//        objectPushToDriver.setNotifyType(Constant.NOTIFY_TYPE.FCM_PUSH);
+//        MsgNotifyDriver msgNotifyDriver = new MsgNotifyDriver();
+//        TitleObj titleObj = new TitleObj();
+//        titleObj.setTitle("VTGO");
+//        titleObj.setBody("Bạn nhận được thông báo mới");
+//        msgNotifyDriver.setNotification(titleObj);
+//        DataDriver dataDriver = new DataDriver();
+//        dataDriver.setOrderId("ĐHxxxxxxxxx");
+//        dataDriver.setMsg("Admin xác nhận thanh toán đơn hàng ĐHxxxxxxxxx");
+//        dataDriver.setType("7");
+//        msgNotifyDriver.setData(dataDriver);
+//        objectPushToDriver.setMessage(msgNotifyDriver);
+//        msgPushQueue.setData(Arrays.asList(objectPushToDriver));
+//
+//        String message = new String(JsonStream.serialize(msgPushQueue).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+//        Publish.publishMessage(message, Constant.QUEUE.RABBITMQ_EXCHANGE, Constant.QUEUE.KEY_CHANNEL_PUSH_FROM_ADMIN);
     }
 
     public static void publishMessage(String message, String exchange, String routingKey) throws TimeoutException, IOException {

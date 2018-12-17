@@ -15,19 +15,25 @@ import com.vtgo.vn.admin.aerospike.AerospikeFactory;
 import com.vtgo.vn.admin.aerospike.DatabaseMsg;
 import com.vtgo.vn.admin.base.BaseController;
 import com.vtgo.vn.admin.base.BaseResponse;
+import com.vtgo.vn.admin.constant.AccountType;
 import com.vtgo.vn.admin.constant.DatabaseConstants;
 import com.vtgo.vn.admin.constant.ResponseConstants;
+import com.vtgo.vn.admin.pushnotify.Constant;
+import com.vtgo.vn.admin.pushnotify.SendNotify;
 import com.vtgo.vn.admin.userinfo.BO.AccountManager;
 import com.vtgo.vn.admin.userinfo.BO.BalanceTemp;
 import com.vtgo.vn.admin.userinfo.BO.Transaction;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import com.vtgo.vn.admin.userinfo.service.BalanceService;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
 import lombok.AllArgsConstructor;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -137,6 +143,55 @@ public class BalanceController extends BaseController implements BalanceService 
                 String resultText = (String) mapRet.get("ResultText");
                 response.setStatus(resultCode);
                 response.setMessage(resultText);
+
+                if (resultCode != 4) {// resultCode == 4 <=> ["ResultText"]="Balance not enough"
+                    int accountType = getAccountType(request.getAccountId());
+                    try {
+                        Long moneyChange = request.getChange();
+                        String strMoney = "";
+                        if (moneyChange > 0) {
+                            strMoney = "+" + String.valueOf(moneyChange);
+                        } else {
+                            strMoney = String.valueOf(moneyChange);
+                        }
+                        String content = "[Thông báo thay đổi số dư]\nTài khoản " + accountId + ": " + strMoney + "đ.\nNội dung: " + request.getContent();
+                        switch (accountType) {
+                            case AccountType.DRIVER:
+                                logger.info(content);
+                                if (moneyChange < 0) {
+                                    SendNotify.sendToDriver(accountId, Constant.DRIVER_NOTIFY_TYPE.ACCOUNT_WITHDRAWAL, "VTGO", "Bạn nhận được thông báo mới", content);
+                                }
+                                if (moneyChange > 0) {
+                                    SendNotify.sendToDriver(accountId, Constant.DRIVER_NOTIFY_TYPE.ACCOUNT_RECHARGE, "VTGO", "Bạn nhận được thông báo mới", content);
+                                }
+                                break;
+                            case AccountType.GOOD_OWNER:
+                                logger.info(content);
+                                if (moneyChange < 0) {
+                                    SendNotify.sendToGoodOwner(accountId, Constant.OWNER_NOTIFY_TYPE.ACCOUNT_WITHDRAWAL, "VTGO", "Bạn nhận được thông báo mới", content);
+                                }
+                                if (moneyChange > 0) {
+                                    SendNotify.sendToGoodOwner(accountId, Constant.OWNER_NOTIFY_TYPE.ACCOUNT_RECHARGE, "VTGO", "Bạn nhận được thông báo mới", content);
+                                }
+                                break;
+                            case AccountType.VEHICLE_OWNER:
+                                logger.info(content);
+                                if (moneyChange < 0) {
+                                    SendNotify.sendToVehicleOwner(accountId, Constant.VEHICLE_OWNER_NOTIFY_TYPE.ACCOUNT_WITHDRAWAL, "VTGO", "Bạn nhận được thông báo mới", content);
+                                }
+                                if (moneyChange > 0) {
+                                    SendNotify.sendToVehicleOwner(accountId, Constant.VEHICLE_OWNER_NOTIFY_TYPE.ACCOUNT_RECHARGE, "VTGO", "Bạn nhận được thông báo mới", content);
+                                }
+                                break;
+                            default:
+                                logger.debug("Account not in (1,2,3) => Cannot push notify to AccountID= " + accountId + "_AccountType = " + accountType);
+                        }
+                    } catch (TimeoutException ex) {
+                        java.util.logging.Logger.getLogger(BalanceController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        java.util.logging.Logger.getLogger(BalanceController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
 
             @Override
@@ -214,6 +269,23 @@ public class BalanceController extends BaseController implements BalanceService 
             response.setStatus(ResponseConstants.SERVICE_FAIL);
             response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
+    private int getAccountType(Long accountId) {
+        try {
+            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, accountId);
+            if (rec != null) {
+                AccountManager accountManager = new AccountManager();
+                accountManager.parse(rec);
+                return Integer.parseInt(String.valueOf(accountManager.getAccountType()));
+            } else {
+                logger.debug("Cannot find accountId");
+                return -1;
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
+            return -1;
         }
     }
 }

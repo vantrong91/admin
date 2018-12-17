@@ -9,6 +9,7 @@ D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\util\ObjectUtils.j
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\base\BaseController.java
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\userinfo\controller\VehicleOwnerController.java
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\config\SwaggerConfig.java
+D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\pushnotify\SendNotify.java
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\userinfo\BO\User.java
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\userinfo\service\BalanceHisService.java
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\userinfo\controller\AdministrationController.java

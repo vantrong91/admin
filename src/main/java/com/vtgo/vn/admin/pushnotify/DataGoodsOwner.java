@@ -16,11 +16,17 @@ public class DataGoodsOwner {
     private String quotationId;
     private String loadingCode;
     private String msg;
+    private String reason;
     private String promotionCode;//"DEDANG"// với type là chương trình km
     private boolean urgent;//// true với trường hợp thông báo sự cố khẩn, false thông báo sự cố bình thường
     private Long acctIdDriver;
+    private String identityNo;//so cmnd
+    private String driverCode;
     private String nameDr;
     private String phoneNumberDr;
+    private String completeCode;//ma hoan thanh
+    private Double fineFee;
+    private Long vehicleId;
 
     public String getType() {
         return type;
@@ -70,6 +76,14 @@ public class DataGoodsOwner {
         this.msg = msg;
     }
 
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
     public String getLoadingCode() {
         return loadingCode;
     }
@@ -102,4 +116,43 @@ public class DataGoodsOwner {
         this.phoneNumberDr = phoneNumberDr;
     }
 
+    public String getCompleteCode() {
+        return completeCode;
+    }
+
+    public void setCompleteCode(String completeCode) {
+        this.completeCode = completeCode;
+    }
+
+    public String getIdentityNo() {
+        return identityNo;
+    }
+
+    public void setIdentityNo(String identityNo) {
+        this.identityNo = identityNo;
+    }
+
+    public String getDriverCode() {
+        return driverCode;
+    }
+
+    public void setDriverCode(String driverCode) {
+        this.driverCode = driverCode;
+    }
+
+    public Double getFineFee() {
+        return fineFee;
+    }
+
+    public void setFineFee(Double fineFee) {
+        this.fineFee = fineFee;
+    }
+
+    public Long getVehicleId() {
+        return vehicleId;
+    }
+
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
+    }
 }

@@ -5,15 +5,20 @@
  */
 package com.vtgo.vn.admin.pushnotify;
 
+import java.util.List;
+
 /**
  *
  * @author Trong Van
  */
 public class DataVehicleOwner {
 
-    private String type;//// 0 Lái xe kết nối với xe, 1 : Có phản hồi mới cho đơn hàng, 2 : Lái xe đã báo đơn hàng, 3 : xe hết hạn đăng kiểm
-    private Long accDriverId;
-    private Long vehicleId;
+     private String type;//// 0 Lái xe kết nối với xe, 1 : Có phản hồi mới cho đơn hàng, 2 : Lái xe đã báo đơn hàng, 3 : xe hết hạn đăng kiểm
+//    private Long accDriverId;
+    private List<Long> lstVehicleId;
+    private String orderId;
+    private String orderIdOld;
+    private String quotationId;
     private String msg;
 
     public String getType() {
@@ -24,20 +29,36 @@ public class DataVehicleOwner {
         this.type = type;
     }
 
-    public Long getAccDriverId() {
-        return accDriverId;
+    public List<Long> getLstVehicleId() {
+        return lstVehicleId;
     }
 
-    public void setAccDriverId(Long accDriverId) {
-        this.accDriverId = accDriverId;
+    public void setLstVehicleId(List<Long> lstVehicleId) {
+        this.lstVehicleId = lstVehicleId;
     }
 
-    public Long getVehicleId() {
-        return vehicleId;
+    public String getOrderIdOld() {
+        return orderIdOld;
     }
 
-    public void setVehicleId(Long vehicleId) {
-        this.vehicleId = vehicleId;
+    public void setOrderIdOld(String orderIdOld) {
+        this.orderIdOld = orderIdOld;
+    }
+
+    public String getQuotationId() {
+        return quotationId;
+    }
+
+    public void setQuotationId(String quotationId) {
+        this.quotationId = quotationId;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public String getMsg() {
@@ -47,5 +68,6 @@ public class DataVehicleOwner {
     public void setMsg(String msg) {
         this.msg = msg;
     }
+
 
 }
