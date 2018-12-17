@@ -240,14 +240,14 @@ public class VehicleOwnerController extends BaseController implements VehicleOwn
         BaseResponse response = new BaseResponse();
         try {
             RecordSet rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOUNT_SET, "Email",
-                    "EmailIdx", request.getEmail());
+                    "EmailIdx", request.getContactPersonEmail());
             if (rs != null && rs.iterator().hasNext()) {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
                 response.setMessage("Email was existed");
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
             rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOUNT_SET, "PhoneNumber",
-                    "PhoneNumberIdx", request.getContactPhone());
+                    "PhoneNumberIdx", request.getContactPersonPhone());
             if (rs != null && rs.iterator().hasNext()) {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
                 response.setMessage("PhoneNumber was existed");
@@ -268,11 +268,11 @@ public class VehicleOwnerController extends BaseController implements VehicleOwn
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
             lstBin.add(new Bin("Password", bCryptPasswordEncoder.encode(password)));
             lstBin.add(new Bin("Salt", salt));
-            lstBin.add(new Bin("Email", request.getEmail()));
+            lstBin.add(new Bin("Email", request.getContactPersonEmail()));
             lstBin.add(new Bin("FullName", request.getFullName()));
-            lstBin.add(new Bin("PhoneNumber", request.getContactPhone()));
+            lstBin.add(new Bin("PhoneNumber", request.getContactPersonPhone()));
             lstBin.add(new Bin("AccountType", AccountType.VEHICLE_OWNER));
-            String accountCode = "US" + request.getContactPhone();
+            String accountCode = "US" + request.getContactPersonPhone();
             lstBin.add(new Bin("AccountCode", accountCode));
 
             // Create Balance
