@@ -51,6 +51,12 @@ public class UpLoadFileApi {
         LOGGER.debug("cmnd uploading...");
         return upload.uploadFile(files, "CMND");
     }
+    
+    @PostMapping(value = "/cmnd-owner", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity cmndOwner(@RequestParam("files") MultipartFile[] files) {
+        LOGGER.debug("cmnd uploading...");
+        return upload.uploadFile(files, "CMND-OWNER");
+    }
 
     @PostMapping(value = "/gplx", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity gplx(@RequestParam("files") MultipartFile[] files) {

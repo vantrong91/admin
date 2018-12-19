@@ -194,7 +194,9 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
 
     @Override
     public String toString() {
-        return "AccountManager{" + "accountId=" + accountId + ", password=" + password + ", fullName=" + fullName + ", email=" + email + ", phoneNumber=" + phoneNumber + ", accountType=" + accountType + ", accountToken=" + accountToken + ", osType=" + osType + ", deviceToken=" + deviceToken + ", salt=" + salt + '}';
+        return "AccountManager{" + "accountId=" + accountId + ", password=" + password + ", fullName=" + fullName + ", email=" + email + ", phoneNumber=" + phoneNumber + ", accountType=" + accountType + ", accountToken=" + accountToken + ", osType=" + osType + ", deviceToken=" + deviceToken + ", salt=" + salt + ", accountCode=" + accountCode + ", fileAvata=" + fileAvata + '}';
     }
+
+  
 
 }

@@ -272,7 +272,7 @@ public class VehicleOwnerController extends BaseController implements VehicleOwn
             lstBin.add(new Bin("FullName", request.getFullName()));
             lstBin.add(new Bin("PhoneNumber", request.getContactPersonPhone()));
             lstBin.add(new Bin("AccountType", AccountType.VEHICLE_OWNER));
-            String accountCode = "US" + request.getContactPersonPhone();
+            String accountCode = "CX" + request.getContactPersonPhone();
             lstBin.add(new Bin("AccountCode", accountCode));
 
             // Create Balance
@@ -282,7 +282,7 @@ public class VehicleOwnerController extends BaseController implements VehicleOwn
             balParam.add(Value.get(0));//Consume
             balParam.add(Value.get(8141644800000f));//ExpDate
             balParam.add(Value.get(0));//Reserve
-            balParam.add(Value.get("VH" + request.getContactPhone()));//AcctNumber
+            balParam.add(Value.get("VP3" + accountCode));//AcctNumber
             balParam.add(Value.get(accountId));
             try {
                 AerospikeFactory.getInstance().execute(new ExecuteListener() {

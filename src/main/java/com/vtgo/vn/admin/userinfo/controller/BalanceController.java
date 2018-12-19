@@ -248,7 +248,7 @@ public class BalanceController extends BaseController implements BalanceService 
                 argumentFilter.add(new Value.MapValue(f));
             }
 
-            for (int i = 1; i <= 3; i++) {
+            for (int i = 0; i <= 3; i++) {
                 f = new HashMap<>();
                 f.put("field", "AccountType");
                 f.put("value", i);

@@ -199,7 +199,7 @@ public class DriverController extends BaseController implements DriverService {
             lstBin.add(new Bin("FullName", request.getFullName()));
             lstBin.add(new Bin("PhoneNumber", request.getPhoneNumber()));
             lstBin.add(new Bin("AccountType", AccountType.DRIVER));
-            String accountCode = "US" + request.getPhoneNumber();
+            String accountCode = "LX" + request.getPhoneNumber();
             lstBin.add(new Bin("AccountCode", accountCode));
 
             // init Balance
@@ -209,7 +209,7 @@ public class DriverController extends BaseController implements DriverService {
             balParam.add(Value.get(0));//Consume
             balParam.add(Value.get(8141644800000f));//ExpDate
             balParam.add(Value.get(0));//Reserve
-            balParam.add(Value.get("VP1" + request.getPhoneNumber()));//AcctNumber
+            balParam.add(Value.get("VP1" + accountCode));//AcctNumber
             balParam.add(Value.get(accountId));
             try {
                 //add Balance

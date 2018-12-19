@@ -187,7 +187,7 @@ public class GoodOwnerController extends BaseController implements GoodOwnerServ
             lstBin.add(new Bin("PhoneNumber", request.getPhoneNumber()));
             lstBin.add(new Bin("AccountType", AccountType.GOOD_OWNER));
             lstBin.add(new Bin("FullName", request.getFullName()));
-            String accountCode = "US" + request.getPhoneNumber();
+            String accountCode = "CH" + request.getPhoneNumber();
             lstBin.add(new Bin("AccountCode", accountCode));
 
             // init Balance
@@ -197,7 +197,7 @@ public class GoodOwnerController extends BaseController implements GoodOwnerServ
             balParam.add(Value.get(0));//Consume
             balParam.add(Value.get(8141644800000f));//ExpDate
             balParam.add(Value.get(0));//Reserve
-            balParam.add(Value.get("VP1" + request.getPhoneNumber()));//AcctNumber
+            balParam.add(Value.get("VP2" + accountCode));//AcctNumber
             balParam.add(Value.get(accountId));
             try {
                 //add Balance

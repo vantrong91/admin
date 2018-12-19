@@ -82,5 +82,10 @@ public class AccounManagerApi {
         log.debug("request /updateInfo: " + request);
         return accountManagerService.updateInfo(request);
     }
+    
+    @PostMapping(value = "get-by-acc-code", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity checkAccCodeExits(@RequestBody AccountManager request){
+        return accountManagerService.getByAccountCode(request);
+    }
 
 }

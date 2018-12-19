@@ -25,6 +25,8 @@ public interface AccountManagerService {
     public ResponseEntity create(AccountManager request);
 
     public ResponseEntity checkLogin(AccountManager request);
+    
+    public ResponseEntity getByAccountCode(AccountManager request);
 
     public ResponseEntity delete(AccountManager request);
 
