@@ -172,11 +172,13 @@ public class DriverController extends BaseController implements DriverService {
                 response.setMessage("Email was existed");
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
-            rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOUNT_SET, "PhoneNumber",
-                    "PhoneNumberIdx", request.getPhoneNumber());
+
+            String accountCode = "LX" + request.getPhoneNumber();
+            rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOUNT_SET, "AccountCode",
+                    "AccountCodeIdx", accountCode);
             if (rs != null && rs.iterator().hasNext()) {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
-                response.setMessage("PhoneNumber was existed");
+                response.setMessage("PhoneNumber was used for Driver");
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
 
@@ -199,7 +201,6 @@ public class DriverController extends BaseController implements DriverService {
             lstBin.add(new Bin("FullName", request.getFullName()));
             lstBin.add(new Bin("PhoneNumber", request.getPhoneNumber()));
             lstBin.add(new Bin("AccountType", AccountType.DRIVER));
-            String accountCode = "LX" + request.getPhoneNumber();
             lstBin.add(new Bin("AccountCode", accountCode));
 
             // init Balance

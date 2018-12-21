@@ -46,9 +46,9 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class AccountManagerController extends BaseController implements AccountManagerService {
-    
+
     private static final Logger log = Logger.getLogger(AccountManagerController.class.getName());
-    
+
     @Override
     public ResponseEntity searchAccountMan(SearchRequest request) {
         BaseResponse response = new BaseResponse();
@@ -87,7 +87,7 @@ public class AccountManagerController extends BaseController implements AccountM
             s.put("order", "DESC");
             s.put("type", "STRING");
             argumentSorters.add(new Value.MapValue(s));
-            
+
             argument.put("sorters", new Value.ListValue(argumentSorters));
             argument.put("filters", new Value.ListValue(argumentFilter));
             ResultSet resultSet = AerospikeFactory.getInstance()
@@ -117,7 +117,7 @@ public class AccountManagerController extends BaseController implements AccountM
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
-    
+
     @Override
     public ResponseEntity getAccountManById(AccountManager request) {
         BaseResponse response = new BaseResponse();
@@ -138,7 +138,7 @@ public class AccountManagerController extends BaseController implements AccountM
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
-    
+
     @Override
     public ResponseEntity searchByEmail(SearchRequest request) {
         BaseResponse response = new BaseResponse();
@@ -153,14 +153,14 @@ public class AccountManagerController extends BaseController implements AccountM
                 f.put("value", searchVal);
                 f.put("operator", "=");
                 argumentFilter.add(new Value.MapValue(f));
-                
+
                 List<Value.MapValue> argumentSorters = new ArrayList<>();
                 Map<String, Object> s = new HashMap<>();
                 s.put("sort_key", "AccountId");
                 s.put("order", "DESC");
                 s.put("type", "STRING");
                 argumentSorters.add(new Value.MapValue(s));
-                
+
                 argument.put("sorters", new Value.ListValue(argumentSorters));
                 argument.put("filters", new Value.ListValue(argumentFilter));
                 ResultSet resultSet = AerospikeFactory.getInstance()
@@ -180,7 +180,7 @@ public class AccountManagerController extends BaseController implements AccountM
                     }
                 }
             }
-            
+
             response.setData(listAcc);
             response.setStatus(ResponseConstants.SUCCESS);
             response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
@@ -192,7 +192,7 @@ public class AccountManagerController extends BaseController implements AccountM
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
-    
+
     @Override
     public ResponseEntity create(AccountManager request) {
         BaseResponse response = new BaseResponse();
@@ -218,7 +218,7 @@ public class AccountManagerController extends BaseController implements AccountM
                 response.setMessage("SĐT đã được dùng cho loại tài khoản này");
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
-            
+
             long accountId = SequenceManager.getInstance().getSequence(Account.class.getSimpleName());
             if (accountId <= 0) {
                 response.setStatus(ResponseConstants.SERVICE_FAIL);
@@ -262,7 +262,7 @@ public class AccountManagerController extends BaseController implements AccountM
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
-    
+
     public String getAccountCode(Long type, String phoneNum) {
         int types = Integer.parseInt(String.valueOf(type));
         switch (types) {
@@ -276,12 +276,14 @@ public class AccountManagerController extends BaseController implements AccountM
                 return "KTH" + phoneNum;
             case AccountType.MANAGE:
                 return "QL" + phoneNum;
+            case AccountType.INSURANCE:
+                return "BH" + phoneNum;
             default:
                 return "US" + phoneNum;
-            
+
         }
     }
-    
+
     @Override
     public ResponseEntity checkLogin(AccountManager request) {
         BaseResponse response = new BaseResponse();
@@ -311,7 +313,7 @@ public class AccountManagerController extends BaseController implements AccountM
                     s.put("order", "DESC");
                     s.put("type", "STRING");
                     argumentSorters.add(new Value.MapValue(s));
-                    
+
                     argument.put("sorters", new Value.ListValue(argumentSorters));
                     argument.put("filters", new Value.ListValue(argumentFilter));
                     ResultSet resultSet = AerospikeFactory.getInstance()
@@ -333,7 +335,7 @@ public class AccountManagerController extends BaseController implements AccountM
                                         response.setStatus(DatabaseConstants.ResultCode.FAIL);
                                         response.setMessage("Wrong password!");
                                     } //Check Account type
-                                    else if (accountType == 0 || accountType == 5 || accountType == 6 || accountType == 7 || accountType == 8 || accountType == 9) {
+                                    else if (accountType == 0 || accountType == 5 || accountType == 6 || accountType == 7 || accountType == 8 || accountType == 9||accountType==10) {
                                         String token = SecurityUtils.createToken(String.valueOf(accountId), new Date());
                                         accountManager.setAccountToken(token);
                                         update(AerospikeFactory.getInstance().onlyUpdatePolicy,
@@ -346,7 +348,7 @@ public class AccountManagerController extends BaseController implements AccountM
                                         response.setStatus(ResponseConstants.SERVICE_LOGIN_FAIL);
                                         response.setMessage("Your account doesn't have access");
                                     }
-                                    
+
                                 }
                             }
                         }
@@ -358,7 +360,7 @@ public class AccountManagerController extends BaseController implements AccountM
                     response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
                     return ResponseEntity.status(HttpStatus.OK).body(response);
                 }
-                
+
             }
             response.setStatus(ResponseConstants.SERVICE_FAIL);
             response.setMessage(ResponseConstants.SERVICE_ACCOUNT_NOT_FOUND);
@@ -370,7 +372,7 @@ public class AccountManagerController extends BaseController implements AccountM
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
-    
+
     @Override
     public ResponseEntity delete(AccountManager request) {
         BaseResponse response = new BaseResponse();
@@ -384,7 +386,7 @@ public class AccountManagerController extends BaseController implements AccountM
                 response.setStatus(ResponseConstants.SERVICE_ERROR);
                 response.setMessage(ResponseConstants.SERVICE_ACCOUNT_NOT_FOUND);
             }
-            
+
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -393,7 +395,7 @@ public class AccountManagerController extends BaseController implements AccountM
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
-    
+
     @Override
     public ResponseEntity logout(AccountManager request) {
         BaseResponse response = new BaseResponse();
@@ -416,7 +418,7 @@ public class AccountManagerController extends BaseController implements AccountM
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
-    
+
     @Override
     public ResponseEntity update(AccountManager request) {
         BaseResponse response = new BaseResponse();
@@ -444,7 +446,7 @@ public class AccountManagerController extends BaseController implements AccountM
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
-    
+
     @Override
     public ResponseEntity updateInfo(AccountManager request) {
         BaseResponse response = new BaseResponse();
@@ -466,7 +468,7 @@ public class AccountManagerController extends BaseController implements AccountM
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
-    
+
     @Override
     public ResponseEntity getByAccountCode(AccountManager request) {
         BaseResponse response = new BaseResponse();
@@ -481,14 +483,14 @@ public class AccountManagerController extends BaseController implements AccountM
                 f.put("value", accCode);
                 f.put("operator", "=");
                 argumentFilter.add(new Value.MapValue(f));
-                
+
                 List<Value.MapValue> argumentSorters = new ArrayList<>();
                 Map<String, Object> s = new HashMap<>();
                 s.put("sort_key", "AccountId");
                 s.put("order", "DESC");
                 s.put("type", "STRING");
                 argumentSorters.add(new Value.MapValue(s));
-                
+
                 argument.put("sorters", new Value.ListValue(argumentSorters));
                 argument.put("filters", new Value.ListValue(argumentFilter));
                 ResultSet resultSet = AerospikeFactory.getInstance()
@@ -508,7 +510,7 @@ public class AccountManagerController extends BaseController implements AccountM
                     }
                 }
             }
-            
+
             response.setData(listAcc);
             response.setStatus(ResponseConstants.SUCCESS);
             response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
