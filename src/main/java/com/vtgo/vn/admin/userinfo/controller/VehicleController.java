@@ -157,8 +157,6 @@ public class VehicleController extends BaseController implements VehicleService 
                     response.setMessage("Get vehicleId sequence error");
                     return ResponseEntity.status(HttpStatus.OK).body(response);
                 }
-                String vehicleCode = "VH" + request.getLicencePlate();
-                request.setVehicleCode(vehicleCode);
                 request.setVehicleId(vehicleId);
                 update(AerospikeFactory.getInstance().onlyCreatePolicy,
                         DatabaseConstants.NAMESPACE, DatabaseConstants.VEHICLE_SET, request.getVehicleId(), request.toBins());

@@ -49,6 +49,15 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
     private Long driverId;
     private String driverName;
     private Map<String, List<String>> attachProperties;
+    private String ipMonitoring;
+
+    public String getIpMonitoring() {
+        return ipMonitoring;
+    }
+
+    public void setIpMonitoring(String ipMonitoring) {
+        this.ipMonitoring = ipMonitoring;
+    }
 
     public Long getVehicleId() {
         return vehicleId;
@@ -288,6 +297,7 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
         bins.add(new Bin("DriverName", driverName));
         bins.add(new Bin("State", state));
         bins.add(new Bin("AttachProp", attachProperties));
+        bins.add(new Bin("IpMonitoring", ipMonitoring));
         return bins.toArray(new Bin[bins.size()]);
     }
 
@@ -321,6 +331,7 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
             this.driverName = record.getString("DriverName");
             this.state = record.getLong("State");
             this.attachProperties = (Map<String, List<String>>) record.getMap("AttachProp");
+            this.ipMonitoring = record.getString("IpMonitoring");
         } catch (Exception ex) {
             logger.error(ex, ex);
             return false;
@@ -359,12 +370,13 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
             this.civilInsuranceExpDate = (Long) map.get("CivInsuIssDate");
             this.civilInsuranceIssueDate = (Long) map.get("CivInsuExpDate");
             this.itineraryMonitoring = (String) map.get("ItinerMonitor");
-            this.itineraryMonitoringExpDate = (Long) map.get("MonitorIssDate");
-            this.itineraryMonitoringIssueDate = (Long) map.get("MonitorExpDate");
+            this.itineraryMonitoringExpDate = (Long) map.get("MonitorExpDate");
+            this.itineraryMonitoringIssueDate = (Long) map.get("MonitorIssDate");
             this.driverId = (Long) map.get("DriverId");
             this.driverName = (String) map.get("DriverName");
             this.state = (Long) map.get("State");
             this.attachProperties = (Map<String, List<String>>) map.get("AttachProp");
+            this.ipMonitoring = (String) map.get("IpMonitoring");
             return true;
         } catch (Exception ex) {
             logger.error(ex, ex);
