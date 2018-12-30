@@ -19,6 +19,7 @@ public class DatabaseConstants {
     public static String TRANSFER_FEE_SET = "transferFee";
     public static String POLICY_SET = "policy";
     public static String ADMINISTRATION_SET = "administration";
+    public static String BANKADMIN_SET = "bankAdmin";
 
     public class Command {
 

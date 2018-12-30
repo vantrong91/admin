@@ -32,6 +32,9 @@ public class BalanceHis extends BaseRequest<Object> implements BaseObject {
     private Long balanceAfter;
     private Long amount;
     private Long time;
+    private String fromAcctNumber;
+    private String toAcctNumber;
+//    private String orderId;
 
     @Override
     public boolean parse(Record record) {
@@ -45,6 +48,8 @@ public class BalanceHis extends BaseRequest<Object> implements BaseObject {
             this.balanceAfter = record.getLong("BalanceAfter");
             this.amount = record.getLong("Amount");
             this.time = record.getLong("CreateTime");
+            this.fromAcctNumber = record.getString("FromAcct");
+            this.toAcctNumber = record.getString("ToAcct");
             return true;
         } catch (Exception ex) {
             log.debug(ex);
@@ -64,7 +69,8 @@ public class BalanceHis extends BaseRequest<Object> implements BaseObject {
             this.balanceAfter = (Long) map.get("BalanceAfter");
             this.amount = (Long) map.get("Amount");
             this.time = (Long) map.get("CreateTime");
-
+            this.fromAcctNumber = (String) map.get("FromAcct");
+            this.toAcctNumber = (String) map.get("ToAcct");
             return true;
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
@@ -85,19 +91,13 @@ public class BalanceHis extends BaseRequest<Object> implements BaseObject {
             bins.add(new Bin("BalanceAfter", balanceAfter));
             bins.add(new Bin("Amount", amount));
             bins.add(new Bin("CreateTime", time));
+            bins.add(new Bin("FromAcct", fromAcctNumber));
+            bins.add(new Bin("ToAcct", toAcctNumber));
             return bins.toArray(new Bin[bins.size()]);
         } catch (AerospikeException ex) {
             log.error(ex.getMessage());
             return null;
         }
-    }
-
-    public Long getTime() {
-        return time;
-    }
-
-    public void setTime(Long time) {
-        this.time = time;
     }
 
     public Long getHisId() {
@@ -164,8 +164,28 @@ public class BalanceHis extends BaseRequest<Object> implements BaseObject {
         this.amount = amount;
     }
 
-    @Override
-    public String toString() {
-        return "BalanceHis{" + "hisId=" + hisId + ", accountId=" + accountId + ", hisType=" + hisType + ", hisContent=" + hisContent + ", iP=" + iP + ", balanceBefor=" + balanceBefor + ", balanceAfter=" + balanceAfter + ", amount=" + amount + '}';
+    public Long getTime() {
+        return time;
     }
+
+    public void setTime(Long time) {
+        this.time = time;
+    }
+
+    public String getFromAcctNumber() {
+        return fromAcctNumber;
+    }
+
+    public void setFromAcctNumber(String fromAcctNumber) {
+        this.fromAcctNumber = fromAcctNumber;
+    }
+
+    public String getToAcctNumber() {
+        return toAcctNumber;
+    }
+
+    public void setToAcctNumber(String toAcctNumber) {
+        this.toAcctNumber = toAcctNumber;
+    }
+
 }

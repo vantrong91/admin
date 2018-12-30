@@ -64,8 +64,10 @@ com\vtgo\vn\admin\util\ObjectUtils.class
 com\vtgo\vn\admin\userinfo\BO\Administration.class
 com\vtgo\vn\admin\userinfo\api\InsuranceOrderApi.class
 com\vtgo\vn\admin\constant\ResponseConstants.class
+com\vtgo\vn\admin\userinfo\controller\BankController.class
 com\vtgo\vn\admin\pushnotify\Constant.class
 com\vtgo\vn\admin\userinfo\BO\Quotation.class
+com\vtgo\vn\admin\userinfo\service\BankService.class
 com\vtgo\vn\admin\userinfo\api\TransferFeeApi.class
 com\vtgo\vn\admin\userinfo\request\InsuranceOrderSearchRequest.class
 com\vtgo\vn\admin\userinfo\BO\Product.class
@@ -85,6 +87,7 @@ com\vtgo\vn\admin\userinfo\BO\MyFile.class
 com\vtgo\vn\admin\userinfo\controller\BalanceController$1.class
 com\vtgo\vn\admin\userinfo\api\VehicleApi.class
 com\vtgo\vn\admin\userinfo\controller\UpLoadFileController.class
+com\vtgo\vn\admin\userinfo\api\BankApi.class
 com\vtgo\vn\admin\userinfo\api\DriverApi.class
 com\vtgo\vn\admin\config\Config.class
 com\vtgo\vn\admin\userinfo\BO\Balance.class
@@ -108,6 +111,7 @@ com\vtgo\vn\admin\aerospike\handler\AerospikeGetHandler.class
 com\vtgo\vn\admin\constant\DatabaseConstants.class
 com\vtgo\vn\admin\userinfo\BO\AccountManager.class
 com\vtgo\vn\admin\userinfo\BO\BalanceHis.class
+com\vtgo\vn\admin\userinfo\BO\Bank.class
 com\vtgo\vn\admin\userinfo\controller\EmailController.class
 com\vtgo\vn\admin\userinfo\request\InsuOrderCompleteRequest.class
 com\vtgo\vn\admin\userinfo\service\AdministrationService.class
