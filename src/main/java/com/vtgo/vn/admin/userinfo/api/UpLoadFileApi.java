@@ -116,6 +116,16 @@ public class UpLoadFileApi {
         LOGGER.debug("gxntbgs uploading...");
         return upload.uploadFile(files, "GXNTBGS");
     }
+    @PostMapping(value = "aphxe", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity aphxe(@RequestParam("files") MultipartFile[] files){
+        LOGGER.debug("aphxe uploading...");
+        return upload.uploadFile(files, "APHXE");
+    }
+    @PostMapping(value = "achxe", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity achxe(@RequestParam("files") MultipartFile[] files){
+        LOGGER.debug("achxe uploading...");
+        return upload.uploadFile(files, "ACHXE");
+    }
     
     
 }

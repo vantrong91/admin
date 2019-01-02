@@ -45,11 +45,38 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
     private String itineraryMonitoring;
     private Long itineraryMonitoringIssueDate;
     private Long itineraryMonitoringExpDate;
+    private String carBadges; //Phu hieu xe
+    private Long carBaIssDate;
+    private Long carBaExpDate;
     private Long state;
     private Long driverId;
     private String driverName;
     private Map<String, List<String>> attachProperties;
     private String ipMonitoring;
+
+    public String getCarBadges() {
+        return carBadges;
+    }
+
+    public void setCarBadges(String carBadges) {
+        this.carBadges = carBadges;
+    }
+
+    public Long getCarBaIssDate() {
+        return carBaIssDate;
+    }
+
+    public void setCarBaIssDate(Long carBaIssDate) {
+        this.carBaIssDate = carBaIssDate;
+    }
+
+    public Long getCarBaExpDate() {
+        return carBaExpDate;
+    }
+
+    public void setCarBaExpDate(Long carBaExpDate) {
+        this.carBaExpDate = carBaExpDate;
+    }
 
     public String getIpMonitoring() {
         return ipMonitoring;
@@ -298,6 +325,9 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
         bins.add(new Bin("State", state));
         bins.add(new Bin("AttachProp", attachProperties));
         bins.add(new Bin("IpMonitoring", ipMonitoring));
+        bins.add(new Bin("CarBadges", carBadges));
+        bins.add(new Bin("CarBaIssDate", carBaIssDate));
+        bins.add(new Bin("CarBaExpDate", carBaExpDate));
         return bins.toArray(new Bin[bins.size()]);
     }
 
@@ -332,6 +362,9 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
             this.state = record.getLong("State");
             this.attachProperties = (Map<String, List<String>>) record.getMap("AttachProp");
             this.ipMonitoring = record.getString("IpMonitoring");
+            this.carBadges = record.getString("CarBadges");
+            this.carBaExpDate = record.getLong("CarBaExpDate");
+            this.carBaIssDate = record.getLong("CarBaIssDate");
         } catch (Exception ex) {
             logger.error(ex, ex);
             return false;
@@ -377,11 +410,13 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
             this.state = (Long) map.get("State");
             this.attachProperties = (Map<String, List<String>>) map.get("AttachProp");
             this.ipMonitoring = (String) map.get("IpMonitoring");
+            this.carBadges = (String) map.get("CarBadges");
+            this.carBaExpDate = (Long) map.get("CarBaExpDate");
+            this.carBaIssDate = (Long) map.get("CarBaIssDate");
             return true;
         } catch (Exception ex) {
             logger.error(ex, ex);
             return false;
         }
     }
-
 }

@@ -144,11 +144,11 @@ public class VehicleController extends BaseController implements VehicleService 
         BaseResponse response = new BaseResponse();
         try {
             if (request.getLicencePlate() != null) {
-                RecordSet rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE, DatabaseConstants.VEHICLE_SET, "LisencePlate",
-                        "LisencePlateIdx", request.getLicencePlate());
+                RecordSet rs = AerospikeFactory.getInstance().queryByIndex(DatabaseConstants.NAMESPACE, DatabaseConstants.VEHICLE_SET, "LicencePlate",
+                        "LicencePlateIdx", request.getLicencePlate());
                 if (rs != null && rs.iterator().hasNext()) {
                     response.setStatus(ResponseConstants.SERVICE_FAIL);
-                    response.setMessage("LisencePlate was existed");
+                    response.setMessage("Trùng biển số");
                     return ResponseEntity.status(HttpStatus.OK).body(response);
                 }
                 long vehicleId = SequenceManager.getInstance().getSequence(Vehicle.class.getSimpleName());
