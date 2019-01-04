@@ -53,9 +53,18 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
     private String driverName;
     private Map<String, List<String>> attachProperties;
     private String ipMonitoring;
+    private String password; //Mat khau ket noi voi lai xe
 
     public String getCarBadges() {
         return carBadges;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setCarBadges(String carBadges) {
@@ -328,6 +337,7 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
         bins.add(new Bin("CarBadges", carBadges));
         bins.add(new Bin("CarBaIssDate", carBaIssDate));
         bins.add(new Bin("CarBaExpDate", carBaExpDate));
+        bins.add(new Bin("Password", password));
         return bins.toArray(new Bin[bins.size()]);
     }
 
@@ -365,6 +375,7 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
             this.carBadges = record.getString("CarBadges");
             this.carBaExpDate = record.getLong("CarBaExpDate");
             this.carBaIssDate = record.getLong("CarBaIssDate");
+            this.password = record.getString("Password");
         } catch (Exception ex) {
             logger.error(ex, ex);
             return false;
@@ -413,6 +424,7 @@ public class Vehicle extends BaseRequest<Object> implements BaseObject {
             this.carBadges = (String) map.get("CarBadges");
             this.carBaExpDate = (Long) map.get("CarBaExpDate");
             this.carBaIssDate = (Long) map.get("CarBaIssDate");
+            this.password = (String) map.get("Password");
             return true;
         } catch (Exception ex) {
             logger.error(ex, ex);

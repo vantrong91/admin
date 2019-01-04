@@ -119,8 +119,6 @@ public class VehicleController extends BaseController implements VehicleService 
         BaseResponse response = new BaseResponse();
         try {
             if (request.getVehicleId() != null) {
-                String vehicleCode = "VH" +  request.getLicencePlate();
-                request.setVehicleCode(vehicleCode);
                 update(AerospikeFactory.getInstance().onlyUpdatePolicy,
                         DatabaseConstants.NAMESPACE, DatabaseConstants.VEHICLE_SET, request.getVehicleId(), request.toBins());
                 response.setStatus(ResponseConstants.SUCCESS);
@@ -233,9 +231,9 @@ public class VehicleController extends BaseController implements VehicleService 
         try {
             Map<String, Object> argument = new HashMap<>();
             List<Value.MapValue> argumentFilter = new ArrayList<>();
-            
+
             Long searchValue = request.getSearchParam2();
-            if(searchValue != null){
+            if (searchValue != null) {
                 Map<String, Object> f = new HashMap<>();
                 f.put("field", "ID_CHA");
                 f.put("value", searchValue);
@@ -245,21 +243,21 @@ public class VehicleController extends BaseController implements VehicleService 
             List<Value.MapValue> argumentSorters = new ArrayList<>();
             Map<String, Object> s1 = new HashMap<>();
             s1.put("sort_key", "PK");
-            s1.put("order","ASC");
-            s1.put("type","LONG");
+            s1.put("order", "ASC");
+            s1.put("type", "LONG");
             argumentSorters.add(new Value.MapValue(s1));
-            
+
             argument.put("sorters", new Value.ListValue(argumentSorters));
             argument.put("filters", new Value.ListValue(argumentFilter));
-            
-            ResultSet rs = AerospikeFactory.getInstance().aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.CATEGORY_SET,"FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
-            if(rs != null){
+
+            ResultSet rs = AerospikeFactory.getInstance().aggregate(AerospikeFactory.getInstance().queryPolicy, DatabaseConstants.NAMESPACE, DatabaseConstants.CATEGORY_SET, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+            if (rs != null) {
                 Iterator<Object> obIterator = rs.iterator();
-                while(obIterator.hasNext()){
+                while (obIterator.hasNext()) {
                     ArrayList arr = (ArrayList) obIterator.next();
-                    for(Object o : arr) {
+                    for (Object o : arr) {
                         Category category = new Category();
-                        if(category.parse((Map) o)){
+                        if (category.parse((Map) o)) {
                             lstCategory.add(category);
                         }
                     }
