@@ -34,58 +34,62 @@ public class AccounManagerApi {
         log.debug(search.getSearchParam());
         return accountManagerService.searchAccountMan(search);
     }
-    
+
     @PostMapping(value = "/get-by-id", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity getById(@RequestBody AccountManager request) {
         log.debug("request /getById: " + request.getAccountId());
         return accountManagerService.getAccountManById(request);
     }
-    
+
     @PostMapping(value = "/search-by-email", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity searchByEmail(@RequestBody SearchRequest search) {
-         log.debug(search.getSearchParam());
+        log.debug(search.getSearchParam());
         return accountManagerService.searchByEmail(search);
     }
-    
+
     @PostMapping(value = "/logout", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity logout(@RequestBody AccountManager request){
+    public ResponseEntity logout(@RequestBody AccountManager request) {
         log.debug("request /logout: " + request.getAccountId());
         return accountManagerService.logout(request);
     }
-    
+
     @PostMapping(value = "create", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity create(@RequestBody AccountManager request){
+    public ResponseEntity create(@RequestBody AccountManager request) {
         log.debug("request /create: " + request);
         return accountManagerService.create(request);
     }
-    
+
     @PostMapping(value = "check-login", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity checkLogin(@RequestBody AccountManager request){
+    public ResponseEntity checkLogin(@RequestBody AccountManager request) {
         log.debug("request /checkLogin: " + request);
         return accountManagerService.checkLogin(request);
     }
-    
+
     @PostMapping(value = "delete", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity delete(@RequestBody AccountManager request){
+    public ResponseEntity delete(@RequestBody AccountManager request) {
         log.debug("request /delete: " + request);
         return accountManagerService.delete(request);
     }
-    
+
     @PostMapping(value = "update", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity update(@RequestBody AccountManager request){
+    public ResponseEntity update(@RequestBody AccountManager request) {
         log.debug("request /update" + request);
         return accountManagerService.update(request);
     }
-    
+
     @PostMapping(value = "updateInfo", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity updateInfo(@RequestBody AccountManager request){
+    public ResponseEntity updateInfo(@RequestBody AccountManager request) {
         log.debug("request /updateInfo: " + request);
         return accountManagerService.updateInfo(request);
     }
-    
+
     @PostMapping(value = "get-by-acc-code", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity checkAccCodeExits(@RequestBody AccountManager request){
+    public ResponseEntity checkAccCodeExits(@RequestBody AccountManager request) {
         return accountManagerService.getByAccountCode(request);
     }
 
+    @PostMapping(value = "change-state", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity changeState(@RequestBody AccountManager request) {
+        return accountManagerService.changeState(request);
+    }
 }

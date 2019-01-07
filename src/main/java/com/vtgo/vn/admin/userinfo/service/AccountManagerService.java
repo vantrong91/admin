@@ -6,7 +6,6 @@
 package com.vtgo.vn.admin.userinfo.service;
 
 import com.vtgo.vn.admin.userinfo.BO.AccountManager;
-import com.vtgo.vn.admin.userinfo.BO.Transaction;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import org.springframework.http.ResponseEntity;
 
@@ -25,7 +24,7 @@ public interface AccountManagerService {
     public ResponseEntity create(AccountManager request);
 
     public ResponseEntity checkLogin(AccountManager request);
-    
+
     public ResponseEntity getByAccountCode(AccountManager request);
 
     public ResponseEntity delete(AccountManager request);
@@ -33,6 +32,8 @@ public interface AccountManagerService {
     public ResponseEntity logout(AccountManager request);
 
     public ResponseEntity update(AccountManager request);
-    
+
     public ResponseEntity updateInfo(AccountManager request);
+
+    public ResponseEntity changeState(AccountManager request);
 }

@@ -5,17 +5,15 @@
  */
 package com.vtgo.vn.admin.userinfo.controller;
 
-import com.aerospike.client.AerospikeException;
 import com.aerospike.client.Bin;
-import com.aerospike.client.Key;
 import com.aerospike.client.Record;
 import com.aerospike.client.Value;
-import com.aerospike.client.listener.ExecuteListener;
 import com.aerospike.client.query.RecordSet;
 import com.aerospike.client.query.ResultSet;
 import com.vtgo.vn.admin.aerospike.AerospikeFactory;
 import com.vtgo.vn.admin.base.BaseController;
 import com.vtgo.vn.admin.base.BaseResponse;
+import com.vtgo.vn.admin.constant.AcccountStateConstant;
 import com.vtgo.vn.admin.constant.AccountType;
 import com.vtgo.vn.admin.constant.DatabaseConstants;
 import com.vtgo.vn.admin.constant.ResponseConstants;
@@ -243,6 +241,7 @@ public class AccountManagerController extends BaseController implements AccountM
             lstBin.add(new Bin("AccountCode", accountCode));
             lstBin.add(new Bin("AccountToken", token));
             lstBin.add(new Bin("FileAvata", request.getFileAvata()));
+            lstBin.add(new Bin("State", request.getState()));
             try {
                 update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE,
                         DatabaseConstants.ACCOINT_MAN_SET, accountId, lstBin.toArray(new Bin[lstBin.size()]));
@@ -335,7 +334,7 @@ public class AccountManagerController extends BaseController implements AccountM
                                         response.setStatus(DatabaseConstants.ResultCode.FAIL);
                                         response.setMessage("Wrong password!");
                                     } //Check Account type
-                                    else if (accountType == 0 || accountType == 5 || accountType == 6 || accountType == 7 || accountType == 8 || accountType == 9||accountType==10) {
+                                    else if (accountType == 0 || accountType == 5 || accountType == 6 || accountType == 7 || accountType == 8 || accountType == 9 || accountType == 10) {
                                         String token = SecurityUtils.createToken(String.valueOf(accountId), new Date());
                                         accountManager.setAccountToken(token);
                                         update(AerospikeFactory.getInstance().onlyUpdatePolicy,
@@ -521,5 +520,39 @@ public class AccountManagerController extends BaseController implements AccountM
             response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
+    }
+
+    @Override
+    public ResponseEntity changeState(AccountManager request) {
+        BaseResponse response = new BaseResponse();
+        try {
+            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId());
+            if (rec != null) {
+                if (request.getState() == AcccountStateConstant.ACTIVE
+                        || request.getState() == AcccountStateConstant.BLOCK
+                        || request.getState() == AcccountStateConstant.CREATE
+                        || request.getState() == AcccountStateConstant.TERMINATE) {
+                    List<Bin> lstBin = new ArrayList();
+                    lstBin.add(new Bin("State", request.getState()));
+                    update(AerospikeFactory.getInstance().onlyUpdatePolicy,
+                            DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId(), lstBin.toArray(new Bin[lstBin.size()]));
+                    response.setStatus(ResponseConstants.SUCCESS);
+                    response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
+                    response.setData(Arrays.asList(request));
+                } else {
+                    response.setStatus(ResponseConstants.SERVICE_ERROR);
+                    response.setMessage("State invalid");
+                }
+            } else {
+                response.setStatus(ResponseConstants.SERVICE_CUSTOMER_NOT_FOUND);
+                response.setMessage(ResponseConstants.SERVICE_NOT_FOUND);
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception ex) {
+            log.error(ex.toString());
+            response.setMessage(ResponseConstants.SERVICE_FAIL_DESC);
+            response.setStatus(ResponseConstants.SERVICE_FAIL);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

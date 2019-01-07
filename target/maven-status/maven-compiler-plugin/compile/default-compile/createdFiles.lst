@@ -4,6 +4,7 @@ com\vtgo\vn\admin\userinfo\api\GoodOwnerApi.class
 com\vtgo\vn\admin\pushnotify\NotificationObjectPushToVehicleOwner.class
 com\vtgo\vn\admin\pushnotify\NotificationObjectPushToGoodsOwner.class
 com\vtgo\vn\admin\base\BaseRequest.class
+com\vtgo\vn\admin\constant\AcccountStateConstant.class
 com\vtgo\vn\admin\userinfo\controller\DriverController$1.class
 com\vtgo\vn\admin\userinfo\api\AdministrationApi.class
 com\vtgo\vn\admin\userinfo\BO\BankAccount.class

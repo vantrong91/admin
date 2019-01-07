@@ -33,6 +33,7 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
     private String salt;
     private String accountCode;
     private String fileAvata;
+    private Long state;
 
     @Override
     public boolean parse(Record record) {
@@ -49,6 +50,7 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
             this.fullName = record.getString("FullName");
             this.accountCode = record.getString("AccountCode");
             this.fileAvata = record.getString("FileAvata");
+            this.state = record.getLong("State");
             return true;
         } catch (Exception ex) {
             log.debug(ex.getMessage(), ex);
@@ -71,6 +73,7 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
             this.fullName = (String) map.get("FullName");
             this.accountCode = (String) map.get("AccountCode");
             this.fileAvata = (String) map.get("FileAvata");
+            this.state = (Long) map.get("State");
             return true;
         } catch (Exception ex) {
             log.debug(ex.getMessage(), ex);
@@ -93,6 +96,7 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
         bins.add(new Bin("FullName", fullName));
         bins.add(new Bin("AccountCode", accountCode));
         bins.add(new Bin("FileAvata", fileAvata));
+        bins.add(new Bin("State", state));
         return bins.toArray(new Bin[bins.size()]);
     }
 
@@ -192,11 +196,17 @@ public class AccountManager extends BaseRequest<Object> implements BaseObject {
         this.accountCode = accountCode;
     }
 
-    @Override
-    public String toString() {
-        return "AccountManager{" + "accountId=" + accountId + ", password=" + password + ", fullName=" + fullName + ", email=" + email + ", phoneNumber=" + phoneNumber + ", accountType=" + accountType + ", accountToken=" + accountToken + ", osType=" + osType + ", deviceToken=" + deviceToken + ", salt=" + salt + ", accountCode=" + accountCode + ", fileAvata=" + fileAvata + '}';
+    public Long getState() {
+        return state;
     }
 
-  
+    public void setState(Long state) {
+        this.state = state;
+    }
+
+    @Override
+    public String toString() {
+        return "AccountManager{" + "accountId=" + accountId + ", password=" + password + ", fullName=" + fullName + ", email=" + email + ", phoneNumber=" + phoneNumber + ", accountType=" + accountType + ", accountToken=" + accountToken + ", osType=" + osType + ", deviceToken=" + deviceToken + ", salt=" + salt + ", accountCode=" + accountCode + ", fileAvata=" + fileAvata + ", state=" + state + '}';
+    }
 
 }
