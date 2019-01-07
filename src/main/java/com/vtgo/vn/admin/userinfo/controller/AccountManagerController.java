@@ -34,6 +34,8 @@ import lombok.AllArgsConstructor;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +48,7 @@ import org.springframework.stereotype.Service;
 public class AccountManagerController extends BaseController implements AccountManagerService {
 
     private static final Logger log = Logger.getLogger(AccountManagerController.class.getName());
+    private JavaMailSender javaMailSender;
 
     @Override
     public ResponseEntity searchAccountMan(SearchRequest request) {
@@ -536,6 +539,16 @@ public class AccountManagerController extends BaseController implements AccountM
                     lstBin.add(new Bin("State", request.getState()));
                     update(AerospikeFactory.getInstance().onlyUpdatePolicy,
                             DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId(), lstBin.toArray(new Bin[lstBin.size()]));
+
+                    //if state from CREATE change to ACTIVE => send email to user
+                    AccountManager accountManager = new AccountManager();
+                    accountManager.parse(rec);
+                    if (accountManager.getEmail() != null) {
+                        if (accountManager.getState() == 0L && request.getState() == 1L) {
+                            sendEmailToUser(request.getEmail());
+                        }
+                    }
+
                     response.setStatus(ResponseConstants.SUCCESS);
                     response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
                     response.setData(Arrays.asList(request));
@@ -554,5 +567,19 @@ public class AccountManagerController extends BaseController implements AccountM
             response.setStatus(ResponseConstants.SERVICE_FAIL);
         }
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    private void sendEmailToUser(String email){
+        try {
+            SimpleMailMessage mail = new SimpleMailMessage();
+            mail.setTo(email);
+            mail.setFrom("infovtgo@gmail.com");
+            mail.setSubject("[VTGO] Thông báo kích hoạt thành công tài khoản");
+            mail.setText("Xin chào! \nTài khoản của bạn đã được kích hoạt. Hãy đăng nhập theo tên đăng nhập và mật khẩu đã được gửi lúc đăng ký tài khoản.");
+            javaMailSender.send(mail);
+            log.debug("mail to: " + email + " -> sent");
+        } catch (Exception ex) {
+            log.error(ex.toString());
+        }
     }
 }
