@@ -9,6 +9,7 @@ import com.jsoniter.output.JsonStream;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import com.vtgo.vn.admin.config.Config;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -87,9 +88,9 @@ public class Publish {
             return connection;
         }
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("103.90.220.107");
-        factory.setUsername("guest");
-        factory.setPassword("guest");
+        factory.setHost(Config.hostRabbit);
+        factory.setUsername(Config.userRabbit);
+        factory.setPassword(Config.passRabbit);
         connection = factory.newConnection();
         return connection;
     }

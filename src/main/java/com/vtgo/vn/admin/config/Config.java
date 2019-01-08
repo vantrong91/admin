@@ -14,6 +14,9 @@ public class Config {
 
     public static int port;
     public static String contextPath = "";
+    public static String hostRabbit = "";
+    public static String userRabbit = "";
+    public static String passRabbit = "";
 
     public static void loadConfig(String path) {
         FileReader fr = null;
@@ -24,6 +27,9 @@ public class Config {
             pro.load(fr);
             port = Integer.parseInt(pro.getProperty("port", "8086").trim());
             contextPath = pro.getProperty("contextPath", "vtgo-admin").trim();
+            hostRabbit = pro.getProperty("hostRabbit", "172.16.220.71").trim();
+            userRabbit = pro.getProperty("userRabbit", "vtgo").trim();
+            passRabbit = pro.getProperty("passRabbit", "vtgo@vtgo@123").trim();
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         } finally {
