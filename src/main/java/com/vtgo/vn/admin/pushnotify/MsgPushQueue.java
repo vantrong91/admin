@@ -16,6 +16,7 @@ public class MsgPushQueue<T> {
     private Integer typeReceive;
     private Integer typeSend;
     private List<T> data;
+    private NotificationObject<EmailObject> notificationObect;
 
     public Integer getTypeReceive() {
         return typeReceive;
@@ -40,7 +41,13 @@ public class MsgPushQueue<T> {
     public void setTypeSend(Integer typeSend) {
         this.typeSend = typeSend;
     }
-    
-    
+
+    public NotificationObject<EmailObject> getNotificationObect() {
+        return notificationObect;
+    }
+
+    public void setNotificationObect(NotificationObject<EmailObject> notificationObect) {
+        this.notificationObect = notificationObect;
+    }
 
 }
