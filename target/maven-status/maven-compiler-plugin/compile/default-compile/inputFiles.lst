@@ -57,6 +57,7 @@ D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\pushnotify\Publish
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\userinfo\api\VehicleOwnerApi.java
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\userinfo\request\GoodOwnerSearchRequest.java
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\userinfo\controller\AccountManagerController.java
+D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\pushnotify\NotificationObject.java
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\userinfo\service\TransferFeeService.java
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\userinfo\controller\VehicleController.java
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\userinfo\service\AccountManagerService.java
@@ -76,6 +77,7 @@ D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\userinfo\controlle
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\pushnotify\NotificationObjectPushToDriver.java
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\userinfo\request\VehicleSearchRequest.java
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\userinfo\service\OrderService.java
+D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\pushnotify\EmailObject.java
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\userinfo\api\UpLoadFileApi.java
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\pushnotify\MsgNotifyDriver.java
 D:\Project\VTGO Admin\GIT\API\src\main\java\com\vtgo\vn\admin\userinfo\BO\Quotation.java

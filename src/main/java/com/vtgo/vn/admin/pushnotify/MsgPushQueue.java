@@ -14,8 +14,8 @@ import java.util.List;
 public class MsgPushQueue<T> {
 
     private Integer typeReceive;
+    private Integer typeSend;
     private List<T> data;
-
 
     public Integer getTypeReceive() {
         return typeReceive;
@@ -32,5 +32,15 @@ public class MsgPushQueue<T> {
     public void setData(List<T> data) {
         this.data = data;
     }
+
+    public Integer getTypeSend() {
+        return typeSend;
+    }
+
+    public void setTypeSend(Integer typeSend) {
+        this.typeSend = typeSend;
+    }
+    
+    
 
 }

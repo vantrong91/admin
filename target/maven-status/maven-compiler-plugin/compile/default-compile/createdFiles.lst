@@ -56,6 +56,7 @@ com\vtgo\vn\admin\pushnotify\MsgNotifyGoodsOwner.class
 com\vtgo\vn\admin\userinfo\BO\Transaction.class
 com\vtgo\vn\admin\util\SequenceManager$1.class
 com\vtgo\vn\admin\constant\DatabaseConstants$ResultText.class
+com\vtgo\vn\admin\pushnotify\EmailObject.class
 com\vtgo\vn\admin\userinfo\service\VehicleService.class
 com\vtgo\vn\admin\userinfo\service\AccountManagerService.class
 com\vtgo\vn\admin\userinfo\BO\InsuranceOrder.class
@@ -69,6 +70,7 @@ com\vtgo\vn\admin\userinfo\controller\BankController.class
 com\vtgo\vn\admin\pushnotify\Constant.class
 com\vtgo\vn\admin\userinfo\BO\Quotation.class
 com\vtgo\vn\admin\userinfo\service\BankService.class
+com\vtgo\vn\admin\pushnotify\NotificationObject.class
 com\vtgo\vn\admin\userinfo\api\TransferFeeApi.class
 com\vtgo\vn\admin\userinfo\request\InsuranceOrderSearchRequest.class
 com\vtgo\vn\admin\userinfo\BO\Product.class

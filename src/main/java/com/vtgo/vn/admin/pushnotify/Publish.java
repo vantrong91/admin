@@ -26,7 +26,7 @@ public class Publish {
     public static void main(String[] args) throws IOException, TimeoutException {
 //        SendNotify.sendToDriver(18803L, Constant.DRIVER_NOTIFY_TYPE.ACCOUNT_RECHARGE, "VTGO", "Bạn nhận được thông báo mới", "Test notify to driver");//test
 //        SendNotify.sendToGoodOwner(21002L, Constant.OWNER_NOTIFY_TYPE.ACCOUNT_RECHARGE, "VTGO", "Bạn nhận được thông báo mới", "Test notify goodowner");//test
-        SendNotify.sendToVehicleOwner(19904L, Constant.VEHICLE_OWNER_NOTIFY_TYPE.ACCOUNT_RECHARGE, "VTGO", "Bạn nhận được thông báo mới", "Test notify VehicleOwner");//test
+//        SendNotify.sendToVehicleOwner(19904L, Constant.VEHICLE_OWNER_NOTIFY_TYPE.ACCOUNT_RECHARGE, "VTGO", "Bạn nhận được thông báo mới", "Test notify VehicleOwner");//test
 
 //        PropertyConfigurator.configure("./etc/log4j.properties");
 //        MsgPushQueue msgPushQueue = new MsgPushQueue();
@@ -49,6 +49,20 @@ public class Publish {
 //
 //        String message = new String(JsonStream.serialize(msgPushQueue).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
 //        Publish.publishMessage(message, Constant.QUEUE.RABBITMQ_EXCHANGE, Constant.QUEUE.KEY_CHANNEL_PUSH_FROM_ADMIN);
+        MsgPushQueue msgPushQueue = new MsgPushQueue();
+        NotificationObject<EmailObject> noti = new NotificationObject<>();
+        noti.setNotifyType(Constant.NOTIFY_TYPE.EMAIL);
+        EmailObject email = new EmailObject();
+        email.setSubject("[VTGO] Thông báo ....");
+        email.setToEmail("vietthai1108@gmail.com");
+        StringBuilder builder = new StringBuilder();
+        builder.append("Xin chào, Bạn đã .....");
+        email.setContent(builder.toString());
+        noti.setData(Arrays.asList(email));
+        msgPushQueue.setData(Arrays.asList(noti));
+        msgPushQueue.setTypeSend(Constant.NOTIFY_TYPE.FCM_PUSH);
+        String message = new String(JsonStream.serialize(msgPushQueue).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+        Publish.publishMessage(message, Constant.QUEUE.RABBITMQ_EXCHANGE, Constant.QUEUE.KEY_CHANNEL_PUSH_FROM_ADMIN);
     }
 
     public static void publishMessage(String message, String exchange, String routingKey) throws TimeoutException, IOException {
