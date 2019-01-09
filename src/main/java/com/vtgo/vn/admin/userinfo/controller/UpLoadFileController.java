@@ -35,7 +35,9 @@ public class UpLoadFileController extends BaseController implements UpLoadFileSe
         BaseResponse response = new BaseResponse();
         ArrayList<String> lstStatus = new ArrayList<String>();
         FileOutputStream fileOutputStream = null;
-        String path = "/home/haivinh/IMAGE/" + folder;
+//        String path = "/home/haivinh/IMAGE/" + folder;
+        String path = "/u02/IMAGE/" + folder;
+
         for (MultipartFile multipartFile : files) {
             String fileName = multipartFile.getOriginalFilename();
 

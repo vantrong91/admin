@@ -65,7 +65,7 @@ public class AdministrationController extends BaseController implements Administ
             argument.put("sorters", new Value.ListValue(argumentSorters));
             argument.put("filters", new Value.ListValue(argumentFilter));
             ResultSet resultSet = AerospikeFactory.getInstance().aggregate(AerospikeFactory.getInstance().queryPolicy,
-                    DatabaseConstants.NAMESPACE, DatabaseConstants.ADMINISTRATION_SET, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
+                    DatabaseConstants.NAMESPACE, DatabaseConstants.ADMIN, "FILTER_RECORD", "FILTER_RECORD", Value.get(argument));
             if (resultSet != null) {
                 Iterator<Object> obIterator = resultSet.iterator();
                 while(obIterator.hasNext()){
@@ -94,7 +94,7 @@ public class AdministrationController extends BaseController implements Administ
     public ResponseEntity getById(Administration request) {
         BaseResponse response = new BaseResponse();
         try {
-            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.ADMINISTRATION_SET, request.getPk());
+            Record rec = getById(DatabaseConstants.NAMESPACE, DatabaseConstants.ADMIN, request.getPk());
             response.setStatus(ResponseConstants.SUCCESS);
             response.setMessage(ResponseConstants.SERVICE_SUCCESS_DESC);
             if (rec != null) {

@@ -154,7 +154,7 @@ public class BalanceController extends BaseController implements BalanceService 
                         } else {
                             strMoney = String.valueOf(moneyChange);
                         }
-                        String content = "[Thông báo thay đổi số dư]\nTài khoản " + accountId + ": " + strMoney + "đ.\nNội dung: " + request.getContent();
+                        String content = "[Thông báo thay đổi số dư]\nTài khoản của bạn thay đổi: " + strMoney + "đ.\nNội dung: " + request.getContent();
                         switch (accountType) {
                             case AccountType.DRIVER:
                                 logger.info(content);

@@ -290,7 +290,7 @@ public class Quotation extends BaseRequest<Object> implements BaseObject {
             this.driverId = (Long) map.get("DriverId");
             this.price = (Long) map.get("Price");
             this.state = (Long) map.get("State");
-            if (map.get("DelayPrice") != null) {
+            if (map.get("Vat") != null) {
                 this.vat = (Double.parseDouble(String.valueOf(map.get("Vat"))));
             }
             if (map.get("Commission") != null) {

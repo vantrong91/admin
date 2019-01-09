@@ -16,6 +16,7 @@ import com.aerospike.client.query.RecordSet;
 import com.aerospike.client.query.ResultSet;
 import com.vtgo.vn.admin.aerospike.AerospikeFactory;
 import com.vtgo.vn.admin.base.BaseResponse;
+import com.vtgo.vn.admin.constant.AcccountStateConstant;
 import com.vtgo.vn.admin.constant.AccountType;
 import com.vtgo.vn.admin.constant.DatabaseConstants;
 import com.vtgo.vn.admin.constant.ResponseConstants;
@@ -274,6 +275,7 @@ public class VehicleOwnerController extends BaseController implements VehicleOwn
             lstBin.add(new Bin("AccountType", AccountType.VEHICLE_OWNER));
             String accountCode = "CX" + request.getContactPersonPhone();
             lstBin.add(new Bin("AccountCode", accountCode));
+            lstBin.add(new Bin("State",AcccountStateConstant.CREATE));
 
             // Create Balance
             List<Value> balParam = new ArrayList<Value>();

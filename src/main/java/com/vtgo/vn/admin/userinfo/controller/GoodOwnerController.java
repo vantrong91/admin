@@ -16,6 +16,7 @@ import com.aerospike.client.query.ResultSet;
 import com.vtgo.vn.admin.aerospike.AerospikeFactory;
 import com.vtgo.vn.admin.base.BaseController;
 import com.vtgo.vn.admin.base.BaseResponse;
+import com.vtgo.vn.admin.constant.AcccountStateConstant;
 import com.vtgo.vn.admin.constant.AccountType;
 import com.vtgo.vn.admin.constant.DatabaseConstants;
 import com.vtgo.vn.admin.constant.ResponseConstants;
@@ -189,6 +190,7 @@ public class GoodOwnerController extends BaseController implements GoodOwnerServ
             lstBin.add(new Bin("FullName", request.getFullName()));
             String accountCode = "CH" + request.getPhoneNumber();
             lstBin.add(new Bin("AccountCode", accountCode));
+            lstBin.add(new Bin("State", AcccountStateConstant.CREATE));
 
             // init Balance
             List<Value> balParam = new ArrayList<Value>();

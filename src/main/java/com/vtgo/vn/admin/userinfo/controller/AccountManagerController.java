@@ -10,6 +10,7 @@ import com.aerospike.client.Record;
 import com.aerospike.client.Value;
 import com.aerospike.client.query.RecordSet;
 import com.aerospike.client.query.ResultSet;
+import com.jsoniter.output.JsonStream;
 import com.vtgo.vn.admin.aerospike.AerospikeFactory;
 import com.vtgo.vn.admin.base.BaseController;
 import com.vtgo.vn.admin.base.BaseResponse;
@@ -17,12 +18,18 @@ import com.vtgo.vn.admin.constant.AcccountStateConstant;
 import com.vtgo.vn.admin.constant.AccountType;
 import com.vtgo.vn.admin.constant.DatabaseConstants;
 import com.vtgo.vn.admin.constant.ResponseConstants;
+import com.vtgo.vn.admin.pushnotify.Constant;
+import com.vtgo.vn.admin.pushnotify.EmailObject;
+import com.vtgo.vn.admin.pushnotify.MsgPushQueue;
+import com.vtgo.vn.admin.pushnotify.NotificationObject;
+import com.vtgo.vn.admin.pushnotify.Publish;
 import com.vtgo.vn.admin.userinfo.BO.AccountManager;
 import com.vtgo.vn.admin.userinfo.BO.Account;
 import com.vtgo.vn.admin.userinfo.request.SearchRequest;
 import com.vtgo.vn.admin.userinfo.service.AccountManagerService;
 import com.vtgo.vn.admin.util.SecurityUtils;
 import com.vtgo.vn.admin.util.SequenceManager;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -245,6 +252,7 @@ public class AccountManagerController extends BaseController implements AccountM
             lstBin.add(new Bin("AccountToken", token));
             lstBin.add(new Bin("FileAvata", request.getFileAvata()));
             lstBin.add(new Bin("State", request.getState()));
+            lstBin.add(new Bin("BankCodeTran", request.getBankCodeTran()));
             try {
                 update(AerospikeFactory.getInstance().onlyCreatePolicy, DatabaseConstants.NAMESPACE,
                         DatabaseConstants.ACCOINT_MAN_SET, accountId, lstBin.toArray(new Bin[lstBin.size()]));
@@ -541,6 +549,7 @@ public class AccountManagerController extends BaseController implements AccountM
                             DatabaseConstants.NAMESPACE, DatabaseConstants.ACCOINT_MAN_SET, request.getAccountId(), lstBin.toArray(new Bin[lstBin.size()]));
 
                     //if state from CREATE change to ACTIVE => send email to user
+                    //get current state
                     AccountManager accountManager = new AccountManager();
                     accountManager.parse(rec);
                     if (accountManager.getEmail() != null) {
@@ -569,17 +578,26 @@ public class AccountManagerController extends BaseController implements AccountM
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    private void sendEmailToUser(String email){
+    private void sendEmailToUser(String email) {
         try {
-            SimpleMailMessage mail = new SimpleMailMessage();
-            mail.setTo(email);
-            mail.setFrom("infovtgo@gmail.com");
-            mail.setSubject("[VTGO] Thông báo kích hoạt thành công tài khoản");
-            mail.setText("Xin chào! \nTài khoản của bạn đã được kích hoạt. Hãy đăng nhập theo tên đăng nhập và mật khẩu đã được gửi lúc đăng ký tài khoản.");
-            javaMailSender.send(mail);
-            log.debug("mail to: " + email + " -> sent");
+            MsgPushQueue msgPushQueue = new MsgPushQueue();
+            NotificationObject<EmailObject> noti = new NotificationObject<>();
+            noti.setNotifyType(Constant.NOTIFY_TYPE.EMAIL);
+            EmailObject emailObj = new EmailObject();
+            emailObj.setSubject("[VTGO] Thông báo kích hoạt thành công tài khoản");
+            emailObj.setToEmail(email);
+            StringBuilder builder = new StringBuilder();
+            builder.append("Xin chào! \nTài khoản của bạn đã được kích hoạt. Tên đăng nhập và mật khẩu đã được gửi lúc đăng ký tài khoản.");
+            emailObj.setContent(builder.toString());
+            noti.setData(Arrays.asList(emailObj));
+            msgPushQueue.setNotificationObect(noti);
+            msgPushQueue.setTypeSend(Constant.NOTIFY_TYPE.EMAIL);
+
+            String message = new String(JsonStream.serialize(msgPushQueue).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+            Publish.publishMessage(message, Constant.QUEUE.RABBITMQ_EXCHANGE, Constant.QUEUE.KEY_CHANNEL_PUSH_FROM_ADMIN);
+            log.info("Mail to " + email + " -> sent!");
         } catch (Exception ex) {
-            log.error(ex.toString());
+            log.error("Cannot send email: " + ex.toString());
         }
     }
 }
