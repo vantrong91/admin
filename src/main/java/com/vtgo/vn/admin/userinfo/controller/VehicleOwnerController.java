@@ -159,7 +159,7 @@ public class VehicleOwnerController extends BaseController implements VehicleOwn
                             BankAccount bankAccount = new BankAccount();
                             Map<String, String> mapValue = mapBank.get(key);
                             if (mapValue != null && !mapValue.isEmpty()) {
-                                bankAccount.setBankCode(mapValue.get("BankCode"));
+                                bankAccount.setBankCode(mapValue.get("BankId"));
                                 bankAccount.setAccountNumber(mapValue.get("AccountNumber"));
                                 bankAccount.setOwnerName(mapValue.get("OwnerName"));
                                 bankAccount.setBranch(mapValue.get("Branch"));
@@ -199,7 +199,7 @@ public class VehicleOwnerController extends BaseController implements VehicleOwn
                         int j = 1;
                         for (BankAccount bankCard : lstBankCard) {
                             Map<String, String> infoBank = new HashMap<>();
-                            infoBank.put("BankCode", bankCard.getBankCode());
+                            infoBank.put("BankId", bankCard.getBankCode());
                             infoBank.put("AccountNumber", bankCard.getAccountNumber());
                             infoBank.put("OwnerName", bankCard.getOwnerName());
                             infoBank.put("Branch", bankCard.getBranch());
@@ -354,7 +354,7 @@ public class VehicleOwnerController extends BaseController implements VehicleOwn
                 int j = 1;
                 for (BankAccount bankCard : lstBankCard) {
                     Map<String, String> infoBank = new HashMap<>();
-                    infoBank.put("BankCode", bankCard.getBankCode());
+                    infoBank.put("BankId", bankCard.getBankCode());
                     infoBank.put("AccountNumber", bankCard.getAccountNumber());
                     infoBank.put("OwnerName", bankCard.getOwnerName());
                     infoBank.put("Branch", bankCard.getBranch());

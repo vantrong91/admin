@@ -49,7 +49,6 @@ public class TransferFeeController extends BaseController implements TransferFee
             Map<String, Object> argument = new HashMap<>();
             List<Value.MapValue> argumentFilter = new ArrayList<>();
             String searchVal = request.getSearchParam();
-            log.info(searchVal);
             if (searchVal != null && !searchVal.isEmpty()) {
                 Map<String, Object> f = new HashMap<>();
                 f.put("field", "TransferId");
